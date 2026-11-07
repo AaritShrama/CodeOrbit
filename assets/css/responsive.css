@@ -1,127 +1,43 @@
 /* ==========================================================================
-   CODEORBIT — RESPONSIVE DESIGN SPECIFICATIONS
-   Breakpoints: 1440px (Desktop), 1024px (Laptop), 768px (Tablet), 375px (Mobile)
+   CODEORBIT — RESPONSIVE RULES
+   Layout is one centred column under a top bar, so phones mostly need
+   tighter spacing and a scrollable navigation row.
    ========================================================================== */
 
-/* Laptop (<= 1200px) */
-@media (max-width: 1200px) {
-  .dashboard-grid-2col {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+@media (max-width: 860px) {
+  :root {
+    --topbar-height: auto;
   }
 
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .topbar-inner {
+    flex-wrap: wrap;
+    row-gap: 0;
+    padding-top: var(--space-sm);
+  }
+
+  .brand-link {
+    flex: 1;
+  }
+
+  /* Navigation drops to its own scrollable row under the logo */
+  .main-nav {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0 calc(-1 * var(--page-gutter));
+    padding: var(--space-xs) var(--page-gutter);
   }
 
   .content-area {
-    padding: var(--space-lg);
+    padding-top: var(--space-xl);
   }
 }
 
-/* Tablet (<= 1024px) */
-@media (max-width: 1024px) {
-  :root {
-    --sidebar-width: 220px;
-  }
-
-  .hero-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .hero-actions {
-    width: 100%;
-  }
-
-  .search-trigger-btn {
-    min-width: 160px;
-  }
-}
-
-/* Tablet & Mobile (<= 860px) */
-@media (max-width: 860px) {
-  .sidebar {
-    transform: translateX(-100%);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .main-wrapper {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .mobile-menu-btn {
-    display: inline-flex;
-  }
-
-  .topbar {
-    padding: 0 var(--space-md);
-  }
-
-  .search-trigger-btn {
-    min-width: unset;
-    padding: 8px 10px;
-  }
-
-  .search-trigger-btn span,
-  .search-hotkey {
-    display: none;
-  }
-
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-md);
-  }
-
-  .orbital-stage-wrapper {
-    height: 420px;
-  }
-
-  .productivity-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-md);
-  }
-}
-
-/* Small Mobile (<= 520px) */
 @media (max-width: 520px) {
-  .kpi-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .topbar-right .launch-quick-btn span {
-    display: none;
-  }
-
-  .topbar-right .launch-quick-btn {
-    padding: 8px 10px;
-  }
-
-  .hero-heading {
-    font-size: var(--text-2xl);
-  }
-
-  .hero-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .hero-actions .btn {
-    width: 100%;
-  }
-
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .filter-left,
   .filter-right {
     width: 100%;
     justify-content: space-between;
@@ -131,56 +47,39 @@
     width: 100%;
   }
 
-  .orbital-stage-wrapper {
-    height: 360px;
-  }
-
-  .dev-core-sphere {
-    width: 52px;
-    height: 52px;
-  }
-
-  .dev-core-sphere svg {
-    width: 24px;
-    height: 24px;
-  }
-
   .modal-container {
-    max-height: 95vh;
+    max-height: 94vh;
     border-radius: var(--radius-md);
   }
 
-  .modal-header,
-  .modal-body,
   .modal-footer {
-    padding: var(--space-md);
+    flex-direction: column-reverse;
   }
 
-  .content-area {
-    padding: var(--space-sm);
+  .modal-footer .btn {
+    width: 100%;
   }
 
   .toast-container {
-    right: var(--space-sm);
     left: var(--space-sm);
-    bottom: var(--space-md);
-    max-width: unset;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+  }
+
+  .home-empty-actions .btn {
+    width: 100%;
   }
 }
 
-/* Print Styles */
 @media print {
-  .sidebar,
   .topbar,
-  .toast-container,
-  .modal-backdrop,
-  .orbital-controls,
-  .btn {
+  .app-footer,
+  #cosmic-stars-canvas {
     display: none !important;
   }
 
-  .main-wrapper {
-    margin-left: 0;
+  .btn {
+    display: none !important;
   }
 
   body {

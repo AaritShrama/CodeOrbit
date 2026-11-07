@@ -1,50 +1,40 @@
 /**
  * CODEORBIT — NAVIGATION MODULE
- * Multi-view routing, active state indicators, mobile drawer management, and title synchronization.
+ * Hash routing between pages, the active top-bar link, and the page title.
  */
 
-import { storage } from './storage.js';
-
+// Route names (the part after #) are kept as they were so old links and saved
+// bookmarks still work; only the words people see changed (D-020).
 const ROUTE_CONFIG = {
-  dashboard: {
-    title: 'Command Center',
-    subtitle: 'System Overview & Orbital Telemetry',
-    icon: 'layout-dashboard'
-  },
+  dashboard: { title: 'Home', subtitle: '' },
   skills: {
-    title: 'Skill Universe',
-    subtitle: 'Planetary Competency & Proficiency Engine',
-    icon: 'orbit'
+    title: 'Your skills',
+    subtitle:
+      'Everything you are learning, in one place. Use +10% and −10% to update how far along you are.'
   },
   progress: {
-    title: 'Mission Logs',
-    subtitle: 'Developer Sprints, Time Tracking & Learning Habit',
-    icon: 'book-open'
+    title: 'Study sessions',
+    subtitle: 'Every bit of study time you have added, newest first.'
   },
   projects: {
-    title: 'Space Missions',
-    subtitle: 'Developer Project Tracker & Architecture Builds',
-    icon: 'rocket'
+    title: 'Projects',
+    subtitle: 'Things you are building, and how far along each one is.'
   },
   goals: {
-    title: 'Milestones',
-    subtitle: 'Technical Objectives & Target Horizons',
-    icon: 'target'
+    title: 'Goals',
+    subtitle: 'What you want to reach, and by when.'
   },
   achievements: {
-    title: 'Universe Achievements',
-    subtitle: 'Unlocked Milestones & Explorer Badges',
-    icon: 'trophy'
+    title: 'Badges',
+    subtitle: 'You earn a badge when you reach a milestone.'
   },
   analytics: {
-    title: 'Universe Analytics',
-    subtitle: 'Deep Velocity Trends & Habit Distributions',
-    icon: 'bar-chart-3'
+    title: 'Progress',
+    subtitle: 'How your studying is going over time.'
   },
   settings: {
-    title: 'System Settings',
-    subtitle: 'Developer Profile, Appearance & Local Storage Backup',
-    icon: 'settings'
+    title: 'Settings',
+    subtitle: 'Your profile, your goals, and your saved data.'
   }
 };
 
@@ -67,32 +57,16 @@ class NavigationManager {
     // Listen for hash changes
     window.addEventListener('hashchange', () => this.handleHashChange());
 
-    // Setup sidebar navigation links
+    // Top bar links
     document.querySelectorAll('.nav-link[data-route]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
-        const route = link.getAttribute('data-route');
-        this.navigateTo(route);
-        this.closeMobileSidebar();
+        this.navigateTo(link.getAttribute('data-route'));
       });
     });
 
-    // Mobile sidebar hamburger button
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
-    if (mobileMenuBtn) {
-      mobileMenuBtn.addEventListener('click', () => this.toggleMobileSidebar());
-    }
-    if (sidebarBackdrop) {
-      sidebarBackdrop.addEventListener('click', () => this.closeMobileSidebar());
-    }
-
     // Initial load
     this.handleHashChange();
-    this.updateBadges();
-
-    // Re-update badges on data changes
-    window.addEventListener('codeorbit:data-changed', () => this.updateBadges());
   }
 
   registerView(route, callback) {
@@ -142,21 +116,25 @@ class NavigationManager {
       targetPage.classList.add('active');
     }
 
-    // Update active nav-link
+    // Highlight the current page in the top bar. Badges and Settings have no
+    // top-bar link, so Badges lights up "Progress" (it is opened from there).
+    const navRoute = route === 'achievements' ? 'analytics' : route;
     document.querySelectorAll('.nav-link[data-route]').forEach(link => {
-      if (link.getAttribute('data-route') === route) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
+      const isCurrent = link.getAttribute('data-route') === navRoute;
+      link.classList.toggle('active', isCurrent);
+      if (isCurrent) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
     });
 
-    // Update topbar header
+    // Page title (Home has its own big greeting instead)
     const config = ROUTE_CONFIG[route];
+    const headerEl = document.getElementById('page-header');
     const titleEl = document.getElementById('page-title-text');
     const subtitleEl = document.getElementById('page-subtitle-text');
+    if (headerEl) headerEl.hidden = route === 'dashboard';
     if (titleEl) titleEl.textContent = config.title;
     if (subtitleEl) subtitleEl.textContent = config.subtitle;
+    document.title = route === 'dashboard' ? 'CodeOrbit' : `${config.title} · CodeOrbit`;
 
     // Trigger page-specific refresh callback
     this.renderCurrentView();
@@ -168,40 +146,6 @@ class NavigationManager {
     if (window.lucide && window.lucide.createIcons) {
       window.lucide.createIcons();
     }
-  }
-
-  updateBadges() {
-    const data = storage.getUniverse();
-    const skillsCount = (data.skills || []).length;
-    const activeProjectsCount = (data.projects || []).filter(
-      p => p.status === 'In Progress'
-    ).length;
-    const pendingGoalsCount = (data.goals || []).filter(g => g.status === 'Active').length;
-    const unlockedAchievements = (data.achievements || []).length;
-
-    const elSkills = document.getElementById('nav-badge-skills');
-    const elProjects = document.getElementById('nav-badge-projects');
-    const elGoals = document.getElementById('nav-badge-goals');
-    const elAchievements = document.getElementById('nav-badge-achievements');
-
-    if (elSkills) elSkills.textContent = skillsCount;
-    if (elProjects) elProjects.textContent = activeProjectsCount;
-    if (elGoals) elGoals.textContent = pendingGoalsCount;
-    if (elAchievements) elAchievements.textContent = `${unlockedAchievements}/10`;
-  }
-
-  toggleMobileSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
-    if (sidebar) sidebar.classList.toggle('open');
-    if (backdrop) backdrop.classList.toggle('active');
-  }
-
-  closeMobileSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const backdrop = document.getElementById('sidebar-backdrop');
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('active');
   }
 }
 

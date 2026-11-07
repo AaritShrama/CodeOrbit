@@ -3,6 +3,7 @@
  * Modals, Toasts, Confirmation Dialogs, Command Palette / Global Search.
  */
 
+import { icon } from './icons.js';
 import { escapeHTML, sounds } from './utils.js';
 import { storage } from './storage.js';
 
@@ -160,8 +161,8 @@ export function setupModalDismissHandlers() {
  * Reusable Confirmation Dialog
  */
 export function showConfirmDialog({
-  title = 'Confirm Action',
-  message = 'Are you sure you want to proceed?',
+  title = 'Are you sure?',
+  message = 'Please confirm to continue.',
   confirmText = 'Confirm',
   confirmClass = 'btn-danger',
   onConfirm = () => {}
@@ -171,16 +172,19 @@ export function showConfirmDialog({
     modal = document.createElement('div');
     modal.id = 'confirm-action-modal';
     modal.className = 'modal-backdrop';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'confirm-title');
     modal.innerHTML = `
       <div class="modal-container modal-sm">
         <div class="modal-header">
           <div class="modal-title-wrap">
-            <div class="modal-icon-badge" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: var(--danger);">
+            <div class="modal-icon-badge" style="border-color: var(--accent-text); color: var(--accent-text);">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
             </div>
-            <h3 class="modal-title" id="confirm-title">Confirm Action</h3>
+            <h3 class="modal-title" id="confirm-title">Are you sure?</h3>
           </div>
-          <button class="modal-close-btn">&times;</button>
+          <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
         </div>
         <div class="modal-body">
           <p id="confirm-message" style="font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.5;"></p>
@@ -254,7 +258,7 @@ export function renderPaletteResults(query) {
     if (!q || nameMatch || catMatch || descMatch) {
       results.push({
         type: 'Skill',
-        icon: '🪐',
+        icon: 'planet',
         title: s.name,
         subtitle: `${s.category || 'General'} • ${s.proficiency || 'Beginner'} (${s.progress || 0}%)`,
         action: () => {
@@ -273,7 +277,7 @@ export function renderPaletteResults(query) {
     if (!q || nameMatch || descMatch || techMatch) {
       results.push({
         type: 'Project',
-        icon: '🚀',
+        icon: 'folder',
         title: p.name,
         subtitle: `${p.status || 'Active'} • ${p.technologies ? p.technologies.slice(0, 3).join(', ') : ''}`,
         action: () => {
@@ -291,8 +295,8 @@ export function renderPaletteResults(query) {
     const notesMatch = a.notes && a.notes.toLowerCase().includes(q);
     if (!q || titleMatch || skillMatch || notesMatch) {
       results.push({
-        type: 'Mission Log',
-        icon: '📝',
+        type: 'Study session',
+        icon: 'clock',
         title: a.title,
         subtitle: `${a.skill || 'General'} • ${a.duration || 0}m • ${a.date || ''}`,
         action: () => {
@@ -309,10 +313,10 @@ export function renderPaletteResults(query) {
     const catMatch = g.category && g.category.toLowerCase().includes(q);
     if (!q || titleMatch || catMatch) {
       results.push({
-        type: 'Milestone',
-        icon: '🎯',
+        type: 'Goal',
+        icon: 'flag',
         title: g.title,
-        subtitle: `Priority: ${g.priority || 'Normal'} • Due: ${g.deadline || 'None'}`,
+        subtitle: `${g.priority || 'Medium'} priority • Due ${g.deadline || 'any time'}`,
         action: () => {
           window.location.hash = '#goals';
           closeCommandPalette();
@@ -324,7 +328,7 @@ export function renderPaletteResults(query) {
   if (results.length === 0) {
     container.innerHTML = `
       <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: var(--text-sm);">
-        No matching universe items found for "${escapeHTML(query)}".
+        Nothing found for "${escapeHTML(query)}".
       </div>
     `;
     return;
@@ -334,27 +338,29 @@ export function renderPaletteResults(query) {
     .slice(0, 10)
     .map(
       (r, i) => `
-    <div class="palette-result-item" data-index="${i}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; margin-bottom: 2px;">
-      <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
-        <span style="font-size: 1.1rem;">${r.icon}</span>
-        <div style="display: flex; flex-direction: column; overflow: hidden;">
+    <button type="button" class="palette-result-item" data-index="${i}" style="width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; margin-bottom: 2px;">
+      <span style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+        <span style="color: var(--text-muted); display: flex;">${icon(r.icon)}</span>
+        <span style="display: flex; flex-direction: column; overflow: hidden;">
           <span style="font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${escapeHTML(r.title)}</span>
-          <span style="font-size: 0.6875rem; color: var(--text-muted);">${escapeHTML(r.subtitle)}</span>
-        </div>
-      </div>
-      <span class="badge badge-primary" style="font-size: 0.625rem; flex-shrink: 0;">${r.type}</span>
-    </div>
+          <span style="font-size: var(--text-xs); color: var(--text-muted);">${escapeHTML(r.subtitle)}</span>
+        </span>
+      </span>
+      <span class="badge badge-muted" style="flex-shrink: 0;">${escapeHTML(r.type)}</span>
+    </button>
   `
     )
     .join('');
 
   container.querySelectorAll('.palette-result-item').forEach((item, idx) => {
-    item.addEventListener('mouseenter', () => {
+    const highlight = () => {
       container
         .querySelectorAll('.palette-result-item')
         .forEach(el => (el.style.background = 'transparent'));
       item.style.background = 'var(--bg-card-elevated)';
-    });
+    };
+    item.addEventListener('mouseenter', highlight);
+    item.addEventListener('focus', highlight);
     item.addEventListener('click', () => {
       results[idx].action();
     });

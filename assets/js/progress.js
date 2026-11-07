@@ -3,6 +3,7 @@
  * Time tracking, daily target progress ring, session timeline, and activity CRUD.
  */
 
+import { activityIcon } from './icons.js';
 import { storage } from './storage.js';
 import {
   escapeHTML,
@@ -164,18 +165,16 @@ export function renderProgress() {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">📝</div>
-        <h4 class="empty-state-title">No Mission Logs Recorded</h4>
+        <h4 class="empty-state-title">No study time added yet</h4>
         <p class="empty-state-desc">
           ${
             searchQuery || activeType !== 'All' || activeSkill !== 'All'
-              ? 'No activities match the current filters. Clear your filters to see more.'
-              : 'Track your coding sprints, reading, and problem solving sessions to keep your streak glowing.'
+              ? 'Nothing matches your search or filters. Try clearing them.'
+              : 'Each time you study, add it here: what you did and for how long.'
           }
         </p>
         <button class="btn btn-primary" id="empty-launch-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Log Session Now
+          Add study time
         </button>
       </div>
     `;
@@ -211,7 +210,7 @@ export function renderProgress() {
       return `
       <div class="timeline-date-group">
         <div class="timeline-date-header">
-          <span class="timeline-date-badge">🗓 ${escapeHTML(label)}</span>
+          <span class="timeline-date-badge">${escapeHTML(label)}</span>
           <span class="timeline-date-summary">${groupItems.length} session${groupItems.length === 1 ? '' : 's'} &bull; ${formatDuration(groupMins)}</span>
         </div>
         <div class="timeline-stream">
@@ -220,16 +219,16 @@ export function renderProgress() {
               act => `
             <div class="activity-timeline-item card card-elevated" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
               <div style="display: flex; gap: 14px; flex: 1;">
-                <div class="log-type-icon" style="width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0;">
-                  ${getActivityIcon(act.type)}
+                <div class="log-type-icon" style="width: 40px; height: 40px; flex-shrink: 0;">
+                  ${activityIcon(act.type)}
                 </div>
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
                     <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
                       ${escapeHTML(act.title)}
                     </h4>
-                    <span class="badge badge-primary" style="font-size: 0.625rem;">${escapeHTML(act.skill)}</span>
-                    <span class="badge badge-muted" style="font-size: 0.625rem;">${escapeHTML(act.type)}</span>
+                    <span class="badge badge-cyan">${escapeHTML(act.skill)}</span>
+                    <span class="badge badge-muted">${escapeHTML(typeLabel(act.type))}</span>
                   </div>
 
                   ${
@@ -249,14 +248,14 @@ export function renderProgress() {
               </div>
 
               <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
-                <span class="badge badge-cyan" style="font-family: var(--font-mono); font-size: var(--text-xs); padding: 4px 10px;">
-                  ⏱ ${formatDuration(act.duration)}
+                <span style="font-weight: 800; font-size: var(--text-xl); letter-spacing: -0.02em; font-variant-numeric: tabular-nums;">
+                  ${formatDuration(act.duration)}
                 </span>
                 <div style="display: flex; gap: 4px;">
-                  <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" title="Edit log">
+                  <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" aria-label="Edit this study session" title="Edit">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
                   </button>
-                  <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" title="Delete log" style="color: var(--danger);">
+                  <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" aria-label="Delete this study session" title="Delete" style="color: var(--danger);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                   </button>
                 </div>
@@ -283,36 +282,17 @@ export function renderProgress() {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
       showConfirmDialog({
-        title: 'Delete Mission Log',
+        title: 'Delete this study session?',
         message:
-          'Are you sure you want to delete this recorded session? This will affect your total hours and streaks.',
-        confirmText: 'Delete Log',
+          'Its time will be taken off your totals and your days in a row. This cannot be undone.',
+        confirmText: 'Delete',
         onConfirm: () => {
           storage.deleteActivity(id);
-          toast.info('Session Deleted', 'Mission log record was removed.');
+          toast.info('Deleted', 'The study session was removed.');
         }
       });
     });
   });
-}
-
-function getActivityIcon(type) {
-  switch (type) {
-    case 'Coding':
-      return '&lt;/&gt;';
-    case 'Reading':
-      return '📖';
-    case 'Practice Problems':
-      return '🧩';
-    case 'Project Development':
-      return '🚀';
-    case 'Research':
-      return '🔍';
-    case 'Tutorial':
-      return '📺';
-    default:
-      return '⚡';
-  }
 }
 
 function populateSkillFilterOptions(skills) {
@@ -323,7 +303,7 @@ function populateSkillFilterOptions(skills) {
   const skillNames = Array.from(new Set(skills.map(s => s.name)));
 
   filter.innerHTML =
-    `<option value="All">All Skills</option>` +
+    `<option value="All">All skills</option>` +
     skillNames
       .map(
         name =>
@@ -357,7 +337,7 @@ export function openActivityModal(activityId = null) {
     const act = (storage.getActivities() || []).find(a => a.id === activityId);
     if (!act) return;
 
-    if (titleEl) titleEl.textContent = 'Edit Mission Log';
+    if (titleEl) titleEl.textContent = 'Edit study time';
     document.getElementById('activity-form-id').value = act.id;
     document.getElementById('activity-form-title').value = act.title || '';
     if (skillSelect) skillSelect.value = act.skill || '';
@@ -366,7 +346,7 @@ export function openActivityModal(activityId = null) {
     if (dateInput) dateInput.value = act.date ? act.date.slice(0, 10) : getTodayISO();
     document.getElementById('activity-form-notes').value = act.notes || '';
   } else {
-    if (titleEl) titleEl.textContent = 'Launch Learning Session';
+    if (titleEl) titleEl.textContent = 'Add study time';
     document.getElementById('activity-form-id').value = '';
     if (dateInput) dateInput.value = getTodayISO();
     document.getElementById('activity-form-duration').value = 45;
@@ -387,11 +367,11 @@ function handleActivityFormSubmit(e) {
   const notes = document.getElementById('activity-form-notes').value.trim();
 
   if (!title) {
-    toast.error('Validation Error', 'Activity title is required.');
+    toast.error('Missing information', 'Please say what you studied.');
     return;
   }
   if (!duration || duration <= 0) {
-    toast.error('Validation Error', 'Please enter a valid session duration in minutes.');
+    toast.error('Check the time', 'Please enter how many minutes you studied.');
     return;
   }
 
@@ -407,8 +387,12 @@ function handleActivityFormSubmit(e) {
 
   storage.saveActivity(actData);
   closeModal('activity-modal');
-  toast.success(
-    id ? 'Session Updated' : 'Session Logged',
-    `Logged ${formatDuration(duration)} on ${skill}!`
-  );
+  toast.success(id ? 'Saved' : 'Study time added', `${formatDuration(duration)} on ${skill}.`);
+}
+
+/** Words people see for each stored session type (stored values stay the same). */
+function typeLabel(type) {
+  if (type === 'Practice Problems') return 'Practice problems';
+  if (type === 'Project Development') return 'Project work';
+  return type || 'Other';
 }

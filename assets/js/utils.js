@@ -327,11 +327,11 @@ export function calculateProductivityScore({
     Math.max(0, consistencyScore + hoursScore + projectScore + skillScore)
   );
 
-  let level = 'Sub-Orbital';
-  if (totalScore >= 85) level = 'Hyperdrive Velocity';
-  else if (totalScore >= 70) level = 'Orbital Velocity';
-  else if (totalScore >= 50) level = 'Atmospheric Ascender';
-  else if (totalScore >= 30) level = 'Launch Sequence';
+  let level = 'Just beginning';
+  if (totalScore >= 85) level = 'Excellent';
+  else if (totalScore >= 70) level = 'Very good';
+  else if (totalScore >= 50) level = 'Good';
+  else if (totalScore >= 30) level = 'Getting started';
 
   return {
     score: totalScore,

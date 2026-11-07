@@ -209,7 +209,7 @@ describe('calculateProductivityScore', () => {
     assert.equal(r.score, 0);
     assert.equal(r.breakdown.projects.points, 0);
     assert.equal(r.breakdown.skills.points, 0);
-    assert.equal(r.level, 'Sub-Orbital');
+    assert.equal(r.level, 'Just beginning');
   });
 
   test('skills and projects with no sessions still score only what they earn', () => {
@@ -243,7 +243,7 @@ describe('calculateProductivityScore', () => {
       settings: { weeklyTargetHours: 5 }
     });
     assert.equal(r.score, 100);
-    assert.equal(r.level, 'Hyperdrive Velocity');
+    assert.equal(r.level, 'Excellent');
   });
 
   test('a weekly target of 0 or garbage does not produce NaN', t => {

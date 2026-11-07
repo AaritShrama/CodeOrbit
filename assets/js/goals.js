@@ -132,18 +132,17 @@ export function renderGoals() {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
-        <div class="empty-state-icon">🎯</div>
-        <h4 class="empty-state-title">No Milestones Found</h4>
+        <h4 class="empty-state-title">No goals here yet</h4>
         <p class="empty-state-desc">
           ${
             searchQuery || activeStatus !== 'All' || activePriority !== 'All'
-              ? 'No milestones match the current filter parameters.'
-              : 'Set your sights on technical excellence. Create your first milestone!'
+              ? 'Nothing matches your search or filters. Try clearing them.'
+              : 'Add something you want to reach, like finishing a course, and give it a due date.'
           }
         </p>
         <button class="btn btn-primary" id="empty-create-goal-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          Set New Milestone
+          Add a goal
         </button>
       </div>
     `;
@@ -158,35 +157,40 @@ export function renderGoals() {
       const isOverdue = !isCompleted && g.deadline && g.deadline < today;
       const ringCircum = 2 * Math.PI * 20; // 125.66 for r=20
       const ringOffset = ringCircum - (Math.min(100, Number(g.progress) || 0) / 100) * ringCircum;
-      const priorityColor = getPriorityBorderColor(g.priority);
 
-      let deadlineDisplay = 'No deadline';
+      let deadlineDisplay = 'No due date';
       if (g.deadline) {
         const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
         const text =
-          daysLeft < 0 ? '⚠️ Overdue' : daysLeft === 0 ? 'Due Today' : `${daysLeft}d remaining`;
-        deadlineDisplay = `${text} &bull; ${formatDate(g.deadline)}`;
+          daysLeft < 0
+            ? `${-daysLeft} days late`
+            : daysLeft === 0
+              ? 'Due today'
+              : `${daysLeft} days left`;
+        deadlineDisplay = isCompleted
+          ? `Finished &bull; was due ${formatDate(g.deadline)}`
+          : `${text} &bull; ${formatDate(g.deadline)}`;
       }
 
       return `
-      <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid ${priorityColor};">
+      <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
         <div>
           <!-- Header Row -->
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span class="badge ${getPriorityBadge(g.priority)}" style="font-size: 0.625rem;">
-                ${escapeHTML(g.priority)}
+              <span class="badge ${getPriorityBadge(g.priority)}">
+                ${escapeHTML(g.priority)} priority
               </span>
-              <span class="badge badge-muted" style="font-size: 0.625rem; font-family: var(--font-mono);">
+              <span class="badge badge-muted">
                 ${escapeHTML(g.category)}
               </span>
             </div>
 
             <div style="display: flex; gap: 4px;">
-              <button class="btn btn-ghost btn-sm btn-icon-only edit-goal-btn" data-id="${g.id}" title="Edit Milestone">
+              <button class="btn btn-ghost btn-sm btn-icon-only edit-goal-btn" data-id="${g.id}" aria-label="Edit ${escapeHTML(g.title)}" title="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
               </button>
-              <button class="btn btn-ghost btn-sm btn-icon-only delete-goal-btn" data-id="${g.id}" title="Delete Milestone" style="color: var(--danger);">
+              <button class="btn btn-ghost btn-sm btn-icon-only delete-goal-btn" data-id="${g.id}" aria-label="Delete ${escapeHTML(g.title)}" title="Delete" style="color: var(--danger);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
               </button>
             </div>
@@ -194,7 +198,7 @@ export function renderGoals() {
 
           <!-- Goal Info with Circular Progress Ring -->
           <div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px;">
-            <div class="goal-ring-wrap" title="${g.progress}% Complete">
+            <div class="goal-ring-wrap" title="${g.progress}% done">
               <svg class="goal-ring-svg" viewBox="0 0 50 50">
                 <circle class="goal-ring-bg" cx="25" cy="25" r="20"></circle>
                 <circle class="goal-ring-fill ${isCompleted ? 'fill-done' : ''}" cx="25" cy="25" r="20"
@@ -204,11 +208,11 @@ export function renderGoals() {
             </div>
 
             <div style="flex: 1;">
-              <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 4px; letter-spacing: -0.01em;">
+              <h3 style="font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.01em;">
                 ${escapeHTML(g.title)}
               </h3>
               <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; min-height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">
-                ${escapeHTML(g.description || 'No additional notes.')}
+                ${escapeHTML(g.description || 'No notes.')}
               </p>
             </div>
           </div>
@@ -229,8 +233,8 @@ export function renderGoals() {
               <span style="font-size: 0.625rem; color: var(--text-muted);">${formatRelativeTime(g.deadline)}</span>
             </div>
 
-            <button class="btn btn-sm ${isCompleted ? 'btn-outline' : 'btn-primary'} toggle-complete-goal-btn" data-id="${g.id}">
-              ${isCompleted ? '↺ Reopen' : '✓ Mark Done'}
+            <button class="btn btn-sm btn-outline toggle-complete-goal-btn" data-id="${g.id}">
+              ${isCompleted ? 'Not done yet' : 'Mark as done'}
             </button>
           </div>
         </div>
@@ -258,12 +262,12 @@ export function renderGoals() {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
       showConfirmDialog({
-        title: 'Delete Milestone',
-        message: 'Are you sure you want to remove this learning milestone?',
-        confirmText: 'Delete Milestone',
+        title: 'Delete this goal?',
+        message: 'This goal will be deleted. This cannot be undone.',
+        confirmText: 'Delete',
         onConfirm: () => {
           storage.deleteGoal(id);
-          toast.info('Milestone Removed', 'Goal was deleted.');
+          toast.info('Deleted', 'The goal was removed.');
         }
       });
     });
@@ -283,19 +287,6 @@ function getPriorityBadge(priority) {
   }
 }
 
-function getPriorityBorderColor(priority) {
-  switch (priority) {
-    case 'Critical':
-      return 'var(--danger)';
-    case 'High':
-      return 'var(--orbital-orange)';
-    case 'Medium':
-      return 'var(--warning)';
-    default:
-      return 'var(--secondary)';
-  }
-}
-
 function toggleGoalComplete(goalId) {
   const goal = (storage.getGoals() || []).find(g => g.id === goalId);
   if (!goal) return;
@@ -303,11 +294,11 @@ function toggleGoalComplete(goalId) {
   if (goal.status === 'Completed') {
     goal.status = 'Active';
     goal.progress = 50;
-    toast.info('Milestone Reopened', `${goal.title} is active again.`);
+    toast.info('Back in progress', `${goal.title}`);
   } else {
     goal.status = 'Completed';
     goal.progress = 100;
-    toast.success('Milestone Crushed!', `Congratulations on completing "${goal.title}"!`);
+    toast.success('Goal reached', `Well done on finishing "${goal.title}".`);
   }
 
   storage.saveGoal(goal);
@@ -325,7 +316,7 @@ export function openGoalModal(goalId = null) {
     const goal = (storage.getGoals() || []).find(g => g.id === goalId);
     if (!goal) return;
 
-    if (titleEl) titleEl.textContent = 'Edit Milestone';
+    if (titleEl) titleEl.textContent = 'Edit goal';
     document.getElementById('goal-form-id').value = goal.id;
     document.getElementById('goal-form-title').value = goal.title || '';
     document.getElementById('goal-form-category').value = goal.category || 'Programming';
@@ -336,7 +327,7 @@ export function openGoalModal(goalId = null) {
     document.getElementById('goal-form-description').value = goal.description || '';
     if (progBadge) progBadge.textContent = `${goal.progress || 0}%`;
   } else {
-    if (titleEl) titleEl.textContent = 'Set Technical Milestone';
+    if (titleEl) titleEl.textContent = 'Add a goal';
     document.getElementById('goal-form-id').value = '';
     document.getElementById('goal-form-progress').value = 0;
     if (progBadge) progBadge.textContent = '0%';
@@ -358,7 +349,7 @@ function handleGoalFormSubmit(e) {
   const description = document.getElementById('goal-form-description').value.trim();
 
   if (!title) {
-    toast.error('Validation Error', 'Milestone title is required.');
+    toast.error('Missing information', 'Please write your goal.');
     return;
   }
 
@@ -378,5 +369,5 @@ function handleGoalFormSubmit(e) {
 
   storage.saveGoal(goalData);
   closeModal('goal-modal');
-  toast.success(id ? 'Milestone Updated' : 'Milestone Created', `${title} horizon locked.`);
+  toast.success(id ? 'Saved' : 'Goal added', `${title}`);
 }

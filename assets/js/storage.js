@@ -19,8 +19,8 @@ function getEmptyUniverse() {
     version: DATA_VERSION,
     profile: {
       name: 'Developer',
-      title: 'Explorer',
-      bio: 'Welcome to my CodeOrbit developer universe.',
+      title: '',
+      bio: '',
       avatar: 'astronaut',
       github: '',
       joinedDate: getTodayISO()

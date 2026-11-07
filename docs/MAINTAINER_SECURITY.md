@@ -84,5 +84,5 @@ Untrusted contributor code and third-party dependencies can introduce supply cha
 
 - [ ] **Inspect GitHub Actions Workflow Changes:** Always inspect pull requests that modify `.github/workflows/` files. Ensure no untrusted script execution or secrets exposure is introduced.
 - [ ] **Avoid `pull_request_target` with Untrusted Code:** Never check out untrusted pull request code with elevated repository secrets.
-- [ ] **Review External Scripts & Dependencies:** CodeOrbit relies solely on trusted, immutable CDNs (jsDelivr, unpkg, Google Fonts). Thoroughly inspect any pull requests proposing new external CDN scripts or npm libraries.
+- [ ] **Review External Scripts & Dependencies:** CodeOrbit loads only two pinned, SRI-checked scripts from jsDelivr (Chart.js and Lucide); fonts are served from the repo. Thoroughly inspect any pull requests proposing new external CDN scripts or npm libraries.
 - [ ] **Enforce Sanitization in PR Reviews:** Verify that any new DOM rendering logic uses `escapeHTML()` and safe URL protocol checks (`http://`, `https://`) to prevent Cross-Site Scripting (XSS).

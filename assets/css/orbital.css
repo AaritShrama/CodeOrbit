@@ -1,517 +1,116 @@
 /* ==========================================================================
-   CODEORBIT — ORBITAL SKILL VISUALIZATION SYSTEM
-   Dynamic SVG/CSS Multi-Ring Planetary Skill Engine
-   Realistic 3D Spherical Gradients, Atmospheric Lighting & Rings
+   CODEORBIT — THE ORBIT (Home page)
+   Each planet is one skill. Bigger planet = more progress. Crimson = finished.
+   Three rings turn slowly; everything stops when reduced motion is on.
    ========================================================================== */
-
-.orbital-section-card {
+.home-orbit {
+  --orbit-size: min(460px, 86vw);
   position: relative;
-  background: radial-gradient(circle at 50% 50%, #111a35 0%, #0c1226 60%, #080d1b 100%);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(14px);
+  width: var(--orbit-size);
+  height: var(--orbit-size);
 }
 
-/* Subtle circuit background lines */
-.orbital-section-card::before {
-  content: '';
+.orbit-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--text-primary);
+  opacity: 0.25;
+  animation: orbitTwinkle 5s ease-in-out infinite;
+}
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+}
+
+.orbit-ring.r1 {
+  inset: 30%;
+  border-color: var(--border);
+}
+
+.orbit-ring.r2 {
+  inset: 15%;
+}
+
+.orbit-ring.r3 {
+  inset: 0;
+}
+
+.orbit-spin {
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    40px 40px,
-    40px 40px;
-  pointer-events: none;
+  animation: orbitSpin var(--spin, 90s) linear infinite;
 }
 
-.orbital-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-md);
-  position: relative;
-  z-index: 10;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
+.orbit-ring.r2 .orbit-spin {
+  animation-direction: reverse;
 }
 
-.orbital-title-group {
-  display: flex;
-  flex-direction: column;
+.orbit-planet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  background: var(--text-primary);
+  transform: translate(-50%, -50%);
 }
 
-.orbital-title {
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
+.orbit-planet.is-done {
+  background: var(--primary);
+  box-shadow: 0 0 0 7px var(--primary-subtle);
 }
 
-.orbital-subtitle {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.orbital-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-/* Orbit Stage / Viewport */
-.orbital-stage-wrapper {
-  position: relative;
-  width: 100%;
-  height: 520px;
+.orbit-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  height: 22%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  user-select: none;
 }
 
-/* Background Cosmic Nebula in Stage */
-.orbital-stage-wrapper::before {
-  content: '';
-  position: absolute;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(124, 58, 237, 0.18) 0%,
-    rgba(56, 189, 248, 0.08) 50%,
-    transparent 70%
-  );
-  pointer-events: none;
-  filter: blur(50px);
+.orbit-core img {
+  width: 58%;
+  height: auto;
 }
 
-/* SVG Orbital Paths Container */
-.orbital-svg-layer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  max-width: none;
-  pointer-events: none;
-  z-index: 1;
+[data-theme='light'] .orbit-core img {
+  content: url('../images/letscook-mark-light.png');
 }
 
-.orbit-path-ring {
-  fill: none;
-  stroke: rgba(99, 102, 241, 0.22);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 6;
-  transition: stroke 0.3s ease;
+/* First-visit orbit: dashed, empty */
+.home-orbit.is-empty .orbit-ring.r3 {
+  border-style: dashed;
+  border-color: var(--border-strong);
 }
 
-.orbit-path-ring:hover {
-  stroke: rgba(56, 189, 248, 0.5);
+@keyframes orbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* ==========================================================================
-   CENTRAL DEVELOPER CORE (SUN / HUB)
-   ========================================================================== */
-.dev-core-node {
-  position: absolute;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-  transition: transform var(--transition-fast);
-}
-
-.dev-core-halo {
-  position: absolute;
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(124, 58, 237, 0.5) 0%,
-    rgba(56, 189, 248, 0.25) 50%,
-    transparent 75%
-  );
-  animation: corePulse 3.5s infinite ease-in-out;
-  pointer-events: none;
-}
-
-@keyframes corePulse {
+@keyframes orbitTwinkle {
   0%,
   100% {
-    transform: scale(0.92);
-    opacity: 0.65;
+    opacity: 0.2;
   }
   50% {
-    transform: scale(1.18);
-    opacity: 1;
+    opacity: 0.9;
   }
 }
 
-.dev-core-sphere {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    #67e8f9 0%,
-    #38bdf8 30%,
-    #6366f1 70%,
-    #4338ca 100%
-  );
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 0 30px rgba(56, 189, 248, 0.45),
-    inset -8px -8px 16px rgba(0, 0, 0, 0.5),
-    inset 6px 6px 12px rgba(255, 255, 255, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 2;
-  transition: transform var(--transition-fast);
-}
-
-.dev-core-node:hover .dev-core-sphere {
-  transform: scale(1.08);
-  box-shadow:
-    0 0 38px rgba(56, 189, 248, 0.6),
-    inset -6px -6px 14px rgba(0, 0, 0, 0.5);
-}
-
-.dev-core-sphere svg {
-  width: 32px;
-  height: 32px;
-  color: #ffffff;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-}
-
-.dev-core-label {
-  margin-top: 8px;
-  background: rgba(14, 21, 40, 0.9);
-  border: 1px solid var(--border);
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  z-index: 2;
-}
-
-/* ==========================================================================
-   ORBITING PLANET NODES
-   ========================================================================== */
-.orbit-track {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 5;
-}
-
-.orbit-track.animating {
-  animation: orbitRotate var(--orbit-duration, 40s) linear infinite;
-}
-
-.orbital-stage-wrapper.paused .orbit-track {
-  animation-play-state: paused;
-}
-
-@keyframes orbitRotate {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin,
+  .orbit-star {
+    animation: none;
   }
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-.planet-node-wrapper {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: auto;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Counter-rotate label so it always stays horizontal */
-.orbit-track.animating .planet-node-wrapper {
-  animation: counterRotate var(--orbit-duration, 40s) linear infinite;
-}
-
-.orbital-stage-wrapper.paused .planet-node-wrapper {
-  animation-play-state: paused;
-}
-
-@keyframes counterRotate {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  to {
-    transform: translate(-50%, -50%) rotate(-360deg);
-  }
-}
-
-/* 3D Spherical Planetary Body Styling with Specular Highlights */
-.planet-sphere {
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.7),
-    inset -6px -6px 12px rgba(0, 0, 0, 0.6),
-    inset 4px 4px 8px rgba(255, 255, 255, 0.45);
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
-  position: relative;
-}
-
-.planet-node-wrapper:hover .planet-sphere {
-  transform: scale(1.22);
-  z-index: 25;
-}
-
-/* Master Planetary Ring for 100% Completed Skills */
-.planet-master-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 160%;
-  height: 48%;
-  border: 2px solid rgba(249, 115, 22, 0.85);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) rotate(-25deg);
-  pointer-events: none;
-  box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
-}
-
-/* Planetary Colors by Category with 3D Radial Gradients */
-.planet-web {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #7dd3fc 0%,
-    #38bdf8 40%,
-    #0284c7 85%,
-    #0369a1 100%
-  );
-  box-shadow:
-    0 0 16px var(--cyan-glow),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.planet-ai {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #c084fc 0%,
-    #a855f7 40%,
-    #7c3aed 85%,
-    #581c87 100%
-  );
-  box-shadow:
-    0 0 16px var(--primary-glow),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.planet-data {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #fdba74 0%,
-    #fb923c 40%,
-    #ea580c 85%,
-    #9a3412 100%
-  );
-  box-shadow:
-    0 0 16px var(--orange-glow),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.planet-devops {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #6ee7b7 0%,
-    #34d399 40%,
-    #059669 85%,
-    #064e3b 100%
-  );
-  box-shadow:
-    0 0 16px var(--success-glow),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.planet-cs {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #a5b4fc 0%,
-    #818cf8 40%,
-    #4f46e5 85%,
-    #312e81 100%
-  );
-  box-shadow:
-    0 0 16px var(--secondary-glow),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.planet-other {
-  background: radial-gradient(
-    circle at 35% 30%,
-    #cbd5e1 0%,
-    #94a3b8 40%,
-    #475569 85%,
-    #1e293b 100%
-  );
-  box-shadow:
-    0 0 12px rgba(148, 163, 184, 0.3),
-    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
-}
-
-/* Planet Progress Ring / Aura */
-.planet-progress-ring {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1.5px dashed rgba(255, 255, 255, 0.35);
-  pointer-events: none;
-}
-
-/* Planet Label */
-.planet-label-pill {
-  margin-top: 6px;
-  background: rgba(8, 13, 27, 0.92);
-  border: 1px solid var(--border);
-  padding: 3px 9px;
-  border-radius: var(--radius-full);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.planet-pct-tag {
-  color: var(--cyan-accent);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 700;
-}
-
-/* ==========================================================================
-   INTERACTIVE PLANET DETAIL TOOLTIP CARD
-   ========================================================================== */
-.planet-tooltip-card {
-  position: absolute;
-  bottom: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 230px;
-  background: var(--glass-surface-elevated);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-sm) var(--space-md);
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.6),
-    0 0 20px rgba(99, 102, 241, 0.25);
-  backdrop-filter: blur(16px);
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-.planet-node-wrapper:hover .planet-tooltip-card {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(-4px);
-}
-
-.tooltip-skill-name {
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 2px;
-}
-
-.tooltip-meta-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.6875rem;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.tooltip-actions {
-  margin-top: 6px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* ==========================================================================
-   ACCESSIBLE CONSTELLATION GRID VIEW (ALTERNATIVE VIEW)
-   ========================================================================== */
-.constellation-grid-view {
-  display: none;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-md);
-  padding: var(--space-md) 0;
-  max-height: 520px;
-  overflow-y: auto;
-}
-
-.constellation-card {
-  background: var(--glass-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm) var(--space-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  backdrop-filter: blur(10px);
-  transition: all var(--transition-fast);
-}
-
-.constellation-card:hover {
-  border-color: var(--cyan-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-}
-
-.constellation-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }

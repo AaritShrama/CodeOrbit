@@ -120,18 +120,17 @@ export function renderSkills() {
   if (skills.length === 0) {
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
-        <div class="empty-state-icon">🪐</div>
-        <h4 class="empty-state-title">No Skills Found</h4>
+        <h4 class="empty-state-title">No skills here yet</h4>
         <p class="empty-state-desc">
           ${
             searchQuery || activeCategory !== 'All' || activeStatus !== 'All'
-              ? 'No skills match your active filters. Try clearing filters or search query.'
-              : 'Your developer universe is empty. Add your first orbiting skill to begin!'
+              ? 'Nothing matches your search or filters. Try clearing them.'
+              : 'Add something you are learning, like Python or React, to get started.'
           }
         </p>
         <button class="btn btn-primary" id="empty-add-skill-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          Add New Skill
+          Add a skill
         </button>
       </div>
     `;
@@ -140,64 +139,49 @@ export function renderSkills() {
     return;
   }
 
-  // Render cards
+  // Render cards: big number, planet that grows with progress, 10-step bar
   container.innerHTML = skills
     .map(s => {
-      const isCompleted = s.status === 'Completed';
-      const catColor = getCategoryColor(s.category);
+      const id = escapeHTML(s.id);
+      const name = escapeHTML(s.name);
+      const progress = Math.max(0, Math.min(100, Number(s.progress) || 0));
+      const done = s.status === 'Completed' || progress >= 100;
+      const planet = Math.round(20 + progress * 0.36);
+      const filled = Math.round(progress / 10);
+      const ticks = Array.from(
+        { length: 10 },
+        (_, k) => `<span class="skill-tick${k < filled ? ' is-on' : ''}"></span>`
+      ).join('');
       return `
-      <div class="card card-glow-purple skill-item-card" data-skill-id="${s.id}" style="display: flex; flex-direction: column; justify-content: space-between; position: relative; border-top: 3px solid ${catColor};">
-        <!-- Top Row -->
-        <div>
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="skill-category-dot" style="width: 8px; height: 8px; border-radius: 50%; background: ${catColor}; box-shadow: 0 0 8px ${catColor};"></span>
-              <span style="font-size: 0.6875rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-mono);">${escapeHTML(s.category)}</span>
-            </div>
-            <div class="dropdown-wrap" style="position: relative;">
-              <button class="btn btn-ghost btn-sm btn-icon-only skill-action-btn" data-id="${s.id}" title="Skill actions" style="padding: 2px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; letter-spacing: -0.01em;">
-            ${escapeHTML(s.name)}
-          </h3>
-
-          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 14px; min-height: 36px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-            ${escapeHTML(s.description || 'No description added.')}
-          </p>
-        </div>
-
-        <!-- Progress and Badges -->
-        <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <span class="badge ${getProficiencyBadgeClass(s.proficiency)}" style="font-size: 0.625rem;">${escapeHTML(s.proficiency)}</span>
-            <span class="badge ${getStatusBadgeClass(s.status)}" style="font-size: 0.625rem;">${escapeHTML(s.status)}</span>
-          </div>
-
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 6px;">
-            <span style="color: var(--text-muted);">Proficiency Orbit</span>
-            <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${s.progress}%</span>
-          </div>
-
-          <div class="progress-bar-container" style="height: 7px; margin-bottom: 12px;">
-            <div class="progress-bar-fill ${isCompleted ? 'fill-success' : ''}" style="width: ${s.progress}%;"></div>
-          </div>
-
-          <!-- Bottom Actions / Quick Stepper -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs);">
-            <span style="color: var(--text-muted); font-size: 0.6875rem; font-family: var(--font-mono);">
-              Target: ${formatDate(s.targetDate)}
-            </span>
-            <div style="display: flex; gap: 4px;">
-              <button class="btn btn-outline btn-sm quick-step-btn" data-id="${s.id}" data-delta="-10" title="Decrease progress" ${s.progress <= 0 ? 'disabled' : ''}>-10%</button>
-              <button class="btn btn-outline btn-sm quick-step-btn" data-id="${s.id}" data-delta="10" title="Increase progress" ${s.progress >= 100 ? 'disabled' : ''}>+10%</button>
-            </div>
+      <article class="card skill-item-card${done ? ' is-done' : ''}" data-skill-id="${id}">
+        <div class="skill-card-top">
+          <span class="label-mono">${escapeHTML(s.category)}</span>
+          <div class="skill-card-top-right">
+            <span class="badge ${getStatusBadgeClass(s.status)}">${escapeHTML(statusLabel(s.status))}</span>
+            <button class="btn btn-ghost btn-sm btn-icon-only skill-action-btn" data-id="${id}" aria-label="More actions for ${name}" title="Edit or delete">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            </button>
           </div>
         </div>
-      </div>
+
+        <div class="skill-card-id">
+          <span class="skill-planet" aria-hidden="true" style="width: ${planet}px; height: ${planet}px;"></span>
+          <div class="skill-card-name">
+            <h3>${name}</h3>
+            <span>Level: ${escapeHTML(s.proficiency || 'Beginner')}${s.targetDate ? ` · Finish by ${formatDate(s.targetDate)}` : ''}</span>
+          </div>
+        </div>
+
+        <div class="skill-card-figure">
+          <span class="skill-pct">${progress}<small>%</small></span>
+          <div class="skill-steps">
+            <button class="btn btn-outline btn-sm quick-step-btn" data-id="${id}" data-delta="-10" aria-label="Decrease ${name} by 10%" ${progress <= 0 ? 'disabled' : ''}>−10%</button>
+            <button class="btn btn-outline btn-sm quick-step-btn" data-id="${id}" data-delta="10" aria-label="Increase ${name} by 10%" ${progress >= 100 ? 'disabled' : ''}>+10%</button>
+          </div>
+        </div>
+
+        <div class="skill-ticks" role="progressbar" aria-label="${name} progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}">${ticks}</div>
+      </article>
     `;
     })
     .join('');
@@ -221,41 +205,10 @@ export function renderSkills() {
   });
 }
 
-function getCategoryColor(category) {
-  switch (category) {
-    case 'Web Development':
-      return '#38BDF8';
-    case 'Artificial Intelligence':
-    case 'Machine Learning':
-      return '#7C3AED';
-    case 'Database':
-      return '#F97316';
-    case 'DevOps':
-      return '#22C55E';
-    case 'Computer Science':
-      return '#6366F1';
-    default:
-      return '#A855F7';
-  }
-}
-
-function getProficiencyBadgeClass(proficiency) {
-  switch (proficiency) {
-    case 'Expert':
-      return 'badge-cyan';
-    case 'Advanced':
-      return 'badge-primary';
-    case 'Intermediate':
-      return 'badge-secondary';
-    default:
-      return 'badge-muted';
-  }
-}
-
 function getStatusBadgeClass(status) {
   switch (status) {
     case 'Completed':
-      return 'badge-success';
+      return 'badge-primary';
     case 'Practicing':
       return 'badge-orange';
     case 'Learning':
@@ -282,7 +235,7 @@ function stepSkillProgress(skillId, delta) {
   }
 
   storage.saveSkill(skill);
-  toast.success('Skill Updated', `${skill.name} progress is now ${newProgress}%.`);
+  toast.success('Updated', `${skill.name} is now at ${newProgress}%.`);
 }
 
 function showSkillContextMenu(skillId, anchorEl) {
@@ -332,12 +285,12 @@ function showSkillContextMenu(skillId, anchorEl) {
     }
     const s = storage.getSkillById(skillId);
     showConfirmDialog({
-      title: 'Delete Orbiting Skill',
-      message: `Are you sure you want to remove "${s.name}" from your Skill Universe? This cannot be undone.`,
-      confirmText: 'Delete Skill',
+      title: 'Delete this skill?',
+      message: `"${s.name}" will be deleted. This cannot be undone.`,
+      confirmText: 'Delete',
       onConfirm: () => {
         storage.deleteSkill(skillId);
-        toast.info('Skill Deleted', `Removed ${s.name}.`);
+        toast.info('Deleted', `${s.name} was removed.`);
       }
     });
   });
@@ -364,7 +317,7 @@ export function openSkillModal(skillId = null) {
     const skill = storage.getSkillById(skillId);
     if (!skill) return;
 
-    if (titleEl) titleEl.textContent = 'Edit Orbiting Skill';
+    if (titleEl) titleEl.textContent = 'Edit skill';
     document.getElementById('skill-form-id').value = skill.id;
     document.getElementById('skill-form-name').value = skill.name || '';
     document.getElementById('skill-form-category').value = skill.category || 'Programming';
@@ -375,7 +328,7 @@ export function openSkillModal(skillId = null) {
     document.getElementById('skill-form-description').value = skill.description || '';
     if (progBadge) progBadge.textContent = `${skill.progress || 0}%`;
   } else {
-    if (titleEl) titleEl.textContent = 'Add Orbiting Skill';
+    if (titleEl) titleEl.textContent = 'Add a skill';
     document.getElementById('skill-form-id').value = '';
     document.getElementById('skill-form-progress').value = 10;
     if (progBadge) progBadge.textContent = '10%';
@@ -397,7 +350,7 @@ function handleSkillFormSubmit(e) {
   const description = document.getElementById('skill-form-description').value.trim();
 
   if (!name) {
-    toast.error('Validation Error', 'Skill name is required.');
+    toast.error('Missing information', 'Please give your skill a name.');
     return;
   }
 
@@ -417,5 +370,19 @@ function handleSkillFormSubmit(e) {
 
   storage.saveSkill(skillData);
   closeModal('skill-modal');
-  toast.success(id ? 'Skill Updated' : 'Skill Added', `${name} is in your universe.`);
+  toast.success(id ? 'Saved' : 'Skill added', `${name}`);
+}
+
+/** Words people see for each stored status (stored values stay the same). */
+function statusLabel(status) {
+  switch (status) {
+    case 'Completed':
+      return 'Finished';
+    case 'Practicing':
+      return 'Practising';
+    case 'Not Started':
+      return 'Not started';
+    default:
+      return status || 'Learning';
+  }
 }

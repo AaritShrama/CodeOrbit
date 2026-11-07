@@ -1,45 +1,47 @@
 /**
  * CODEORBIT — ACHIEVEMENTS ENGINE MODULE
- * Real-time condition evaluation, unlocking, celebration chimes, and badge rendering.
+ * Badge rules, unlocking, and the Badges page.
+ * Ids and categories are stored in saved data, so they never change; only the words people see do.
  */
 
 import { storage } from './storage.js';
 import { escapeHTML, formatDate, calculateStreak } from './utils.js';
 import { toast } from './components.js';
+import { icon } from './icons.js';
 
 export const ACHIEVEMENT_DEFINITIONS = [
   {
     id: 'first_skill',
-    title: 'First Orbit',
-    description: 'Add your first skill to the developer universe.',
-    icon: '🪐',
+    title: 'First skill',
+    description: 'Add your first skill.',
+    icon: 'planet',
     category: 'Skills',
     check: data => (data.skills || []).length >= 1,
     progress: data => ({ current: Math.min(1, (data.skills || []).length), target: 1 })
   },
   {
     id: 'first_mission',
-    title: 'Ignition Sequence',
-    description: 'Create your first Space Mission project.',
-    icon: '🚀',
+    title: 'First project',
+    description: 'Add your first project.',
+    icon: 'folder',
     category: 'Missions',
     check: data => (data.projects || []).length >= 1,
     progress: data => ({ current: Math.min(1, (data.projects || []).length), target: 1 })
   },
   {
     id: 'learning_explorer',
-    title: 'Learning Explorer',
-    description: 'Complete 5 learning sessions in your Mission Log.',
-    icon: '🧭',
+    title: 'Getting going',
+    description: 'Add 5 study sessions.',
+    icon: 'compass',
     category: 'Progress',
     check: data => (data.activities || []).length >= 5,
     progress: data => ({ current: Math.min(5, (data.activities || []).length), target: 5 })
   },
   {
     id: 'orbit_streak',
-    title: 'Orbit Streak',
-    description: 'Maintain a 3-day consecutive learning streak.',
-    icon: '🔥',
+    title: '3 days in a row',
+    description: 'Study 3 days in a row.',
+    icon: 'flame',
     category: 'Habits',
     check: data => calculateStreak(data.activities).longestStreak >= 3,
     progress: data => ({
@@ -49,9 +51,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'deep_space_voyager',
-    title: 'Deep Space Voyager',
-    description: 'Maintain a 7-day unbroken learning streak.',
-    icon: '🌌',
+    title: '7 days in a row',
+    description: 'Study 7 days in a row.',
+    icon: 'calendar',
     category: 'Habits',
     check: data => calculateStreak(data.activities).longestStreak >= 7,
     progress: data => ({
@@ -61,9 +63,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'skill_master',
-    title: 'Skill Master',
-    description: 'Bring a skill to 100% completion in your universe.',
-    icon: '⭐',
+    title: 'First skill finished',
+    description: 'Take one skill all the way to 100%.',
+    icon: 'star',
     category: 'Skills',
     check: data => (data.skills || []).some(s => s.progress >= 100 || s.status === 'Completed'),
     progress: data => {
@@ -75,9 +77,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'goal_crusher',
-    title: 'Goal Crusher',
-    description: 'Complete 5 learning milestones.',
-    icon: '🏆',
+    title: '5 goals reached',
+    description: 'Finish 5 goals.',
+    icon: 'trophy',
     category: 'Milestones',
     check: data => (data.goals || []).filter(g => g.status === 'Completed').length >= 5,
     progress: data => {
@@ -87,9 +89,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'century_club',
-    title: 'Century Club',
-    description: 'Log 100 total hours of deep developer learning.',
-    icon: '⏱',
+    title: '100 hours',
+    description: 'Study for 100 hours in total.',
+    icon: 'clock',
     category: 'Progress',
     check: data => {
       const totalMinutes = (data.activities || []).reduce(
@@ -108,9 +110,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'fleet_commander',
-    title: 'Fleet Commander',
-    description: 'Complete 3 Space Mission developer projects.',
-    icon: '🛰',
+    title: '3 projects finished',
+    description: 'Finish 3 projects.',
+    icon: 'check',
     category: 'Missions',
     check: data => (data.projects || []).filter(p => p.status === 'Completed').length >= 3,
     progress: data => {
@@ -120,9 +122,9 @@ export const ACHIEVEMENT_DEFINITIONS = [
   },
   {
     id: 'constellation_creator',
-    title: 'Constellation Creator',
-    description: 'Have at least 6 active or completed skills orbiting simultaneously.',
-    icon: '✨',
+    title: '6 skills',
+    description: 'Have 6 skills in CodeOrbit at the same time.',
+    icon: 'layers',
     category: 'Skills',
     check: data => (data.skills || []).length >= 6,
     progress: data => ({ current: Math.min(6, (data.skills || []).length), target: 6 })
@@ -178,7 +180,7 @@ export function evaluateAchievements() {
     const saved = storage.unlockAchievements(newlySatisfied.map(def => def.id));
     if (saved) {
       newlySatisfied.forEach(def => {
-        toast.achievement('Achievement Unlocked!', `${def.icon} ${def.title}: ${def.description}`);
+        toast.achievement('You earned a badge', `${def.title}: ${def.description}`);
       });
     }
     return saved;
@@ -216,9 +218,8 @@ export function renderAchievements() {
   if (filteredList.length === 0) {
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
-        <div class="empty-state-icon">🏆</div>
-        <h4 class="empty-state-title">No Badges in Category</h4>
-        <p class="empty-state-desc">Select another category or view all badges.</p>
+        <h4 class="empty-state-title">No badges in this group</h4>
+        <p class="empty-state-desc">Pick another group, or choose All.</p>
       </div>
     `;
     return;
@@ -232,56 +233,28 @@ export function renderAchievements() {
       const progPct = Math.min(100, Math.round((prog.current / prog.target) * 100));
 
       return `
-      <div class="card ${isUnlocked ? 'card-glow-orange' : ''} achievement-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: ${isUnlocked ? 'rgba(249, 115, 22, 0.5)' : 'var(--glass-border)'}; background: ${isUnlocked ? 'linear-gradient(135deg, rgba(25, 36, 61, 0.9) 0%, rgba(42, 26, 61, 0.6) 100%)' : 'var(--glass-surface)'}; box-shadow: ${isUnlocked ? '0 4px 20px rgba(0,0,0,0.4), 0 0 16px rgba(249, 115, 22, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)'};">
-        <div>
-          <!-- Header -->
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px;">
-            <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: ${isUnlocked ? 'var(--orange-subtle)' : 'var(--bg-input)'}; border: 1px solid ${isUnlocked ? 'rgba(249, 115, 22, 0.45)' : 'var(--border)'}; display: flex; align-items: center; justify-content: center; font-size: 1.45rem; box-shadow: ${isUnlocked ? '0 0 16px var(--orange-glow)' : 'none'};">
-              ${def.icon}
-            </div>
-
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-              <span class="badge ${isUnlocked ? 'badge-orange' : 'badge-muted'}" style="font-size: 0.625rem;">
-                ${isUnlocked ? '⭐ Unlocked' : '🔒 In Progress'}
-              </span>
-              <span style="font-size: 0.625rem; font-family: var(--font-mono); color: var(--text-muted);">${escapeHTML(def.category)}</span>
-            </div>
-          </div>
-
-          <h3 style="font-size: 1.05rem; font-weight: 700; color: ${isUnlocked ? '#FDBA74' : '#FFFFFF'}; margin-bottom: 4px; letter-spacing: -0.01em;">
-            ${escapeHTML(def.title)}
-          </h3>
-
-          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 14px; min-height: 34px;">
-            ${escapeHTML(def.description)}
-          </p>
+      <article class="card achievement-card${isUnlocked ? ' is-earned' : ''}">
+        <div class="achievement-top">
+          <span class="achievement-icon">${icon(isUnlocked ? def.icon : 'lock', 20)}</span>
+          <span class="badge ${isUnlocked ? 'badge-primary' : 'badge-muted'}">${isUnlocked ? 'Earned' : 'Not yet'}</span>
         </div>
-
-        <div>
-          <!-- Progress or Unlock Date -->
-          ${
-            isUnlocked
-              ? `
-            <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 10px; font-size: 0.6875rem; color: var(--cyan-accent); font-family: var(--font-mono); display: flex; align-items: center; justify-content: space-between;">
-              <span>Unlocked</span>
-              <span>${formatDate(unlockedRecord.unlockedAt)}</span>
-            </div>
-          `
-              : `
-            <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-bottom: 6px;">
-                <span>Requirement</span>
-                <span style="font-family: var(--font-mono); color: var(--text-secondary);">${prog.current} / ${prog.target}${prog.unit || ''}</span>
-              </div>
-              <div class="progress-bar-container" style="height: 5px;">
-                <div class="progress-bar-fill fill-primary" style="width: ${progPct}%;"></div>
-              </div>
-            </div>
-          `
-          }
-        </div>
-      </div>
+        <h3 class="achievement-title">${escapeHTML(def.title)}</h3>
+        <p class="achievement-desc">${escapeHTML(def.description)}</p>
+        ${
+          isUnlocked
+            ? `<div class="achievement-foot"><span class="label-mono">Earned on</span><span>${formatDate(unlockedRecord.unlockedAt)}</span></div>`
+            : `<div class="achievement-foot"><span class="label-mono">${escapeHTML(categoryLabel(def.category))}</span><span>${prog.current} / ${prog.target}${prog.unit || ''}</span></div>
+               <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${progPct}%;"></div></div>`
+        }
+      </article>
     `;
     })
     .join('');
+}
+
+/** Words people see for each badge group (the stored group names stay the same). */
+function categoryLabel(category) {
+  if (category === 'Missions') return 'Projects';
+  if (category === 'Milestones') return 'Goals';
+  return category;
 }

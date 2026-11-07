@@ -62,16 +62,16 @@ When you cannot **see** your progress, it feels like you are not making any. Tha
 
 **CodeOrbit is one page where you write down what you learn, and it turns that into numbers and pictures you understand at a glance.**
 
-It uses a small space theme. Your skills are planets orbiting around you, and they grow as you get better. Here is what the space words mean:
+It uses a small space theme: on Home, each skill you add is a planet in your orbit, and it grows as you get better. The words stay simple:
 
-| In CodeOrbit | It simply means | Example |
+| Page | What it is | Example |
 | :--- | :--- | :--- |
-| 🛸 **Command Center** | Your home screen | Everything at a glance |
-| 🪐 **Skill Universe** | Your list of skills | "Python, 60%" |
-| 📝 **Mission Logs** | Your study sessions | "Studied React hooks, 90 minutes" |
-| 🛰️ **Space Missions** | Your projects | "Portfolio website, 70% done" |
-| 🎯 **Milestones** | Your goals, with a deadline | "Finish the Docker course by 30 Nov" |
-| ⭐ **Achievements** | Badges you earn | "Studied 3 days in a row 🔥" |
+| **Home** | This week at a glance and what is coming up | "6.5 of 12 hours studied" |
+| **Skills** | What you are learning | "Python, 60%" |
+| **Study sessions** | Each time you studied | "Studied React hooks, 1h 30m" |
+| **Projects** | Things you are building | "Portfolio website, 70% done" |
+| **Goals** | What you want to reach, with a due date | "Finish the Docker course by 30 Nov" |
+| **Progress** | Charts, your progress score and badges | "You studied 7 days in a row" |
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -191,7 +191,8 @@ CodeOrbit/
 │       ├── storage.js    ← the memory. The ONLY file that reads and writes your data.
 │       ├── utils.js      ← small helpers: dates, streaks, the score, safe text
 │       ├── navigation.js ← switches between screens (#skills, #goals, …)
-│       ├── components.js ← pop-ups, notifications, the Ctrl+K search
+│       ├── components.js ← pop-ups, messages, the Ctrl+K search
+│       ├── icons.js      ← small line icons
 │       ├── dashboard.js, skills.js, progress.js, projects.js,
 │       │   goals.js, achievements.js, analytics.js, settings.js
 │       │                 ← one file per screen

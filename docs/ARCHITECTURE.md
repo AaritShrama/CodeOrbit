@@ -28,28 +28,31 @@ codeorbit/
 ├── .gitignore                  # Clean repository ignores
 ├── assets/
 │   ├── css/
-│   │   ├── style.css           # Design tokens, variables, base layout & reset
+│   │   ├── style.css           # Fonts, colour tokens (dark + light), top bar, page layout
 │   │   ├── components.css      # Buttons, cards, inputs, modals, toasts, dropdowns
-│   │   ├── dashboard.css       # Cinematic hero, KPI cards, velocity score ring
-│   │   ├── orbital.css         # Dynamic SVG/CSS multi-ring planetary visualization
-│   │   └── responsive.css      # Desktop (1440px), Laptop (1024px), Tablet (768px), Mobile (375px)
+│   │   ├── dashboard.css       # Home page, shared number strip, progress score
+│   │   ├── orbital.css         # The orbit on Home (one planet per skill)
+│   │   └── responsive.css      # Phone layout (navigation row, stacked filters)
 │   ├── js/
 │   │   ├── app.js              # Bootstrap orchestrator, event bus & canvas starfield
 │   │   ├── storage.js          # Centralized LocalStorage manager (no migrations yet, see issue #17)
 │   │   ├── utils.js            # Sanitization (XSS safe), streaks, score math, web audio
 │   │   ├── navigation.js       # Hash-based routing (#dashboard, #skills, etc.)
 │   │   ├── components.js       # Modal controller, Toast engine, Command Palette (Ctrl+K)
-│   │   ├── dashboard.js        # Command Center logic & planetary orbit engine
-│   │   ├── skills.js           # Skill Universe CRUD, filters, search & sorting
-│   │   ├── progress.js         # Mission Logs time tracking & daily goal ring
-│   │   ├── projects.js         # Space Missions project manager & tech stack tags
-│   │   ├── goals.js            # Milestones target horizons & overdue calculations
-│   │   ├── achievements.js     # Real-time condition evaluation & celebratory chimes
-│   │   ├── analytics.js        # Deep velocity metrics & automated habit insights
+│   │   ├── icons.js            # Small inline line icons (replaces emoji)
+│   │   ├── dashboard.js        # Home: week hours, orbit, last 7 days, coming up, first visit
+│   │   ├── skills.js           # Skills page: add/edit/delete, filters, search, sorting
+│   │   ├── progress.js         # Study sessions page and daily goal ring
+│   │   ├── projects.js         # Projects page and tool tags
+│   │   ├── goals.js            # Goals page, due dates and late goals
+│   │   ├── achievements.js     # Badge rules and the Badges page
+│   │   ├── analytics.js        # Progress page: score, badges count, charts, observations
 │   │   ├── settings.js         # Profile editor, avatars, theme toggle, JSON backup/restore
-│   │   └── charts.js           # Chart.js cosmic gradient configurations & lifecycle
+│   │   └── charts.js           # Chart.js setup (black, white, grey, crimson) & lifecycle
+│   ├── fonts/                  # Inter + JetBrains Mono (SIL OFL), served locally (D-021)
 │   └── images/
-│       ├── logo.svg            # Central planet with orbital ring branding
+│       ├── letscook-mark-dark.png / -light.png  # Let's Cook mark used in the app (dark / light theme)
+│       ├── logo.svg            # Older CodeOrbit planet logo (no longer shown in the app)
 │       └── favicon.svg         # High-resolution cosmic browser tab favicon
 ├── docs/
 │   ├── ARCHITECTURE.md         # This architectural specification
@@ -155,13 +158,13 @@ All persistent data is stored under the atomic key: `codeorbit_universe_v1`.
 ### A. Orbit Streak Algorithm
 A streak requires activities on consecutive days leading up to today (or yesterday if no session has been recorded yet today). The longest streak is preserved historically by traversing sorted dates chronologically.
 
-### B. Developer Velocity Index (0–100)
-The velocity score uses four explainable components:
-$$\text{Score} = \text{Consistency} (30) + \text{Hours Target} (30) + \text{Missions Progress} (20) + \text{Skill Growth} (20)$$
+### B. Progress score (0–100)
+The progress score (shown on the Progress page) uses four explainable components:
+$$\text{Score} = \text{Consistency} (30) + \text{Hours Target} (30) + \text{Projects} (20) + \text{Skill Growth} (20)$$
 
 - **Consistency:** $(\text{Active Days in Last 7 Days} / 7) \times 30$
 - **Hours Target:** $\min(30, (\text{Hours Logged this Week} / \text{Weekly Target}) \times 30)$
-- **Missions Progress:** $(\text{Average Progress of Space Missions} / 100) \times 20$
+- **Projects:** $(\text{Average Progress of Projects} / 100) \times 20$
 - **Skill Growth:** $(\text{Average Progress of Skills} / 100) \times 20$
 
 If the user has no projects (or no skills), that part counts as a neutral 10/20, **but only after at least one session has been logged**. An empty universe scores 0 (see `DECISIONS.md` D-015).

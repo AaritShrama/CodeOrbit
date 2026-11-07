@@ -13,11 +13,17 @@ class ChartManager {
   getThemeColors() {
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
     return {
-      textColor: isDark ? '#94A3B8' : '#475569',
-      gridColor: isDark ? 'rgba(37, 49, 74, 0.4)' : 'rgba(203, 213, 225, 0.6)',
-      tooltipBg: isDark ? '#19243D' : '#FFFFFF',
-      tooltipText: isDark ? '#F8FAFC' : '#0F172A',
-      tooltipBorder: isDark ? '#25314A' : '#CBD5E1'
+      textColor: isDark ? '#8F8F95' : '#63636A',
+      gridColor: isDark ? 'rgba(44, 44, 49, 0.7)' : 'rgba(226, 226, 224, 0.9)',
+      tooltipBg: isDark ? '#121214' : '#FFFFFF',
+      tooltipText: isDark ? '#F5F5F4' : '#0A0A0B',
+      tooltipBorder: isDark ? '#3A3A40' : '#C4C4C0',
+      // Black, white and greys with one crimson (Let's Cook); see D-020
+      bar: isDark ? '#B9B9BE' : '#45454B',
+      accent: '#B8002F',
+      palette: isDark
+        ? ['#B8002F', '#F5F5F4', '#8F8F95', '#FF4D6A', '#4A4A52', '#B9B9BE', '#2C2C31', '#6B6B72']
+        : ['#B8002F', '#0A0A0B', '#8F8F95', '#FF4D6A', '#C4C4C0', '#45454B', '#E2E2E0', '#6B6B72']
     };
   }
 
@@ -65,21 +71,15 @@ class ChartManager {
       dayHours[i] = Math.round((dayMins / 60) * 10) / 10;
     }
 
-    // Bar Gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
-    gradient.addColorStop(0, '#38BDF8');
-    gradient.addColorStop(0.5, '#6366F1');
-    gradient.addColorStop(1, '#7C3AED');
-
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: dayLabels,
         datasets: [
           {
-            label: 'Learning Hours',
+            label: 'Hours',
             data: dayHours,
-            backgroundColor: gradient,
+            backgroundColor: theme.bar,
             borderRadius: 6,
             borderSkipped: false,
             barPercentage: 0.55
@@ -100,7 +100,7 @@ class ChartManager {
             padding: 10,
             displayColors: false,
             callbacks: {
-              label: item => `${item.raw} hrs logged`
+              label: item => `${item.raw} hours`
             }
           }
         },
@@ -152,9 +152,8 @@ class ChartManager {
     }
 
     const fillGrad = ctx.createLinearGradient(0, 0, 0, 280);
-    fillGrad.addColorStop(0, 'rgba(124, 58, 237, 0.45)');
-    fillGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.08)');
-    fillGrad.addColorStop(1, 'rgba(8, 13, 27, 0)');
+    fillGrad.addColorStop(0, 'rgba(184, 0, 47, 0.22)');
+    fillGrad.addColorStop(1, 'rgba(184, 0, 47, 0)');
 
     const chart = new Chart(ctx, {
       type: 'line',
@@ -162,12 +161,12 @@ class ChartManager {
         labels,
         datasets: [
           {
-            label: 'Daily Hours',
+            label: 'Hours',
             data: hours,
-            borderColor: '#38BDF8',
+            borderColor: theme.accent,
             borderWidth: 2.5,
-            pointBackgroundColor: '#7C3AED',
-            pointBorderColor: '#FFFFFF',
+            pointBackgroundColor: theme.accent,
+            pointBorderColor: theme.tooltipBg,
             pointHoverRadius: 6,
             fill: true,
             backgroundColor: fillGrad,
@@ -236,27 +235,18 @@ class ChartManager {
     const labels = Object.keys(categoryMap);
     const counts = Object.values(categoryMap);
 
-    const palette = [
-      '#7C3AED', // Violet
-      '#38BDF8', // Cyan
-      '#F97316', // Orange
-      '#22C55E', // Green
-      '#6366F1', // Indigo
-      '#F59E0B', // Amber
-      '#EC4899', // Pink
-      '#64748B' // Slate
-    ];
+    const palette = theme.palette;
 
     const chart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: labels.length ? labels : ['No Skills Yet'],
+        labels: labels.length ? labels : ['No skills yet'],
         datasets: [
           {
             data: counts.length ? counts : [1],
             backgroundColor: counts.length
               ? labels.map((_, i) => palette[i % palette.length])
-              : ['#25314A'],
+              : [theme.gridColor],
             borderWidth: 2,
             borderColor: theme.tooltipBg
           }
@@ -313,10 +303,11 @@ class ChartManager {
       }
     });
 
-    const labels = Object.keys(statusCounts);
+    const shownAs = { 'In Progress': 'In progress', 'On Hold': 'Paused', Completed: 'Finished' };
+    const labels = Object.keys(statusCounts).map(k => shownAs[k] || k);
     const counts = Object.values(statusCounts);
 
-    const colors = ['#6366F1', '#38BDF8', '#F59E0B', '#22C55E'];
+    const colors = [theme.palette[2], theme.palette[1], theme.palette[4], theme.accent];
 
     const chart = new Chart(ctx, {
       type: 'doughnut',
@@ -382,12 +373,20 @@ class ChartManager {
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels.length ? labels : ['No Activities'],
+        labels: labels.length
+          ? labels.map(
+              l =>
+                ({
+                  'Practice Problems': 'Practice problems',
+                  'Project Development': 'Project work'
+                })[l] || l
+            )
+          : ['No study time yet'],
         datasets: [
           {
-            label: 'Total Hours',
+            label: 'Hours',
             data: dataVals.length ? dataVals : [0],
-            backgroundColor: '#6366F1',
+            backgroundColor: theme.bar,
             borderRadius: 4,
             barPercentage: 0.6
           }

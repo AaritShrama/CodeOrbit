@@ -17,7 +17,7 @@ index.html
         │   creating 5 singletons: sounds, storage, navigation, toast, chartManager
         │
         └─ initApp()
-              ├─ theme, starfield, shortcuts, topbar
+              ├─ theme, starfield, shortcuts
               ├─ register 8 views with the router
               ├─ init every page (wires listeners only, no rendering)
               ├─ evaluateAchievements() once
@@ -29,7 +29,7 @@ After that, everything is driven by user events, and every data change follows O
 
   user action → page handler → storage.saveX() → storage.saveUniverse()
              → localStorage write → dispatch 'codeorbit:data-changed'
-             → listeners update sidebar badges, re-check achievements, re-render the visible page
+             → the listener re-checks achievements, then re-renders the visible page
 ```
 
 ---
@@ -79,16 +79,15 @@ Runs once, in this exact order. **Every step runs through `runStep(name, fn, fai
 
 | Step | Call | What it does |
 |---|---|---|
-| 1 | `storage.getSettings()` → `applyTheme(theme, false)` *(settings.js)* | Sets `data-theme` on `<html>`, swaps the topbar theme icon. `false` = don't save. |
+| 1 | `storage.getSettings()` → `applyTheme(theme, false)` *(settings.js)* | Sets `data-theme` on `<html>`, swaps the top-bar theme icon. `false` = don't save. |
 | 2 | `initCosmicStarfield()` *(app.js)* | Draws the background star canvas; starts a `requestAnimationFrame` loop unless the OS asks for reduced motion. |
 | 3 | `setupModalDismissHandlers()` *(components.js)*, `setupGlobalShortcuts()` *(app.js)* | **Esc** closes the open modal + command palette; backdrop / `[data-modal-close]` clicks close modals. **Ctrl/Cmd+K** or **/** → `openCommandPalette()`; typing → `renderPaletteResults(query)`. |
-| 4 | `setupTopbarInteractions()` *(app.js)* | Quick-action menu (log session / add skill / new project / new goal → each page's `openXModal()`), notifications dropdown, close-on-outside-click; calls `updateNotificationsPanel()` once. |
-| 5 | `navigation.registerView(route, fn)` ×8 | Maps `'dashboard' → renderDashboard`, `'skills' → renderSkills`, … `'settings' → renderSettings`. |
-| 6 | `initDashboard()` … `initSettings()` (8 calls, each its own step) | Each attaches its page's button/form/filter listeners. **None of them render** (see §5). `initSettings` also fills the sidebar profile card, because it is visible on every page. |
-| 7 | `evaluateAchievements()` *(achievements.js)* | Unlocks anything already earned (e.g. data imported in another session) **before** the first paint. No listener is registered yet, so its save causes no render. |
-| 8 | `navigation.init()` | Attaches sidebar + mobile-menu listeners, listens for `hashchange`, then `handleHashChange()` → `navigateTo(route)` → `renderCurrentView()`: **the only render during startup.** Also calls `updateBadges()` and subscribes it to `data-changed`. |
-| 9 | `window.addEventListener('codeorbit:data-changed', …)` | The main re-render listener (see §6). |
-| 10 | `refreshIcons()` | `lucide.createIcons()` replaces `<i data-lucide="…">` placeholders with SVG icons. |
+| 4 | `navigation.registerView(route, fn)` ×8 | Maps `'dashboard' → renderDashboard`, `'skills' → renderSkills`, … `'settings' → renderSettings`. |
+| 5 | `initDashboard()` … `initSettings()` (8 calls, each its own step) | Each attaches its page's button/form/filter listeners. **None of them render** (see §5). `initSettings` also fills the profile picture in the top bar, because it is visible on every page. |
+| 6 | `evaluateAchievements()` *(achievements.js)* | Unlocks anything already earned (e.g. data imported in another session) **before** the first paint. No listener is registered yet, so its save causes no render. |
+| 7 | `navigation.init()` | Attaches the top-bar link listeners, listens for `hashchange`, then `handleHashChange()` → `navigateTo(route)` → `renderCurrentView()`: **the only render during startup.** |
+| 8 | `window.addEventListener('codeorbit:data-changed', …)` | The main re-render listener (see §6). |
+| 9 | `refreshIcons()` | `lucide.createIcons()` replaces `<i data-lucide="…">` placeholders with SVG icons. |
 
 ---
 
@@ -98,14 +97,14 @@ Every page module follows the same shape: **`initX()` attaches listeners only; `
 
 | Module | `init` attaches | `render` reads | `render` calls |
 |---|---|---|---|
-| `dashboard.js` | Orbit pause/resume, orbital ↔ constellation toggle, weekly/monthly chart tabs, score-breakdown button | whole universe | `calculateStreak`, `calculateProductivityScore` *(utils)*, `populateScoreModal`, `renderOrbitalVisualization` (or `renderConstellationGrid`), `chartManager.renderWeeklyChart`/`renderMonthlyTrendChart`, `chartManager.renderSkillCategoryChart`, `renderRecentLogs`, `renderActiveProjects`, `renderUpcomingGoals` |
+| `dashboard.js` (Home) | *Add study time* → `openActivityModal`; first-visit *Add your first skill* → `openSkillModal`, *Try it with sample data first* → `storage.loadDemoUniverse()` | whole universe | first visit (no skills, no sessions)? show `#home-empty` and stop; else `renderGreeting`, `renderWeek` (`isWithinLastNDays`, `calculateStreak`), `renderOrbit` (DOM APIs, no `innerHTML`), `renderDays` (`getLastNDaysISO`), `renderComingUp` |
 | `skills.js` | Search, category filter, status pills, sort, Add button, form submit, progress slider label | `skills` | per-card `+10%/−10%` → `stepSkillProgress`, ⋮ menu → `showSkillContextMenu` → edit (`openSkillModal`) / delete (`showConfirmDialog` → `storage.deleteSkill`) |
-| `progress.js` | Search, type filter, skill filter, sort, "Launch session" button, form submit | `activities`, `skills` | `populateSkillFilterOptions`, `openActivityModal`, delete via `showConfirmDialog` |
+| `progress.js` (Study sessions) | Search, type filter, skill filter, sort, *Add study time* button, form submit | `activities`, `skills` | `populateSkillFilterOptions`, `openActivityModal`, delete via `showConfirmDialog` |
 | `projects.js` | Search, status pills, sort, Create button, form submit, progress slider label, technology tag input | `projects` | `renderModalTags`, `openProjectModal`, delete via `showConfirmDialog` |
 | `goals.js` | Search, status pills, priority filter, Create button, form submit, progress slider label | `goals` | `toggleGoalComplete`, `openGoalModal`, delete via `showConfirmDialog` |
 | `achievements.js` | Category pills (no `data-changed` listener of its own) | `achievements` + `ACHIEVEMENT_DEFINITIONS` | (evaluation happens in `app.js`, see §6) |
-| `analytics.js` | nothing (no listeners) | whole universe | `calculateStreak`, 5 × `chartManager.render…Chart`, `generateHabitInsights` |
-| `settings.js` | Section nav, profile form, preferences form, theme select, topbar theme toggle, avatar picker, export, import, load demo, reset; **fills the sidebar profile card** | `profile`, `settings` | `applyTheme(theme, false)`, `updateSidebarProfile` |
+| `analytics.js` (Progress) | score-breakdown button → `openModal('score-breakdown-modal')` | whole universe | `calculateProductivityScore`, `populateScoreModal`, badges count, `calculateStreak`, 5 × `chartManager.render…Chart`, `generateHabitInsights` |
+| `settings.js` | Section nav, profile form, preferences form, theme select, top-bar theme toggle, avatar picker, export, import, load demo, reset; **fills the top-bar profile picture** | `profile`, `settings` | `applyTheme(theme, false)`, `updateSidebarProfile` |
 
 ---
 
@@ -129,13 +128,11 @@ Example: **user adds a skill.**
                                                 ├─ this.cache = data
                                                 ├─ localStorage.setItem(KEY, JSON.stringify(data))
                                                 └─ window.dispatchEvent('codeorbit:data-changed')   ← synchronous
-5. Two listeners fire, in registration order:
-   a. navigation.js (registered in startup step 8) → updateBadges()   (sidebar counters)
-   b. app.js        (registered in startup step 9) → evaluateAchievements()
-                                                       └─ unlocked something? → return (see below)
-                                                    → navigation.renderCurrentView()   (error-contained)
-                                                    → updateNotificationsPanel()
-                                                    → refreshIcons()
+5. One listener fires:
+   app.js (registered in startup step 8) → evaluateAchievements()
+                                             └─ unlocked something? → return (see below)
+                                          → navigation.renderCurrentView()   (error-contained)
+                                          → refreshIcons()
 ```
 
 The same loop applies to every write: `saveActivity`, `saveProject`, `saveGoal`, `deleteX`, `saveProfile`, `saveSettings`, `unlockAchievement`, `importJSON`, `resetAllData`, `loadDemoUniverse`.
@@ -148,9 +145,8 @@ app.js listener (outer round)
        ├─ collect ALL newly satisfied definitions
        ├─ storage.unlockAchievements(ids)   ← ONE save for all of them
        │    └─ dispatch 'data-changed'  (synchronous, nested round)
-       │         ├─ updateBadges()
        │         └─ app.js listener → evaluateAchievements() returns false (isEvaluating)
-       │                            → renderCurrentView(), notifications, icons
+       │                            → renderCurrentView(), icons
        ├─ toast.achievement(...) for each unlocked badge
        └─ return true
   └─ return early: the nested round already re-rendered everything
@@ -163,14 +159,14 @@ Result: one save that unlocks N badges = 2 `data-changed` events and **one** pag
 ## 7. Navigation flow
 
 ```
-Sidebar click          → navigation.navigateTo(route)
+Top-bar link click     → navigation.navigateTo(route)
                            └─ sets location.hash = '#route' and RETURNS
 Browser fires hashchange → navigation.handleHashChange()
                            └─ unknown/empty hash ⇒ 'dashboard'
                            └─ navigateTo(route, updateHash = false)
                                 ├─ hide all .view-page, show #view-<route>
-                                ├─ highlight the active .nav-link
-                                ├─ set topbar title/subtitle from ROUTE_CONFIG
+                                ├─ highlight the active .nav-link (Badges highlights Progress)
+                                ├─ set the page title/subtitle from ROUTE_CONFIG (hidden on Home), document.title
                                 ├─ renderCurrentView()  (registered render function, try/catch)
                                 ├─ scroll to top
                                 └─ lucide.createIcons()
@@ -192,7 +188,7 @@ Command-palette results navigate the same way: they set `window.location.hash` d
 
 **Save preferences:** `handlePreferencesSubmit()` → `storage.saveSettings(all)` (one data-change loop) → `applyTheme(theme, false)` (visual only, no second save).
 
-**Theme toggle:** topbar button → `applyTheme(next)` → sets `data-theme` → `storage.saveSettings({ theme })` (save defaults to `true`) → data-change loop. Charts pick up the theme through `chartManager.getThemeColors()` the next time they render.
+**Theme toggle:** top-bar button → `applyTheme(next)` → sets `data-theme` → `storage.saveSettings({ theme })` (save defaults to `true`) → data-change loop. Charts pick up the theme through `chartManager.getThemeColors()` the next time they render.
 
 **Charts:** every `chartManager.render…Chart(canvasId, data)` first checks the canvas exists and `window.Chart` is loaded, calls `destroyChart(canvasId)` to free the old instance, builds a new `Chart`, and stores it in `chartManager.instances`.
 

@@ -9,10 +9,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ## [Unreleased]
 
 ### Added
+- A new look for the whole app: black and white with one Let's Cook crimson, big clear numbers, and a quiet space theme. Works in dark and light.
+- A first-visit screen that explains the app and offers *Add your first skill* or *Try it with sample data first*.
+- Home shows each skill as a planet: the bigger it is, the further along you are; red means finished.
 - Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.
 - Unit tests for dates, streaks, the productivity score, storage, import/export, page addresses and achievement rules, run in four timezones on every pull request and push.
 
+### Changed
+- Home is now minimal: hours studied in the last 7 days against your weekly goal, your skills as planets, hours for each day, and what is coming up. The progress score and badges moved to the new **Progress** page.
+- Navigation is a top bar: Home, Skills, Study sessions, Projects, Goals, Progress. Settings opens from your profile picture.
+- Plain words everywhere: "Mission Logs" is now **Study sessions**, "Space Missions" **Projects**, "Milestones" **Goals**, "Analytics" **Progress**, "Achievements" **Badges**; times are written like "1h 15m". Your saved data is not changed.
+- Fonts now load from CodeOrbit itself instead of Google Fonts.
+- Badges and search results use simple line icons instead of emoji.
+
 ### Fixed
+- Finished goals no longer show as "late".
+- The chosen profile picture in Settings is now visibly selected.
+- Search results can be opened with the keyboard.
 - A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
 - The planet at the centre of the dashboard said "Alex Rivera" (the demo user) on hover for everyone. It now says "Your profile".
 - Analytics "Peak Velocity Day" showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US). ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
@@ -22,6 +35,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Importing a backup file made by someone else could run their code in your browser, through fake dates or a session's skill name. Invalid dates are now shown as "Invalid date" and dropped on import, and those names are escaped. Sessions and achievements without a valid date are removed when importing.
 
 ### Removed
+- The quick "Launch" menu and the notifications bell. Each page has its own add button, and Home has *Add study time*.
 - An unused skills "proficiency" filter that had no button to turn it on.
 
 ## [0.1.0] - 2026-11-07
