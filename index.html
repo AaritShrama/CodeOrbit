@@ -210,7 +210,16 @@
 
           <!-- Hero Section -->
           <div class="dashboard-hero">
-            <div class="hero-orbital-accent"></div>
+            <div class="hero-cosmic-backdrop">
+              <div class="hero-planet-sphere"></div>
+              <div class="hero-planet-ring"></div>
+              <div class="hero-orbital-ellipse"></div>
+              <div class="hero-orbital-beacon"></div>
+              <div class="hero-particle p1"></div>
+              <div class="hero-particle p2"></div>
+              <div class="hero-particle p3"></div>
+              <div class="hero-particle p4"></div>
+            </div>
             <div class="hero-content">
               <div class="hero-text-block">
                 <div class="hero-meta-row">
@@ -252,6 +261,9 @@
                 <span class="kpi-main-val" id="kpi-skills-val">0</span>
                 <span class="kpi-unit">Active</span>
               </div>
+              <div class="kpi-micro-meter">
+                <div class="kpi-micro-meter-fill" id="kpi-skills-meter" style="width: 0%;"></div>
+              </div>
               <div class="kpi-footer-row">
                 <span id="kpi-skills-sub">0 completed</span>
                 <span class="kpi-subtext-highlight">Competency</span>
@@ -269,6 +281,9 @@
               <div class="kpi-value-row">
                 <span class="kpi-main-val" id="kpi-hours-val">0</span>
                 <span class="kpi-unit">Hours</span>
+              </div>
+              <div class="kpi-micro-meter">
+                <div class="kpi-micro-meter-fill" id="kpi-hours-meter" style="width: 0%;"></div>
               </div>
               <div class="kpi-footer-row">
                 <span id="kpi-hours-sub">0h this week</span>
@@ -288,6 +303,9 @@
                 <span class="kpi-main-val" id="kpi-missions-val">0</span>
                 <span class="kpi-unit">Projects</span>
               </div>
+              <div class="kpi-micro-meter">
+                <div class="kpi-micro-meter-fill" id="kpi-missions-meter" style="width: 0%;"></div>
+              </div>
               <div class="kpi-footer-row">
                 <span id="kpi-missions-sub">0 completed</span>
                 <span class="kpi-subtext-highlight">Portfolio</span>
@@ -305,6 +323,9 @@
               <div class="kpi-value-row">
                 <span class="kpi-main-val" id="kpi-streak-val">0</span>
                 <span class="kpi-unit">Days</span>
+              </div>
+              <div class="kpi-micro-meter">
+                <div class="kpi-micro-meter-fill" id="kpi-streak-meter" style="width: 0%;"></div>
               </div>
               <div class="kpi-footer-row">
                 <span id="kpi-streak-sub">Longest: 0 days</span>
@@ -415,22 +436,37 @@
                 <div class="constellation-grid-view" id="constellation-grid"></div>
               </div>
 
-              <!-- Weekly Learning Analytics Chart Card -->
-              <div class="card">
-                <div class="card-header">
+              <!-- Learning Velocity & Skill Distribution Charts Telemetry -->
+              <div class="chart-telemetry-card">
+                <div class="chart-header-segmented">
                   <div>
                     <h3 class="card-title">
-                      <i data-lucide="bar-chart-2" style="width: 18px; height: 18px; color: var(--secondary);"></i>
-                      <span>Weekly Learning Velocity</span>
+                      <i data-lucide="activity" style="width: 18px; height: 18px; color: var(--cyan-accent);"></i>
+                      <span>Flightpath Telemetry</span>
                     </h3>
-                    <p class="card-subtitle">Hours logged Monday through Sunday this week.</p>
+                    <p class="card-subtitle">Activity trends and domain distribution</p>
                   </div>
-                  <button class="btn btn-outline btn-sm" onclick="window.location.hash='#analytics'">
-                    Full Analytics &rarr;
-                  </button>
+                  <div class="segmented-controls">
+                    <button class="segmented-btn active" id="dashboard-tab-weekly">Weekly Velocity</button>
+                    <button class="segmented-btn" id="dashboard-tab-monthly">30-Day Trend</button>
+                  </div>
                 </div>
-                <div style="height: 220px; position: relative;">
-                  <canvas id="dashboard-weekly-chart"></canvas>
+
+                <div class="telemetry-dual-charts">
+                  <div>
+                    <div class="chart-canvas-wrapper">
+                      <canvas id="dashboard-weekly-chart"></canvas>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                      <span style="font-size: var(--text-xs); font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Domain Distribution</span>
+                      <a href="#skills" style="font-size: var(--text-xs); color: var(--secondary);">Manage &rarr;</a>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 195px;">
+                      <canvas id="dashboard-skills-distribution-chart"></canvas>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

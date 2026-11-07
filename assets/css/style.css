@@ -13,6 +13,12 @@
   --bg-card-elevated: #19243D;
   --bg-card-hover: #1E2B49;
   --bg-glass: rgba(19, 29, 51, 0.75);
+  --glass-surface: rgba(19, 29, 51, 0.65);
+  --glass-surface-elevated: rgba(25, 36, 61, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(99, 102, 241, 0.35);
+  --circuit-line: rgba(99, 102, 241, 0.18);
+  --circuit-node: rgba(56, 189, 248, 0.5);
   --bg-input: #0B1122;
 
   /* Brand Accents */

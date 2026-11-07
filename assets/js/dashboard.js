@@ -1,7 +1,7 @@
 /**
  * CODEORBIT — COMMAND CENTER (DASHBOARD) MODULE
  * Hero updates, KPI calculations, Productivity Score gauge, Orbital Skill Visualizer,
- * and preview feeds for logs, projects, and milestones.
+ * multi-chart telemetry switcher, and preview feeds for logs, projects, and milestones.
  */
 
 import { storage } from './storage.js';
@@ -18,6 +18,7 @@ import { openModal } from './components.js';
 
 let isOrbitPaused = false;
 let currentOrbitView = 'orbital'; // 'orbital' | 'constellation'
+let currentTelemetryMode = 'weekly'; // 'weekly' | 'monthly'
 
 export function initDashboard() {
   renderDashboard();
@@ -43,6 +44,30 @@ export function initDashboard() {
     viewToggleBtn.addEventListener('click', () => {
       currentOrbitView = currentOrbitView === 'orbital' ? 'constellation' : 'orbital';
       renderOrbitalVisualization();
+    });
+  }
+
+  // Telemetry Chart Segmented Switcher (Weekly Velocity vs 30-Day Trend)
+  const weeklyTab = document.getElementById('dashboard-tab-weekly');
+  const monthlyTab = document.getElementById('dashboard-tab-monthly');
+
+  if (weeklyTab) {
+    weeklyTab.addEventListener('click', () => {
+      currentTelemetryMode = 'weekly';
+      weeklyTab.classList.add('active');
+      if (monthlyTab) monthlyTab.classList.remove('active');
+      const data = storage.getUniverse();
+      chartManager.renderWeeklyChart('dashboard-weekly-chart', data.activities || []);
+    });
+  }
+
+  if (monthlyTab) {
+    monthlyTab.addEventListener('click', () => {
+      currentTelemetryMode = 'monthly';
+      monthlyTab.classList.add('active');
+      if (weeklyTab) weeklyTab.classList.remove('active');
+      const data = storage.getUniverse();
+      chartManager.renderMonthlyTrendChart('dashboard-weekly-chart', data.activities || []);
     });
   }
 
@@ -108,23 +133,46 @@ export function renderDashboard() {
   // Render KPI values
   const kpi1Val = document.getElementById('kpi-skills-val');
   const kpi1Sub = document.getElementById('kpi-skills-sub');
+  const kpi1Meter = document.getElementById('kpi-skills-meter');
   if (kpi1Val) kpi1Val.textContent = activeSkillsCount;
   if (kpi1Sub) kpi1Sub.textContent = `${completedSkillsCount} completed`;
+  if (kpi1Meter) {
+    const totalSkills = skills.length || 1;
+    const pct = Math.min(100, Math.round((completedSkillsCount / totalSkills) * 100));
+    kpi1Meter.style.width = `${pct}%`;
+  }
 
   const kpi2Val = document.getElementById('kpi-hours-val');
   const kpi2Sub = document.getElementById('kpi-hours-sub');
+  const kpi2Meter = document.getElementById('kpi-hours-meter');
   if (kpi2Val) kpi2Val.textContent = totalHours;
   if (kpi2Sub) kpi2Sub.textContent = `${weeklyHours}h this week`;
+  if (kpi2Meter) {
+    const targetHours = Number(settings.weeklyGoalHours) || 15;
+    const pct = Math.min(100, Math.round((weeklyHours / targetHours) * 100));
+    kpi2Meter.style.width = `${pct}%`;
+  }
 
   const kpi3Val = document.getElementById('kpi-missions-val');
   const kpi3Sub = document.getElementById('kpi-missions-sub');
+  const kpi3Meter = document.getElementById('kpi-missions-meter');
   if (kpi3Val) kpi3Val.textContent = totalProjects;
   if (kpi3Sub) kpi3Sub.textContent = `${completedProjects} completed`;
+  if (kpi3Meter) {
+    const totalProj = projects.length || 1;
+    const pct = Math.min(100, Math.round((completedProjects / totalProj) * 100));
+    kpi3Meter.style.width = `${pct}%`;
+  }
 
   const kpi4Val = document.getElementById('kpi-streak-val');
   const kpi4Sub = document.getElementById('kpi-streak-sub');
+  const kpi4Meter = document.getElementById('kpi-streak-meter');
   if (kpi4Val) kpi4Val.textContent = streakData.currentStreak;
   if (kpi4Sub) kpi4Sub.textContent = `Longest: ${streakData.longestStreak} days`;
+  if (kpi4Meter) {
+    const pct = Math.min(100, Math.round((streakData.currentStreak / 30) * 100));
+    kpi4Meter.style.width = `${pct}%`;
+  }
 
   // 3. Productivity Score
   const prod = calculateProductivityScore({ activities, skills, projects, settings });
@@ -135,8 +183,7 @@ export function renderDashboard() {
   if (scoreNumEl) scoreNumEl.textContent = prod.score;
   if (scoreLevelEl) scoreLevelEl.textContent = prod.level;
   if (scoreRingEl) {
-    // Circumference for r=46 is ~289.02
-    const circumference = 2 * Math.PI * 46;
+    const circumference = 2 * Math.PI * 45;
     const offset = circumference - (prod.score / 100) * circumference;
     scoreRingEl.style.strokeDasharray = `${circumference}`;
     scoreRingEl.style.strokeDashoffset = `${offset}`;
@@ -148,8 +195,13 @@ export function renderDashboard() {
   // 4. Orbital Skill Visualization
   renderOrbitalVisualization();
 
-  // 5. Weekly Learning Analytics Chart
-  chartManager.renderWeeklyChart('dashboard-weekly-chart', activities);
+  // 5. Flightpath Telemetry Charts (Weekly Velocity or 30-Day Trend + Skill Distribution)
+  if (currentTelemetryMode === 'weekly') {
+    chartManager.renderWeeklyChart('dashboard-weekly-chart', activities);
+  } else {
+    chartManager.renderMonthlyTrendChart('dashboard-weekly-chart', activities);
+  }
+  chartManager.renderSkillCategoryChart('dashboard-skills-distribution-chart', skills);
 
   // 6. Recent Mission Logs
   renderRecentLogs(activities);
@@ -177,7 +229,7 @@ function renderOrbitalVisualization() {
     stage.style.display = 'none';
     gridView.style.display = 'grid';
     if (toggleBtn) {
-      toggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg> Planetary Orbit`;
+      toggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg> <span>Planetary Orbit</span>`;
     }
     renderConstellationGrid(skills, gridView);
     return;
@@ -187,7 +239,7 @@ function renderOrbitalVisualization() {
   stage.style.display = 'flex';
   gridView.style.display = 'none';
   if (toggleBtn) {
-    toggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Constellation Grid`;
+    toggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> <span>Constellation Grid</span>`;
   }
 
   // Clear previous dynamic orbit tracks (preserve SVG paths and dev core)
@@ -238,6 +290,7 @@ function renderOrbitalVisualization() {
       const angle = sIdx * angleStep;
       // Calculate planet size based on progress (24px to 44px)
       const size = Math.round(24 + (Number(skill.progress) || 0) * 0.2);
+      const isMastered = Number(skill.progress) >= 100 || skill.status === 'Completed';
 
       const nodeWrapper = document.createElement('div');
       nodeWrapper.className = 'planet-node-wrapper';
@@ -245,6 +298,7 @@ function renderOrbitalVisualization() {
 
       nodeWrapper.innerHTML = `
         <div class="planet-sphere ${categoryClass(skill.category)}" style="width: ${size}px; height: ${size}px;">
+          ${isMastered ? '<div class="planet-master-ring"></div>' : ''}
           <div class="planet-progress-ring"></div>
         </div>
         <div class="planet-label-pill">
@@ -374,26 +428,36 @@ function renderActiveProjects(projects) {
     return;
   }
 
-  container.innerHTML = active.map(p => `
-    <div class="mission-preview-card">
-      <div class="mission-header-row">
-        <span class="mission-title">${escapeHTML(p.name)}</span>
-        <span class="badge badge-cyan" style="font-size: 0.625rem;">${p.status}</span>
-      </div>
-      <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-        ${escapeHTML(p.description || '')}
-      </p>
-      <div class="progress-bar-container" style="height: 6px;">
-        <div class="progress-bar-fill fill-primary" style="width: ${p.progress}%;"></div>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.6875rem;">
-        <div class="mission-tech-stack">
-          ${(p.technologies || []).slice(0, 2).map(t => `<span class="mission-tech-tag">${escapeHTML(t)}</span>`).join('')}
+  container.innerHTML = active.map(p => {
+    let deadlineStr = '';
+    if (p.deadline) {
+      const daysLeft = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+      const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Due today' : `${daysLeft}d left`;
+      deadlineStr = `<span style="font-size: 0.6875rem; color: var(--text-muted);">${formatDate(p.deadline)} (${countdown})</span>`;
+    }
+
+    return `
+      <div class="mission-preview-card">
+        <div class="mission-header-row">
+          <span class="mission-title">${escapeHTML(p.name)}</span>
+          <span class="badge badge-cyan" style="font-size: 0.625rem;">${p.status}</span>
         </div>
-        <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${p.progress}%</span>
+        <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          ${escapeHTML(p.description || '')}
+        </p>
+        <div class="progress-bar-container" style="height: 6px;">
+          <div class="progress-bar-fill fill-primary" style="width: ${p.progress}%;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.6875rem;">
+          <div class="mission-tech-stack">
+            ${(p.technologies || []).slice(0, 2).map(t => `<span class="mission-tech-tag">${escapeHTML(t)}</span>`).join('')}
+          </div>
+          <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${p.progress}%</span>
+        </div>
+        ${deadlineStr ? `<div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px; display: flex; justify-content: flex-end;">${deadlineStr}</div>` : ''}
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 /**
@@ -413,23 +477,32 @@ function renderUpcomingGoals(goals) {
     return;
   }
 
-  container.innerHTML = active.map(g => `
-    <div class="milestone-item">
-      <div class="milestone-info">
-        <div class="milestone-title-row">
-          <span class="milestone-title">${escapeHTML(g.title)}</span>
-          <span class="badge ${getPriorityBadgeClass(g.priority)}" style="font-size: 0.625rem;">${escapeHTML(g.priority)}</span>
+  container.innerHTML = active.map(g => {
+    let deadlineBadge = '';
+    if (g.deadline) {
+      const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+      const text = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
+      deadlineBadge = `<span style="font-size: 0.625rem; font-family: var(--font-mono); color: var(--text-muted); margin-left: 4px;">(${text})</span>`;
+    }
+
+    return `
+      <div class="milestone-item">
+        <div class="milestone-info">
+          <div class="milestone-title-row">
+            <span class="milestone-title">${escapeHTML(g.title)}</span>
+            <span class="badge ${getPriorityBadgeClass(g.priority)}" style="font-size: 0.625rem;">${escapeHTML(g.priority)}</span>
+          </div>
+          <div class="milestone-deadline">Due: ${formatDate(g.deadline)}${deadlineBadge}</div>
+          <div class="progress-bar-container" style="height: 4px; margin-top: 6px;">
+            <div class="progress-bar-fill fill-orange" style="width: ${g.progress}%;"></div>
+          </div>
         </div>
-        <div class="milestone-deadline">Due: ${formatDate(g.deadline)}</div>
-        <div class="progress-bar-container" style="height: 4px; margin-top: 6px;">
-          <div class="progress-bar-fill fill-orange" style="width: ${g.progress}%;"></div>
-        </div>
+        <span style="font-family: var(--font-mono); font-weight: 700; font-size: var(--text-xs); color: var(--text-primary); margin-left: 8px;">
+          ${g.progress}%
+        </span>
       </div>
-      <span style="font-family: var(--font-mono); font-weight: 700; font-size: var(--text-xs); color: var(--text-primary); margin-left: 8px;">
-        ${g.progress}%
-      </span>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function getPriorityBadgeClass(priority) {
