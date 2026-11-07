@@ -10,6 +10,8 @@ import {
   formatDuration,
   formatRelativeTime,
   getTodayISO,
+  getRelativeISO,
+  isWithinLastNDays,
   minutesToHours
 } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
@@ -93,12 +95,11 @@ export function renderProgress() {
   const avgSessionMins = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
 
   // Last 7 days & Last 30 days
-  const now = Date.now();
   const weekMins = activities
-    .filter(a => (now - new Date(a.date).getTime()) <= 7 * 86400000)
+    .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const monthMins = activities
-    .filter(a => (now - new Date(a.date).getTime()) <= 30 * 86400000)
+    .filter(a => isWithinLastNDays(a.date, 30))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
 
   // Set Metric Elements
@@ -189,7 +190,7 @@ export function renderProgress() {
 
   const dateKeys = Object.keys(groups);
   const todayStr = getTodayISO();
-  const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const yesterdayStr = getRelativeISO(-1);
 
   const getDateGroupLabel = (dStr) => {
     if (dStr === todayStr) return 'Today';

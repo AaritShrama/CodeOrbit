@@ -4,7 +4,7 @@
  */
 
 import { storage } from './storage.js';
-import { calculateStreak } from './utils.js';
+import { calculateStreak, isWithinLastNDays } from './utils.js';
 import { chartManager } from './charts.js';
 
 export function initAnalytics() {
@@ -22,14 +22,13 @@ export function renderAnalytics() {
   const totalMinutes = activities.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
 
-  const now = Date.now();
   const weekMins = activities
-    .filter(a => (now - new Date(a.date).getTime()) <= 7 * 86400000)
+    .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const weeklyHours = Math.round((weekMins / 60) * 10) / 10;
 
   const monthMins = activities
-    .filter(a => (now - new Date(a.date).getTime()) <= 30 * 86400000)
+    .filter(a => isWithinLastNDays(a.date, 30))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const monthlyHours = Math.round((monthMins / 60) * 10) / 10;
 

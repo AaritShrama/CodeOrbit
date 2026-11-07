@@ -38,10 +38,48 @@ export function generateId(prefix = 'id_') {
 export function getRelativeISO(offsetDays = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  return toLocalISO(d);
+}
+
+/**
+ * Formats a Date as YYYY-MM-DD in the user's LOCAL timezone.
+ * Never use date.toISOString().slice(0, 10) for calendar days: that is UTC
+ * and shifts the day for users east or west of Greenwich (e.g. India, UTC+5:30).
+ * @param {Date} date
+ * @returns {string} YYYY-MM-DD
+ */
+export function toLocalISO(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+/**
+ * The last N local calendar days, today first.
+ * This is THE definition of "last 7 days" / "last 30 days" used across the app.
+ * @param {number} n
+ * @returns {string[]} e.g. ['2026-11-07', '2026-11-06', ...]
+ */
+export function getLastNDaysISO(n) {
+  const days = [];
+  for (let i = 0; i < n; i++) {
+    days.push(getRelativeISO(-i));
+  }
+  return days;
+}
+
+/**
+ * Whether an activity date (YYYY-MM-DD or full ISO string) falls within the
+ * last N local calendar days, including today.
+ * @param {string} dateStr
+ * @param {number} n
+ * @returns {boolean}
+ */
+export function isWithinLastNDays(dateStr, n) {
+  if (!dateStr) return false;
+  const day = dateStr.slice(0, 10);
+  return day <= getTodayISO() && day >= getRelativeISO(-(n - 1));
 }
 
 /**
@@ -218,16 +256,13 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
   const weeklyTargetHours = Math.max(1, Number(settings.weeklyTargetHours) || 10);
 
   // 1. Consistency: How many of the last 7 days had logged activity? (Max 30)
-  const last7Days = [];
-  for (let i = 0; i < 7; i++) {
-    last7Days.push(getRelativeISO(-i));
-  }
+  const last7Days = getLastNDaysISO(7);
   const activeDaysLast7 = last7Days.filter(day => activities.some(a => a.date && a.date.slice(0, 10) === day)).length;
   const consistencyScore = Math.round((activeDaysLast7 / 7) * 30);
 
   // 2. Learning Hours this week vs Target (Max 30)
   const weeklyMinutes = activities
-    .filter(a => last7Days.includes(a.date && a.date.slice(0, 10)))
+    .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const weeklyHours = weeklyMinutes / 60;
   const hoursScore = Math.min(30, Math.round((weeklyHours / weeklyTargetHours) * 30));

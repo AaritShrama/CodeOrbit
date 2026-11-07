@@ -3,6 +3,8 @@
  * Cosmic-themed Chart.js configurations, gradients, and lifecycle management.
  */
 
+import { toLocalISO } from './utils.js';
+
 class ChartManager {
   constructor() {
     this.instances = new Map();
@@ -55,7 +57,7 @@ class ChartManager {
     for (let i = 0; i < 7; i++) {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      const dStr = d.toISOString().slice(0, 10);
+      const dStr = toLocalISO(d);
 
       const dayMins = activities
         .filter(a => a.date && a.date.slice(0, 10) === dStr)
@@ -137,8 +139,9 @@ class ChartManager {
     const now = new Date();
 
     for (let i = 29; i >= 0; i--) {
-      const d = new Date(Date.now() - i * 86400000);
-      const dStr = d.toISOString().slice(0, 10);
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dStr = toLocalISO(d);
       labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
 
       const dayMins = activities

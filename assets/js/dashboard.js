@@ -11,7 +11,8 @@ import {
   formatDuration,
   formatRelativeTime,
   calculateStreak,
-  calculateProductivityScore
+  calculateProductivityScore,
+  isWithinLastNDays
 } from './utils.js';
 import { chartManager } from './charts.js';
 import { openModal } from './components.js';
@@ -118,12 +119,8 @@ export function renderDashboard() {
   const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
 
   // Last 7 days minutes
-  const last7Days = [];
-  for (let i = 0; i < 7; i++) {
-    last7Days.push(new Date(Date.now() - i * 86400000).toISOString().slice(0, 10));
-  }
   const weeklyMinutes = activities
-    .filter(a => last7Days.includes(a.date && a.date.slice(0, 10)))
+    .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const weeklyHours = Math.round((weeklyMinutes / 60) * 10) / 10;
 
