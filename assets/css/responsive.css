@@ -121,7 +121,8 @@
     align-items: stretch;
   }
 
-  .filter-left, .filter-right {
+  .filter-left,
+  .filter-right {
     width: 100%;
     justify-content: space-between;
   }
@@ -183,7 +184,7 @@
   }
 
   body {
-    background: #FFFFFF;
+    background: #ffffff;
     color: #000000;
   }
 }

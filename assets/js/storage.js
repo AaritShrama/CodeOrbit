@@ -201,7 +201,8 @@ function getDefaultUniverse() {
       {
         id: generateId('proj_'),
         name: 'OrbitFlow CLI',
-        description: 'Lightweight autonomous terminal utility for tracking developer focus sprints and orbital habits.',
+        description:
+          'Lightweight autonomous terminal utility for tracking developer focus sprints and orbital habits.',
         technologies: ['TypeScript', 'Node.js', 'Chalk', 'Commander'],
         status: 'In Progress',
         progress: 75,
@@ -215,7 +216,8 @@ function getDefaultUniverse() {
       {
         id: generateId('proj_'),
         name: 'Neural Canvas Vector Search',
-        description: 'Interactive visual playground for high-dimensional latent space exploration and clustering.',
+        description:
+          'Interactive visual playground for high-dimensional latent space exploration and clustering.',
         technologies: ['Python', 'FastAPI', 'PyTorch', 'Tailwind', 'Canvas API'],
         status: 'In Progress',
         progress: 50,
@@ -229,7 +231,8 @@ function getDefaultUniverse() {
       {
         id: generateId('proj_'),
         name: 'Cosmic UI Component Library',
-        description: 'Accessible, dark-first UI kit for futuristic web dashboards with glassmorphism and smooth micro-interactions.',
+        description:
+          'Accessible, dark-first UI kit for futuristic web dashboards with glassmorphism and smooth micro-interactions.',
         technologies: ['CSS3', 'Vanilla JS', 'Web Components', 'Storybook'],
         status: 'Completed',
         progress: 100,
@@ -336,7 +339,9 @@ class StorageManager {
 
     if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.skills)) {
       // Unreadable data: keep a copy instead of silently destroying it, then start empty.
-      console.warn(`CodeOrbit: stored data was unreadable. A copy was kept under "${CORRUPT_BACKUP_KEY}".`);
+      console.warn(
+        `CodeOrbit: stored data was unreadable. A copy was kept under "${CORRUPT_BACKUP_KEY}".`
+      );
       try {
         localStorage.setItem(CORRUPT_BACKUP_KEY, raw);
       } catch (e) {
@@ -370,7 +375,9 @@ class StorageManager {
     try {
       this.cache = data;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      window.dispatchEvent(new CustomEvent('codeorbit:data-changed', { detail: { timestamp: Date.now() } }));
+      window.dispatchEvent(
+        new CustomEvent('codeorbit:data-changed', { detail: { timestamp: Date.now() } })
+      );
       return true;
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
@@ -618,14 +625,24 @@ class StorageManager {
       if (!parsed || typeof parsed !== 'object') {
         throw new Error('Invalid JSON root format: must be an object.');
       }
-      if (!Array.isArray(parsed.skills) || !Array.isArray(parsed.activities) || !Array.isArray(parsed.projects)) {
+      if (
+        !Array.isArray(parsed.skills) ||
+        !Array.isArray(parsed.activities) ||
+        !Array.isArray(parsed.projects)
+      ) {
         throw new Error('Missing essential CodeOrbit collections (skills, activities, projects).');
       }
 
       const defaults = getEmptyUniverse();
       parsed.version = DATA_VERSION;
-      parsed.profile = (typeof parsed.profile === 'object' && parsed.profile) ? { ...defaults.profile, ...parsed.profile } : defaults.profile;
-      parsed.settings = (typeof parsed.settings === 'object' && parsed.settings) ? { ...defaults.settings, ...parsed.settings } : defaults.settings;
+      parsed.profile =
+        typeof parsed.profile === 'object' && parsed.profile
+          ? { ...defaults.profile, ...parsed.profile }
+          : defaults.profile;
+      parsed.settings =
+        typeof parsed.settings === 'object' && parsed.settings
+          ? { ...defaults.settings, ...parsed.settings }
+          : defaults.settings;
       parsed.skills = Array.isArray(parsed.skills) ? parsed.skills : [];
       parsed.activities = Array.isArray(parsed.activities) ? parsed.activities : [];
       parsed.projects = Array.isArray(parsed.projects) ? parsed.projects : [];

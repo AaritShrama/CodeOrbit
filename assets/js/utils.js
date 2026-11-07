@@ -252,12 +252,19 @@ export function calculateStreak(activities = []) {
  * @param {Object} data - { activities, skills, projects, settings }
  * @returns {{ score: number, level: string, breakdown: Object }}
  */
-export function calculateProductivityScore({ activities = [], skills = [], projects = [], settings = {} }) {
+export function calculateProductivityScore({
+  activities = [],
+  skills = [],
+  projects = [],
+  settings = {}
+}) {
   const weeklyTargetHours = Math.max(1, Number(settings.weeklyTargetHours) || 10);
 
   // 1. Consistency: How many of the last 7 days had logged activity? (Max 30)
   const last7Days = getLastNDaysISO(7);
-  const activeDaysLast7 = last7Days.filter(day => activities.some(a => a.date && a.date.slice(0, 10) === day)).length;
+  const activeDaysLast7 = last7Days.filter(day =>
+    activities.some(a => a.date && a.date.slice(0, 10) === day)
+  ).length;
   const consistencyScore = Math.round((activeDaysLast7 / 7) * 30);
 
   // 2. Learning Hours this week vs Target (Max 30)
@@ -270,7 +277,8 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
   // 3. Project Progress (Max 20)
   let projectScore;
   if (projects.length > 0) {
-    const avgProjectProg = projects.reduce((sum, p) => sum + (Number(p.progress) || 0), 0) / projects.length;
+    const avgProjectProg =
+      projects.reduce((sum, p) => sum + (Number(p.progress) || 0), 0) / projects.length;
     projectScore = Math.round((avgProjectProg / 100) * 20);
   } else {
     projectScore = 10; // Neutral baseline
@@ -279,13 +287,17 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
   // 4. Skill Development (Max 20)
   let skillScore;
   if (skills.length > 0) {
-    const avgSkillProg = skills.reduce((sum, s) => sum + (Number(s.progress) || 0), 0) / skills.length;
+    const avgSkillProg =
+      skills.reduce((sum, s) => sum + (Number(s.progress) || 0), 0) / skills.length;
     skillScore = Math.round((avgSkillProg / 100) * 20);
   } else {
     skillScore = 10;
   }
 
-  const totalScore = Math.min(100, Math.max(0, consistencyScore + hoursScore + projectScore + skillScore));
+  const totalScore = Math.min(
+    100,
+    Math.max(0, consistencyScore + hoursScore + projectScore + skillScore)
+  );
 
   let level = 'Sub-Orbital';
   if (totalScore >= 85) level = 'Hyperdrive Velocity';
@@ -298,7 +310,12 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
     level,
     breakdown: {
       consistency: { points: consistencyScore, max: 30, activeDays: activeDaysLast7 },
-      learningHours: { points: hoursScore, max: 30, currentHours: Math.round(weeklyHours * 10) / 10, targetHours: weeklyTargetHours },
+      learningHours: {
+        points: hoursScore,
+        max: 30,
+        currentHours: Math.round(weeklyHours * 10) / 10,
+        targetHours: weeklyTargetHours
+      },
       projects: { points: projectScore, max: 20, count: projects.length },
       skills: { points: skillScore, max: 20, count: skills.length }
     }
@@ -316,7 +333,11 @@ class SoundEffects {
   }
 
   init() {
-    if (!this.ctx && typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext)) {
+    if (
+      !this.ctx &&
+      typeof window !== 'undefined' &&
+      (window.AudioContext || window.webkitAudioContext)
+    ) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       this.ctx = new AudioCtx();
     }
@@ -354,17 +375,17 @@ class SoundEffects {
 
   // Success chime
   success() {
-    this.playTone(523.25, 'sine', 0.15, 0);     // C5
-    this.playTone(659.25, 'sine', 0.15, 0.08);  // E5
-    this.playTone(783.99, 'sine', 0.3, 0.16);   // G5
+    this.playTone(523.25, 'sine', 0.15, 0); // C5
+    this.playTone(659.25, 'sine', 0.15, 0.08); // E5
+    this.playTone(783.99, 'sine', 0.3, 0.16); // G5
   }
 
   // Achievement unlock chime
   achievement() {
-    this.playTone(440, 'triangle', 0.2, 0);       // A4
-    this.playTone(554.37, 'triangle', 0.2, 0.1);  // C#5
-    this.playTone(659.25, 'triangle', 0.2, 0.2);  // E5
-    this.playTone(880, 'sine', 0.5, 0.3);         // A5
+    this.playTone(440, 'triangle', 0.2, 0); // A4
+    this.playTone(554.37, 'triangle', 0.2, 0.1); // C#5
+    this.playTone(659.25, 'triangle', 0.2, 0.2); // E5
+    this.playTone(880, 'sine', 0.5, 0.3); // A5
   }
 }
 

@@ -22,7 +22,7 @@ function setupSkillEventListeners() {
   // Search input
   const searchInput = document.getElementById('skill-search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener('input', e => {
       searchQuery = e.target.value.toLowerCase().trim();
       renderSkills();
     });
@@ -31,7 +31,7 @@ function setupSkillEventListeners() {
   // Category filter
   const categoryFilter = document.getElementById('skill-category-filter');
   if (categoryFilter) {
-    categoryFilter.addEventListener('change', (e) => {
+    categoryFilter.addEventListener('change', e => {
       activeCategory = e.target.value;
       renderSkills();
     });
@@ -40,7 +40,9 @@ function setupSkillEventListeners() {
   // Status pills
   document.querySelectorAll('#skill-status-pills .pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#skill-status-pills .pill-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('#skill-status-pills .pill-btn')
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeStatus = btn.getAttribute('data-status') || 'All';
       renderSkills();
@@ -50,7 +52,7 @@ function setupSkillEventListeners() {
   // Sort selector
   const sortSelect = document.getElementById('skill-sort-select');
   if (sortSelect) {
-    sortSelect.addEventListener('change', (e) => {
+    sortSelect.addEventListener('change', e => {
       activeSort = e.target.value;
       renderSkills();
     });
@@ -72,7 +74,7 @@ function setupSkillEventListeners() {
   const progSlider = document.getElementById('skill-form-progress');
   const progBadge = document.getElementById('skill-form-progress-badge');
   if (progSlider && progBadge) {
-    progSlider.addEventListener('input', (e) => {
+    progSlider.addEventListener('input', e => {
       progBadge.textContent = `${e.target.value}%`;
     });
   }
@@ -86,10 +88,11 @@ export function renderSkills() {
 
   // 1. Search Filter
   if (searchQuery) {
-    skills = skills.filter(s =>
-      (s.name || '').toLowerCase().includes(searchQuery) ||
-      (s.category || '').toLowerCase().includes(searchQuery) ||
-      (s.description || '').toLowerCase().includes(searchQuery)
+    skills = skills.filter(
+      s =>
+        (s.name || '').toLowerCase().includes(searchQuery) ||
+        (s.category || '').toLowerCase().includes(searchQuery) ||
+        (s.description || '').toLowerCase().includes(searchQuery)
     );
   }
 
@@ -120,9 +123,11 @@ export function renderSkills() {
         <div class="empty-state-icon">🪐</div>
         <h4 class="empty-state-title">No Skills Found</h4>
         <p class="empty-state-desc">
-          ${searchQuery || activeCategory !== 'All' || activeStatus !== 'All'
-            ? 'No skills match your active filters. Try clearing filters or search query.'
-            : 'Your developer universe is empty. Add your first orbiting skill to begin!'}
+          ${
+            searchQuery || activeCategory !== 'All' || activeStatus !== 'All'
+              ? 'No skills match your active filters. Try clearing filters or search query.'
+              : 'Your developer universe is empty. Add your first orbiting skill to begin!'
+          }
         </p>
         <button class="btn btn-primary" id="empty-add-skill-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -136,10 +141,11 @@ export function renderSkills() {
   }
 
   // Render cards
-  container.innerHTML = skills.map(s => {
-    const isCompleted = s.status === 'Completed';
-    const catColor = getCategoryColor(s.category);
-    return `
+  container.innerHTML = skills
+    .map(s => {
+      const isCompleted = s.status === 'Completed';
+      const catColor = getCategoryColor(s.category);
+      return `
       <div class="card card-glow-purple skill-item-card" data-skill-id="${s.id}" style="display: flex; flex-direction: column; justify-content: space-between; position: relative; border-top: 3px solid ${catColor};">
         <!-- Top Row -->
         <div>
@@ -193,11 +199,12 @@ export function renderSkills() {
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Wire action buttons
   container.querySelectorAll('.quick-step-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       const delta = parseInt(btn.getAttribute('data-delta'), 10);
@@ -206,7 +213,7 @@ export function renderSkills() {
   });
 
   container.querySelectorAll('.skill-action-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       showSkillContextMenu(id, btn);
@@ -216,31 +223,45 @@ export function renderSkills() {
 
 function getCategoryColor(category) {
   switch (category) {
-    case 'Web Development': return '#38BDF8';
+    case 'Web Development':
+      return '#38BDF8';
     case 'Artificial Intelligence':
-    case 'Machine Learning': return '#7C3AED';
-    case 'Database': return '#F97316';
-    case 'DevOps': return '#22C55E';
-    case 'Computer Science': return '#6366F1';
-    default: return '#A855F7';
+    case 'Machine Learning':
+      return '#7C3AED';
+    case 'Database':
+      return '#F97316';
+    case 'DevOps':
+      return '#22C55E';
+    case 'Computer Science':
+      return '#6366F1';
+    default:
+      return '#A855F7';
   }
 }
 
 function getProficiencyBadgeClass(proficiency) {
   switch (proficiency) {
-    case 'Expert': return 'badge-cyan';
-    case 'Advanced': return 'badge-primary';
-    case 'Intermediate': return 'badge-secondary';
-    default: return 'badge-muted';
+    case 'Expert':
+      return 'badge-cyan';
+    case 'Advanced':
+      return 'badge-primary';
+    case 'Intermediate':
+      return 'badge-secondary';
+    default:
+      return 'badge-muted';
   }
 }
 
 function getStatusBadgeClass(status) {
   switch (status) {
-    case 'Completed': return 'badge-success';
-    case 'Practicing': return 'badge-orange';
-    case 'Learning': return 'badge-cyan';
-    default: return 'badge-muted';
+    case 'Completed':
+      return 'badge-success';
+    case 'Practicing':
+      return 'badge-orange';
+    case 'Learning':
+      return 'badge-cyan';
+    default:
+      return 'badge-muted';
   }
 }
 
@@ -321,7 +342,7 @@ function showSkillContextMenu(skillId, anchorEl) {
     });
   });
 
-  activeMenuDismissListener = (e) => {
+  activeMenuDismissListener = e => {
     if (!menu.contains(e.target) && e.target !== anchorEl) {
       menu.remove();
       document.removeEventListener('click', activeMenuDismissListener);
@@ -381,7 +402,7 @@ function handleSkillFormSubmit(e) {
   }
 
   const finalStatus = progress === 100 ? 'Completed' : status;
-  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+  const finalProgress = finalStatus === 'Completed' && progress < 100 ? 100 : progress;
 
   const skillData = {
     name,

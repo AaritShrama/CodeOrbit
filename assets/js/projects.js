@@ -22,7 +22,7 @@ function setupProjectEventListeners() {
   // Search
   const searchInput = document.getElementById('project-search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener('input', e => {
       searchQuery = e.target.value.toLowerCase().trim();
       renderProjects();
     });
@@ -31,7 +31,9 @@ function setupProjectEventListeners() {
   // Status Filter Pills
   document.querySelectorAll('#project-status-pills .pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#project-status-pills .pill-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('#project-status-pills .pill-btn')
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeStatus = btn.getAttribute('data-status') || 'All';
       renderProjects();
@@ -41,7 +43,7 @@ function setupProjectEventListeners() {
   // Sort
   const sortSelect = document.getElementById('project-sort-select');
   if (sortSelect) {
-    sortSelect.addEventListener('change', (e) => {
+    sortSelect.addEventListener('change', e => {
       activeSort = e.target.value;
       renderProjects();
     });
@@ -63,7 +65,7 @@ function setupProjectEventListeners() {
   const progSlider = document.getElementById('project-form-progress');
   const progBadge = document.getElementById('project-form-progress-badge');
   if (progSlider && progBadge) {
-    progSlider.addEventListener('input', (e) => {
+    progSlider.addEventListener('input', e => {
       progBadge.textContent = `${e.target.value}%`;
     });
   }
@@ -71,7 +73,7 @@ function setupProjectEventListeners() {
   // Tag Input field in modal
   const tagInputField = document.getElementById('project-tag-input');
   if (tagInputField) {
-    tagInputField.addEventListener('keydown', (e) => {
+    tagInputField.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault();
         const val = tagInputField.value.trim().replace(/^,+|,+$/g, '');
@@ -108,10 +110,11 @@ export function renderProjects() {
 
   // Filters
   if (searchQuery) {
-    projects = projects.filter(p =>
-      (p.name || '').toLowerCase().includes(searchQuery) ||
-      (p.description && p.description.toLowerCase().includes(searchQuery)) ||
-      (p.technologies && p.technologies.some(t => (t || '').toLowerCase().includes(searchQuery)))
+    projects = projects.filter(
+      p =>
+        (p.name || '').toLowerCase().includes(searchQuery) ||
+        (p.description && p.description.toLowerCase().includes(searchQuery)) ||
+        (p.technologies && p.technologies.some(t => (t || '').toLowerCase().includes(searchQuery)))
     );
   }
 
@@ -134,9 +137,11 @@ export function renderProjects() {
         <div class="empty-state-icon">🚀</div>
         <h4 class="empty-state-title">No Space Missions Found</h4>
         <p class="empty-state-desc">
-          ${searchQuery || activeStatus !== 'All'
-            ? 'No missions match your active search or status filters.'
-            : 'Assemble your portfolio! Create your first mission and chart its flightpath.'}
+          ${
+            searchQuery || activeStatus !== 'All'
+              ? 'No missions match your active search or status filters.'
+              : 'Assemble your portfolio! Create your first mission and chart its flightpath.'
+          }
         </p>
         <button class="btn btn-primary" id="empty-create-project-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -149,27 +154,32 @@ export function renderProjects() {
     return;
   }
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
-      case 'In Progress': return 'var(--cyan-accent)';
-      case 'Planning': return 'var(--secondary)';
-      case 'Completed': return 'var(--success)';
-      default: return 'var(--border)';
+      case 'In Progress':
+        return 'var(--cyan-accent)';
+      case 'Planning':
+        return 'var(--secondary)';
+      case 'Completed':
+        return 'var(--success)';
+      default:
+        return 'var(--border)';
     }
   };
 
-  container.innerHTML = projects.map(p => {
-    const isCompleted = p.status === 'Completed';
-    const statusColor = getStatusColor(p.status);
+  container.innerHTML = projects
+    .map(p => {
+      const isCompleted = p.status === 'Completed';
+      const statusColor = getStatusColor(p.status);
 
-    let targetDateDisplay = 'No target date';
-    if (p.targetDate) {
-      const daysLeft = Math.ceil((new Date(p.targetDate) - new Date()) / (1000 * 60 * 60 * 24));
-      const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
-      targetDateDisplay = `Target: ${formatDate(p.targetDate)} (${countdown})`;
-    }
+      let targetDateDisplay = 'No target date';
+      if (p.targetDate) {
+        const daysLeft = Math.ceil((new Date(p.targetDate) - new Date()) / (1000 * 60 * 60 * 24));
+        const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
+        targetDateDisplay = `Target: ${formatDate(p.targetDate)} (${countdown})`;
+      }
 
-    return `
+      return `
       <div class="card card-glow-cyan project-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${statusColor};">
         <div>
           <!-- Top Row -->
@@ -215,18 +225,26 @@ export function renderProjects() {
           <!-- Bottom Links and Dates -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; gap: 10px;">
-              ${p.githubUrl ? `
+              ${
+                p.githubUrl
+                  ? `
                 <a href="${escapeHTML(p.githubUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="GitHub Repository">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                   <span style="font-size: 0.6875rem;">Repo</span>
                 </a>
-              ` : ''}
-              ${p.liveDemoUrl ? `
+              `
+                  : ''
+              }
+              ${
+                p.liveDemoUrl
+                  ? `
                 <a href="${escapeHTML(p.liveDemoUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-accent); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Live Demo">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   <span style="font-size: 0.6875rem;">Demo</span>
                 </a>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
 
             <span style="font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono);">
@@ -236,7 +254,8 @@ export function renderProjects() {
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Wire buttons
   container.querySelectorAll('.edit-project-btn').forEach(btn => {
@@ -265,11 +284,16 @@ export function renderProjects() {
 
 function getStatusBadge(status) {
   switch (status) {
-    case 'Completed': return 'badge-success';
-    case 'In Progress': return 'badge-cyan';
-    case 'Planning': return 'badge-secondary';
-    case 'On Hold': return 'badge-warning';
-    default: return 'badge-muted';
+    case 'Completed':
+      return 'badge-success';
+    case 'In Progress':
+      return 'badge-cyan';
+    case 'Planning':
+      return 'badge-secondary';
+    case 'On Hold':
+      return 'badge-warning';
+    default:
+      return 'badge-muted';
   }
 }
 
@@ -277,12 +301,16 @@ function renderModalTags() {
   const container = document.getElementById('project-modal-tags-list');
   if (!container) return;
 
-  container.innerHTML = modalTechTags.map(tag => `
+  container.innerHTML = modalTechTags
+    .map(
+      tag => `
     <span class="tag-badge">
       ${escapeHTML(tag)}
       <span class="tag-remove-btn" data-tag="${escapeHTML(tag)}">&times;</span>
     </span>
-  `).join('');
+  `
+    )
+    .join('');
 
   container.querySelectorAll('.tag-remove-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -359,7 +387,7 @@ function handleProjectFormSubmit(e) {
   }
 
   const finalStatus = progress === 100 ? 'Completed' : status;
-  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+  const finalProgress = finalStatus === 'Completed' && progress < 100 ? 100 : progress;
 
   const projectData = {
     name,

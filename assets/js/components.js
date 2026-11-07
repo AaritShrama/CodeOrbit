@@ -113,7 +113,9 @@ export function openModal(modalId) {
   document.body.style.overflow = 'hidden';
 
   // Auto focus first interactive element
-  const focusable = modal.querySelectorAll('input:not([type="hidden"]), select, textarea, button:not(.modal-close-btn)');
+  const focusable = modal.querySelectorAll(
+    'input:not([type="hidden"]), select, textarea, button:not(.modal-close-btn)'
+  );
   if (focusable.length > 0) {
     setTimeout(() => focusable[0].focus(), 50);
   }
@@ -133,7 +135,7 @@ export function closeModal(modalId) {
  * Initializes generic modal close handlers (ESC key and backdrop click).
  */
 export function setupModalDismissHandlers() {
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       const activeModal = document.querySelector('.modal-backdrop.active');
       if (activeModal) {
@@ -143,7 +145,7 @@ export function setupModalDismissHandlers() {
     }
   });
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     if (e.target.classList.contains('modal-backdrop')) {
       closeModal(e.target.id);
     }
@@ -328,7 +330,10 @@ export function renderPaletteResults(query) {
     return;
   }
 
-  container.innerHTML = results.slice(0, 10).map((r, i) => `
+  container.innerHTML = results
+    .slice(0, 10)
+    .map(
+      (r, i) => `
     <div class="palette-result-item" data-index="${i}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; margin-bottom: 2px;">
       <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
         <span style="font-size: 1.1rem;">${r.icon}</span>
@@ -339,11 +344,15 @@ export function renderPaletteResults(query) {
       </div>
       <span class="badge badge-primary" style="font-size: 0.625rem; flex-shrink: 0;">${r.type}</span>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 
   container.querySelectorAll('.palette-result-item').forEach((item, idx) => {
     item.addEventListener('mouseenter', () => {
-      container.querySelectorAll('.palette-result-item').forEach(el => el.style.background = 'transparent');
+      container
+        .querySelectorAll('.palette-result-item')
+        .forEach(el => (el.style.background = 'transparent'));
       item.style.background = 'var(--bg-card-elevated)';
     });
     item.addEventListener('click', () => {

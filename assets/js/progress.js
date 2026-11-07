@@ -30,7 +30,7 @@ function setupProgressEventListeners() {
   // Search
   const searchInput = document.getElementById('log-search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener('input', e => {
       searchQuery = e.target.value.toLowerCase().trim();
       renderProgress();
     });
@@ -39,7 +39,7 @@ function setupProgressEventListeners() {
   // Activity Type Filter
   const typeFilter = document.getElementById('log-type-filter');
   if (typeFilter) {
-    typeFilter.addEventListener('change', (e) => {
+    typeFilter.addEventListener('change', e => {
       activeType = e.target.value;
       renderProgress();
     });
@@ -48,7 +48,7 @@ function setupProgressEventListeners() {
   // Skill Filter
   const skillFilter = document.getElementById('log-skill-filter');
   if (skillFilter) {
-    skillFilter.addEventListener('change', (e) => {
+    skillFilter.addEventListener('change', e => {
       activeSkill = e.target.value;
       renderProgress();
     });
@@ -57,7 +57,7 @@ function setupProgressEventListeners() {
   // Sort Filter
   const sortSelect = document.getElementById('log-sort-select');
   if (sortSelect) {
-    sortSelect.addEventListener('change', (e) => {
+    sortSelect.addEventListener('change', e => {
       activeSort = e.target.value;
       renderProgress();
     });
@@ -137,10 +137,11 @@ export function renderProgress() {
   let filtered = [...activities];
 
   if (searchQuery) {
-    filtered = filtered.filter(a =>
-      (a.title || '').toLowerCase().includes(searchQuery) ||
-      (a.skill || '').toLowerCase().includes(searchQuery) ||
-      (a.notes && a.notes.toLowerCase().includes(searchQuery))
+    filtered = filtered.filter(
+      a =>
+        (a.title || '').toLowerCase().includes(searchQuery) ||
+        (a.skill || '').toLowerCase().includes(searchQuery) ||
+        (a.notes && a.notes.toLowerCase().includes(searchQuery))
     );
   }
 
@@ -154,7 +155,8 @@ export function renderProgress() {
 
   filtered.sort((a, b) => {
     if (activeSort === 'date-asc') return new Date(a.date) - new Date(b.date);
-    if (activeSort === 'duration-desc') return (Number(b.duration) || 0) - (Number(a.duration) || 0);
+    if (activeSort === 'duration-desc')
+      return (Number(b.duration) || 0) - (Number(a.duration) || 0);
     if (activeSort === 'duration-asc') return (Number(a.duration) || 0) - (Number(b.duration) || 0);
     return new Date(b.date) - new Date(a.date); // default date-desc
   });
@@ -165,9 +167,11 @@ export function renderProgress() {
         <div class="empty-state-icon">📝</div>
         <h4 class="empty-state-title">No Mission Logs Recorded</h4>
         <p class="empty-state-desc">
-          ${searchQuery || activeType !== 'All' || activeSkill !== 'All'
-            ? 'No activities match the current filters. Clear your filters to see more.'
-            : 'Track your coding sprints, reading, and problem solving sessions to keep your streak glowing.'}
+          ${
+            searchQuery || activeType !== 'All' || activeSkill !== 'All'
+              ? 'No activities match the current filters. Clear your filters to see more.'
+              : 'Track your coding sprints, reading, and problem solving sessions to keep your streak glowing.'
+          }
         </p>
         <button class="btn btn-primary" id="empty-launch-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -192,25 +196,28 @@ export function renderProgress() {
   const todayStr = getTodayISO();
   const yesterdayStr = getRelativeISO(-1);
 
-  const getDateGroupLabel = (dStr) => {
+  const getDateGroupLabel = dStr => {
     if (dStr === todayStr) return 'Today';
     if (dStr === yesterdayStr) return 'Yesterday';
     return formatDate(dStr, false);
   };
 
-  container.innerHTML = dateKeys.map(dStr => {
-    const groupItems = groups[dStr];
-    const groupMins = groupItems.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
-    const label = getDateGroupLabel(dStr);
+  container.innerHTML = dateKeys
+    .map(dStr => {
+      const groupItems = groups[dStr];
+      const groupMins = groupItems.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+      const label = getDateGroupLabel(dStr);
 
-    return `
+      return `
       <div class="timeline-date-group">
         <div class="timeline-date-header">
           <span class="timeline-date-badge">🗓 ${label}</span>
           <span class="timeline-date-summary">${groupItems.length} session${groupItems.length === 1 ? '' : 's'} &bull; ${formatDuration(groupMins)}</span>
         </div>
         <div class="timeline-stream">
-          ${groupItems.map(act => `
+          ${groupItems
+            .map(
+              act => `
             <div class="activity-timeline-item card card-elevated" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
               <div style="display: flex; gap: 14px; flex: 1;">
                 <div class="log-type-icon" style="width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0;">
@@ -225,11 +232,15 @@ export function renderProgress() {
                     <span class="badge badge-muted" style="font-size: 0.625rem;">${escapeHTML(act.type)}</span>
                   </div>
 
-                  ${act.notes ? `
+                  ${
+                    act.notes
+                      ? `
                     <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 6px;">
                       ${escapeHTML(act.notes)}
                     </p>
-                  ` : ''}
+                  `
+                      : ''
+                  }
 
                   <div style="font-size: 0.6875rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-family: var(--font-mono);">
                     <span>${formatDate(act.date, true)} (${formatRelativeTime(act.date)})</span>
@@ -251,11 +262,14 @@ export function renderProgress() {
                 </div>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Wire actions
   container.querySelectorAll('.edit-log-btn').forEach(btn => {
@@ -270,7 +284,8 @@ export function renderProgress() {
       const id = btn.getAttribute('data-id');
       showConfirmDialog({
         title: 'Delete Mission Log',
-        message: 'Are you sure you want to delete this recorded session? This will affect your total hours and streaks.',
+        message:
+          'Are you sure you want to delete this recorded session? This will affect your total hours and streaks.',
         confirmText: 'Delete Log',
         onConfirm: () => {
           storage.deleteActivity(id);
@@ -283,13 +298,20 @@ export function renderProgress() {
 
 function getActivityIcon(type) {
   switch (type) {
-    case 'Coding': return '&lt;/&gt;';
-    case 'Reading': return '📖';
-    case 'Practice Problems': return '🧩';
-    case 'Project Development': return '🚀';
-    case 'Research': return '🔍';
-    case 'Tutorial': return '📺';
-    default: return '⚡';
+    case 'Coding':
+      return '&lt;/&gt;';
+    case 'Reading':
+      return '📖';
+    case 'Practice Problems':
+      return '🧩';
+    case 'Project Development':
+      return '🚀';
+    case 'Research':
+      return '🔍';
+    case 'Tutorial':
+      return '📺';
+    default:
+      return '⚡';
   }
 }
 
@@ -300,8 +322,14 @@ function populateSkillFilterOptions(skills) {
   const currentVal = filter.value;
   const skillNames = Array.from(new Set(skills.map(s => s.name)));
 
-  filter.innerHTML = `<option value="All">All Skills</option>` +
-    skillNames.map(name => `<option value="${escapeHTML(name)}" ${currentVal === name ? 'selected' : ''}>${escapeHTML(name)}</option>`).join('');
+  filter.innerHTML =
+    `<option value="All">All Skills</option>` +
+    skillNames
+      .map(
+        name =>
+          `<option value="${escapeHTML(name)}" ${currentVal === name ? 'selected' : ''}>${escapeHTML(name)}</option>`
+      )
+      .join('');
 }
 
 export function openActivityModal(activityId = null) {
@@ -314,9 +342,12 @@ export function openActivityModal(activityId = null) {
   // Populate skill select dropdown
   const skillSelect = document.getElementById('activity-form-skill');
   if (skillSelect) {
-    skillSelect.innerHTML = skills.length > 0
-      ? skills.map(s => `<option value="${escapeHTML(s.name)}">${escapeHTML(s.name)}</option>`).join('') + `<option value="General Exploration">General Exploration</option>`
-      : `<option value="General Exploration">General Exploration</option>`;
+    skillSelect.innerHTML =
+      skills.length > 0
+        ? skills
+            .map(s => `<option value="${escapeHTML(s.name)}">${escapeHTML(s.name)}</option>`)
+            .join('') + `<option value="General Exploration">General Exploration</option>`
+        : `<option value="General Exploration">General Exploration</option>`;
   }
 
   const titleEl = document.getElementById('activity-modal-title');
@@ -376,5 +407,8 @@ function handleActivityFormSubmit(e) {
 
   storage.saveActivity(actData);
   closeModal('activity-modal');
-  toast.success(id ? 'Session Updated' : 'Session Logged', `Logged ${formatDuration(duration)} on ${skill}!`);
+  toast.success(
+    id ? 'Session Updated' : 'Session Logged',
+    `Logged ${formatDuration(duration)} on ${skill}!`
+  );
 }

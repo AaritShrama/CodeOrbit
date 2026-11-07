@@ -1,7 +1,7 @@
 name: Feature Request
 description: Propose an idea, improvement, or new capability for CodeOrbit.
-title: "[FEATURE]: "
-labels: ["enhancement", "triage"]
+title: '[FEATURE]: '
+labels: ['enhancement', 'triage']
 body:
   - type: markdown
     attributes:

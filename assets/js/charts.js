@@ -75,14 +75,16 @@ class ChartManager {
       type: 'bar',
       data: {
         labels: dayLabels,
-        datasets: [{
-          label: 'Learning Hours',
-          data: dayHours,
-          backgroundColor: gradient,
-          borderRadius: 6,
-          borderSkipped: false,
-          barPercentage: 0.55
-        }]
+        datasets: [
+          {
+            label: 'Learning Hours',
+            data: dayHours,
+            backgroundColor: gradient,
+            borderRadius: 6,
+            borderSkipped: false,
+            barPercentage: 0.55
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -98,7 +100,7 @@ class ChartManager {
             padding: 10,
             displayColors: false,
             callbacks: {
-              label: (item) => `${item.raw} hrs logged`
+              label: item => `${item.raw} hrs logged`
             }
           }
         },
@@ -113,7 +115,7 @@ class ChartManager {
             ticks: {
               color: theme.textColor,
               font: { family: 'Inter', size: 12 },
-              callback: (v) => `${v}h`
+              callback: v => `${v}h`
             }
           }
         }
@@ -158,18 +160,20 @@ class ChartManager {
       type: 'line',
       data: {
         labels,
-        datasets: [{
-          label: 'Daily Hours',
-          data: hours,
-          borderColor: '#38BDF8',
-          borderWidth: 2.5,
-          pointBackgroundColor: '#7C3AED',
-          pointBorderColor: '#FFFFFF',
-          pointHoverRadius: 6,
-          fill: true,
-          backgroundColor: fillGrad,
-          tension: 0.35
-        }]
+        datasets: [
+          {
+            label: 'Daily Hours',
+            data: hours,
+            borderColor: '#38BDF8',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#7C3AED',
+            pointBorderColor: '#FFFFFF',
+            pointHoverRadius: 6,
+            fill: true,
+            backgroundColor: fillGrad,
+            tension: 0.35
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -183,7 +187,7 @@ class ChartManager {
             borderColor: theme.tooltipBorder,
             borderWidth: 1,
             callbacks: {
-              label: (item) => `${item.raw} hours`
+              label: item => `${item.raw} hours`
             }
           }
         },
@@ -202,7 +206,7 @@ class ChartManager {
             ticks: {
               color: theme.textColor,
               font: { family: 'Inter', size: 11 },
-              callback: (v) => `${v}h`
+              callback: v => `${v}h`
             }
           }
         }
@@ -240,19 +244,23 @@ class ChartManager {
       '#6366F1', // Indigo
       '#F59E0B', // Amber
       '#EC4899', // Pink
-      '#64748B'  // Slate
+      '#64748B' // Slate
     ];
 
     const chart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: labels.length ? labels : ['No Skills Yet'],
-        datasets: [{
-          data: counts.length ? counts : [1],
-          backgroundColor: counts.length ? labels.map((_, i) => palette[i % palette.length]) : ['#25314A'],
-          borderWidth: 2,
-          borderColor: theme.tooltipBg
-        }]
+        datasets: [
+          {
+            data: counts.length ? counts : [1],
+            backgroundColor: counts.length
+              ? labels.map((_, i) => palette[i % palette.length])
+              : ['#25314A'],
+            borderWidth: 2,
+            borderColor: theme.tooltipBg
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -293,10 +301,10 @@ class ChartManager {
     const theme = this.getThemeColors();
 
     const statusCounts = {
-      'Planning': 0,
+      Planning: 0,
       'In Progress': 0,
       'On Hold': 0,
-      'Completed': 0
+      Completed: 0
     };
 
     projects.forEach(p => {
@@ -314,12 +322,14 @@ class ChartManager {
       type: 'doughnut',
       data: {
         labels,
-        datasets: [{
-          data: counts,
-          backgroundColor: colors,
-          borderWidth: 2,
-          borderColor: theme.tooltipBg
-        }]
+        datasets: [
+          {
+            data: counts,
+            backgroundColor: colors,
+            borderWidth: 2,
+            borderColor: theme.tooltipBg
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -373,13 +383,15 @@ class ChartManager {
       type: 'bar',
       data: {
         labels: labels.length ? labels : ['No Activities'],
-        datasets: [{
-          label: 'Total Hours',
-          data: dataVals.length ? dataVals : [0],
-          backgroundColor: '#6366F1',
-          borderRadius: 4,
-          barPercentage: 0.6
-        }]
+        datasets: [
+          {
+            label: 'Total Hours',
+            data: dataVals.length ? dataVals : [0],
+            backgroundColor: '#6366F1',
+            borderRadius: 4,
+            barPercentage: 0.6
+          }
+        ]
       },
       options: {
         indexAxis: 'y',
@@ -394,7 +406,7 @@ class ChartManager {
             borderColor: theme.tooltipBorder,
             borderWidth: 1,
             callbacks: {
-              label: (item) => `${item.raw} hrs`
+              label: item => `${item.raw} hrs`
             }
           }
         },

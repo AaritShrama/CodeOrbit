@@ -1,7 +1,7 @@
 name: Bug Report
 description: Report a reproducible bug or unexpected behavior in CodeOrbit.
-title: "[BUG]: "
-labels: ["bug", "triage"]
+title: '[BUG]: '
+labels: ['bug', 'triage']
 body:
   - type: markdown
     attributes:
@@ -54,7 +54,7 @@ body:
     attributes:
       label: Browser & Operating System
       description: Please tell us what browser and OS you are using.
-      placeholder: "e.g., Google Chrome 124 on Windows 11 / Firefox 125 on Ubuntu 22.04 / Safari on macOS"
+      placeholder: 'e.g., Google Chrome 124 on Windows 11 / Firefox 125 on Ubuntu 22.04 / Safari on macOS'
     validations:
       required: true
 

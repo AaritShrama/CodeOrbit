@@ -18,7 +18,9 @@ function setupSettingsEventListeners() {
   // Section Navigation Bar
   document.querySelectorAll('#settings-nav-bar .settings-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#settings-nav-bar .settings-nav-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('#settings-nav-bar .settings-nav-btn')
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const targetId = btn.getAttribute('data-target');
       const targetEl = document.getElementById(targetId);
@@ -49,7 +51,7 @@ function setupSettingsEventListeners() {
   // Theme selector in settings
   const themeSelect = document.getElementById('settings-theme-select');
   if (themeSelect) {
-    themeSelect.addEventListener('change', (e) => {
+    themeSelect.addEventListener('change', e => {
       applyTheme(e.target.value);
     });
   }
@@ -97,7 +99,8 @@ function setupSettingsEventListeners() {
     loadDemoBtn.addEventListener('click', () => {
       showConfirmDialog({
         title: 'Load Demo Universe Data',
-        message: 'This will replace your current data with a comprehensive realistic developer universe. Are you sure?',
+        message:
+          'This will replace your current data with a comprehensive realistic developer universe. Are you sure?',
         confirmText: 'Load Demo Universe',
         confirmClass: 'btn-primary',
         onConfirm: () => {
@@ -115,7 +118,8 @@ function setupSettingsEventListeners() {
     resetBtn.addEventListener('click', () => {
       showConfirmDialog({
         title: 'Reset All Universe Data',
-        message: 'WARNING: This will permanently delete all your skills, projects, logs, and goals. This action cannot be undone.',
+        message:
+          'WARNING: This will permanently delete all your skills, projects, logs, and goals. This action cannot be undone.',
         confirmText: 'Reset Everything',
         confirmClass: 'btn-danger',
         onConfirm: () => {
@@ -197,7 +201,8 @@ function handlePreferencesSubmit(e) {
 
   const theme = document.getElementById('settings-theme-select').value;
   const dailyTargetHours = parseFloat(document.getElementById('settings-daily-target').value) || 2;
-  const weeklyTargetHours = parseFloat(document.getElementById('settings-weekly-target').value) || 10;
+  const weeklyTargetHours =
+    parseFloat(document.getElementById('settings-weekly-target').value) || 10;
   const soundEnabled = document.getElementById('settings-sound-enabled').checked;
 
   const newSettings = {
@@ -222,9 +227,10 @@ export function applyTheme(themeName, save = true) {
   // Update topbar theme button icon
   const topbarThemeBtn = document.getElementById('topbar-theme-toggle');
   if (topbarThemeBtn) {
-    topbarThemeBtn.innerHTML = themeName === 'light'
-      ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>`
-      : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>`;
+    topbarThemeBtn.innerHTML =
+      themeName === 'light'
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>`;
   }
 
   if (save) {
@@ -286,7 +292,7 @@ function handleImportFile(e) {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = (event) => {
+  reader.onload = event => {
     const content = event.target.result;
     showConfirmDialog({
       title: 'Import Universe JSON',

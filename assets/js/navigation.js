@@ -60,7 +60,7 @@ class NavigationManager {
 
     // Setup sidebar navigation links
     document.querySelectorAll('.nav-link[data-route]').forEach(link => {
-      link.addEventListener('click', (e) => {
+      link.addEventListener('click', e => {
         e.preventDefault();
         const route = link.getAttribute('data-route');
         this.navigateTo(route);
@@ -163,7 +163,9 @@ class NavigationManager {
   updateBadges() {
     const data = storage.getUniverse();
     const skillsCount = (data.skills || []).length;
-    const activeProjectsCount = (data.projects || []).filter(p => p.status === 'In Progress').length;
+    const activeProjectsCount = (data.projects || []).filter(
+      p => p.status === 'In Progress'
+    ).length;
     const pendingGoalsCount = (data.goals || []).filter(g => g.status === 'Active').length;
     const unlockedAchievements = (data.achievements || []).length;
 

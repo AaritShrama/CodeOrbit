@@ -2,14 +2,14 @@
 # Automated updates for GitHub Actions CI/CD workflows
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     commit-message:
-      prefix: "chore(ci)"
-      include: "scope"
+      prefix: 'chore(ci)'
+      include: 'scope'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "security"
+      - 'dependencies'
+      - 'security'

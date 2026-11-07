@@ -31,14 +31,14 @@
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  color: #FFFFFF;
+  color: #ffffff;
   box-shadow: 0 2px 8px var(--primary-glow);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px var(--primary-glow);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .btn-secondary {
@@ -50,12 +50,12 @@
 .btn-secondary:hover {
   background-color: var(--bg-card-hover);
   border-color: var(--secondary);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .btn-cyan {
-  background: linear-gradient(135deg, #0284C7 0%, var(--cyan-accent) 100%);
-  color: #080D1B;
+  background: linear-gradient(135deg, #0284c7 0%, var(--cyan-accent) 100%);
+  color: #080d1b;
   font-weight: 700;
   box-shadow: 0 2px 8px var(--cyan-glow);
 }
@@ -63,12 +63,12 @@
 .btn-cyan:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px var(--cyan-glow);
-  color: #080D1B;
+  color: #080d1b;
 }
 
 .btn-orange {
-  background: linear-gradient(135deg, #EA580C 0%, var(--orbital-orange) 100%);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #ea580c 0%, var(--orbital-orange) 100%);
+  color: #ffffff;
   box-shadow: 0 2px 8px var(--orange-glow);
 }
 
@@ -107,7 +107,7 @@
 
 .btn-danger:hover {
   background: var(--danger);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .btn-sm {
@@ -151,7 +151,9 @@
 .card:hover {
   border-color: var(--glass-border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 16px rgba(99, 102, 241, 0.15);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(99, 102, 241, 0.15);
 }
 
 .card-elevated {
@@ -160,17 +162,23 @@
 
 .card-glow-purple:hover {
   border-color: rgba(124, 58, 237, 0.5);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 16px var(--primary-glow);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 16px var(--primary-glow);
 }
 
 .card-glow-cyan:hover {
   border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 16px var(--cyan-glow);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 16px var(--cyan-glow);
 }
 
 .card-glow-orange:hover {
   border-color: rgba(249, 115, 22, 0.5);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 16px var(--orange-glow);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 16px var(--orange-glow);
 }
 
 .card-header {
@@ -381,13 +389,13 @@
 
 .badge-primary {
   background: var(--primary-subtle);
-  color: #C4B5FD;
+  color: #c4b5fd;
   border: 1px solid rgba(124, 58, 237, 0.4);
 }
 
 .badge-secondary {
   background: var(--secondary-subtle);
-  color: #A5B4FC;
+  color: #a5b4fc;
   border: 1px solid rgba(99, 102, 241, 0.4);
 }
 
@@ -449,11 +457,11 @@
 }
 
 .progress-bar-fill.fill-orange {
-  background: linear-gradient(90deg, var(--orbital-orange) 0%, #FBBF24 100%);
+  background: linear-gradient(90deg, var(--orbital-orange) 0%, #fbbf24 100%);
 }
 
 .progress-bar-fill.fill-success {
-  background: linear-gradient(90deg, #10B981 0%, var(--success) 100%);
+  background: linear-gradient(90deg, #10b981 0%, var(--success) 100%);
 }
 
 .progress-bar-fill.fill-primary {
@@ -491,7 +499,9 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 30px rgba(0, 0, 0, 0.5);
   transform: translateY(16px) scale(0.98);
   transition: transform var(--transition-normal);
   overflow: hidden;
@@ -598,7 +608,9 @@
   border-radius: var(--radius-md);
   background: var(--bg-card-elevated);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 20px rgba(0, 0, 0, 0.4);
   animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   position: relative;
   overflow: hidden;
@@ -691,7 +703,7 @@
 /* Special Achievement Unlock Toast */
 .toast-achievement {
   border: 1px solid var(--orbital-orange);
-  background: linear-gradient(135deg, #1A1F3C 0%, #2A1A3D 100%);
+  background: linear-gradient(135deg, #1a1f3c 0%, #2a1a3d 100%);
   box-shadow: 0 0 25px var(--orange-glow);
 }
 
@@ -700,7 +712,7 @@
 }
 
 .toast-achievement .toast-title {
-  color: #FDBA74;
+  color: #fdba74;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -716,7 +728,9 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 20px rgba(0, 0, 0, 0.4);
   padding: 6px;
   min-width: 220px;
   z-index: 150;
@@ -881,7 +895,8 @@
   margin-bottom: var(--space-lg);
 }
 
-.filter-left, .filter-right {
+.filter-left,
+.filter-right {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -933,7 +948,7 @@
 
 .pill-btn.active {
   background: var(--primary);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 /* ==========================================================================
@@ -1093,9 +1108,8 @@
 }
 
 .settings-nav-btn.active {
-  color: #FFFFFF;
+  color: #ffffff;
   background: rgba(124, 58, 237, 0.18);
   border-color: rgba(124, 58, 237, 0.35);
   box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
 }
-

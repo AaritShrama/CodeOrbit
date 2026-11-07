@@ -21,7 +21,7 @@ function setupGoalEventListeners() {
   // Search
   const searchInput = document.getElementById('goal-search-input');
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener('input', e => {
       searchQuery = e.target.value.toLowerCase().trim();
       renderGoals();
     });
@@ -30,7 +30,9 @@ function setupGoalEventListeners() {
   // Status Filter Pills
   document.querySelectorAll('#goal-status-pills .pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#goal-status-pills .pill-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('#goal-status-pills .pill-btn')
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeStatus = btn.getAttribute('data-status') || 'All';
       renderGoals();
@@ -40,7 +42,7 @@ function setupGoalEventListeners() {
   // Priority Filter
   const priorityFilter = document.getElementById('goal-priority-filter');
   if (priorityFilter) {
-    priorityFilter.addEventListener('change', (e) => {
+    priorityFilter.addEventListener('change', e => {
       activePriority = e.target.value;
       renderGoals();
     });
@@ -62,7 +64,7 @@ function setupGoalEventListeners() {
   const progSlider = document.getElementById('goal-form-progress');
   const progBadge = document.getElementById('goal-form-progress-badge');
   if (progSlider && progBadge) {
-    progSlider.addEventListener('input', (e) => {
+    progSlider.addEventListener('input', e => {
       progBadge.textContent = `${e.target.value}%`;
     });
   }
@@ -80,7 +82,9 @@ export function renderGoals() {
   const total = goals.length;
   const completed = goals.filter(g => g.status === 'Completed').length;
   const active = goals.filter(g => g.status === 'Active').length;
-  const overdue = goals.filter(g => g.status === 'Active' && g.deadline && g.deadline < today).length;
+  const overdue = goals.filter(
+    g => g.status === 'Active' && g.deadline && g.deadline < today
+  ).length;
   const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   const setEl = (id, text) => {
@@ -96,10 +100,11 @@ export function renderGoals() {
   let filtered = [...goals];
 
   if (searchQuery) {
-    filtered = filtered.filter(g =>
-      (g.title || '').toLowerCase().includes(searchQuery) ||
-      (g.description && g.description.toLowerCase().includes(searchQuery)) ||
-      (g.category && g.category.toLowerCase().includes(searchQuery))
+    filtered = filtered.filter(
+      g =>
+        (g.title || '').toLowerCase().includes(searchQuery) ||
+        (g.description && g.description.toLowerCase().includes(searchQuery)) ||
+        (g.category && g.category.toLowerCase().includes(searchQuery))
     );
   }
 
@@ -130,9 +135,11 @@ export function renderGoals() {
         <div class="empty-state-icon">🎯</div>
         <h4 class="empty-state-title">No Milestones Found</h4>
         <p class="empty-state-desc">
-          ${searchQuery || activeStatus !== 'All' || activePriority !== 'All'
-            ? 'No milestones match the current filter parameters.'
-            : 'Set your sights on technical excellence. Create your first milestone!'}
+          ${
+            searchQuery || activeStatus !== 'All' || activePriority !== 'All'
+              ? 'No milestones match the current filter parameters.'
+              : 'Set your sights on technical excellence. Create your first milestone!'
+          }
         </p>
         <button class="btn btn-primary" id="empty-create-goal-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -145,21 +152,23 @@ export function renderGoals() {
     return;
   }
 
-  container.innerHTML = filtered.map(g => {
-    const isCompleted = g.status === 'Completed';
-    const isOverdue = !isCompleted && g.deadline && g.deadline < today;
-    const ringCircum = 2 * Math.PI * 20; // 125.66 for r=20
-    const ringOffset = ringCircum - (Math.min(100, Number(g.progress) || 0) / 100) * ringCircum;
-    const priorityColor = getPriorityBorderColor(g.priority);
+  container.innerHTML = filtered
+    .map(g => {
+      const isCompleted = g.status === 'Completed';
+      const isOverdue = !isCompleted && g.deadline && g.deadline < today;
+      const ringCircum = 2 * Math.PI * 20; // 125.66 for r=20
+      const ringOffset = ringCircum - (Math.min(100, Number(g.progress) || 0) / 100) * ringCircum;
+      const priorityColor = getPriorityBorderColor(g.priority);
 
-    let deadlineDisplay = 'No deadline';
-    if (g.deadline) {
-      const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-      const text = daysLeft < 0 ? '⚠️ Overdue' : daysLeft === 0 ? 'Due Today' : `${daysLeft}d remaining`;
-      deadlineDisplay = `${text} &bull; ${formatDate(g.deadline)}`;
-    }
+      let deadlineDisplay = 'No deadline';
+      if (g.deadline) {
+        const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+        const text =
+          daysLeft < 0 ? '⚠️ Overdue' : daysLeft === 0 ? 'Due Today' : `${daysLeft}d remaining`;
+        deadlineDisplay = `${text} &bull; ${formatDate(g.deadline)}`;
+      }
 
-    return `
+      return `
       <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid ${priorityColor};">
         <div>
           <!-- Header Row -->
@@ -227,7 +236,8 @@ export function renderGoals() {
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Wire event handlers
   container.querySelectorAll('.toggle-complete-goal-btn').forEach(btn => {
@@ -262,19 +272,27 @@ export function renderGoals() {
 
 function getPriorityBadge(priority) {
   switch (priority) {
-    case 'Critical': return 'badge-danger';
-    case 'High': return 'badge-orange';
-    case 'Medium': return 'badge-warning';
-    default: return 'badge-muted';
+    case 'Critical':
+      return 'badge-danger';
+    case 'High':
+      return 'badge-orange';
+    case 'Medium':
+      return 'badge-warning';
+    default:
+      return 'badge-muted';
   }
 }
 
 function getPriorityBorderColor(priority) {
   switch (priority) {
-    case 'Critical': return 'var(--danger)';
-    case 'High': return 'var(--orbital-orange)';
-    case 'Medium': return 'var(--warning)';
-    default: return 'var(--secondary)';
+    case 'Critical':
+      return 'var(--danger)';
+    case 'High':
+      return 'var(--orbital-orange)';
+    case 'Medium':
+      return 'var(--warning)';
+    default:
+      return 'var(--secondary)';
   }
 }
 
@@ -345,7 +363,7 @@ function handleGoalFormSubmit(e) {
   }
 
   const finalStatus = progress === 100 ? 'Completed' : status;
-  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+  const finalProgress = finalStatus === 'Completed' && progress < 100 ? 100 : progress;
 
   const goalData = {
     title,

@@ -263,7 +263,7 @@ function renderOrbitalVisualization() {
   });
 
   // Category to color class mapping
-  const categoryClass = (cat) => {
+  const categoryClass = cat => {
     const c = (cat || '').toLowerCase();
     if (c.includes('web')) return 'planet-web';
     if (c.includes('ai') || c.includes('intelligence') || c.includes('machine')) return 'planet-ai';
@@ -273,7 +273,7 @@ function renderOrbitalVisualization() {
     return 'planet-other';
   };
 
-  ringConfigs.forEach((ring) => {
+  ringConfigs.forEach(ring => {
     if (ring.skills.length === 0) return;
 
     const track = document.createElement('div');
@@ -340,7 +340,9 @@ function renderConstellationGrid(skills, container) {
     return;
   }
 
-  container.innerHTML = skills.map(s => `
+  container.innerHTML = skills
+    .map(
+      s => `
     <div class="constellation-card">
       <div class="constellation-top">
         <span style="font-size: var(--text-sm); font-weight: 700; color: var(--text-primary);">${escapeHTML(s.name)}</span>
@@ -355,7 +357,9 @@ function renderConstellationGrid(skills, container) {
         <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${s.progress}%</span>
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 
 /**
@@ -375,7 +379,9 @@ function renderRecentLogs(activities) {
     return;
   }
 
-  container.innerHTML = recent.map(act => `
+  container.innerHTML = recent
+    .map(
+      act => `
     <div class="recent-log-item">
       <div class="recent-log-left">
         <div class="log-type-icon">
@@ -394,18 +400,27 @@ function renderRecentLogs(activities) {
         <span class="log-duration-badge">${formatDuration(act.duration)}</span>
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 
 function getLogIcon(type) {
   switch (type) {
-    case 'Coding': return '&lt;/&gt;';
-    case 'Reading': return '📖';
-    case 'Practice Problems': return '🧩';
-    case 'Project Development': return '🚀';
-    case 'Research': return '🔍';
-    case 'Tutorial': return '📺';
-    default: return '⚡';
+    case 'Coding':
+      return '&lt;/&gt;';
+    case 'Reading':
+      return '📖';
+    case 'Practice Problems':
+      return '🧩';
+    case 'Project Development':
+      return '🚀';
+    case 'Research':
+      return '🔍';
+    case 'Tutorial':
+      return '📺';
+    default:
+      return '⚡';
   }
 }
 
@@ -426,16 +441,18 @@ function renderActiveProjects(projects) {
     return;
   }
 
-  container.innerHTML = active.map(p => {
-    let deadlineStr = '';
-    const targetDateVal = p.targetDate || p.deadline;
-    if (targetDateVal) {
-      const daysLeft = Math.ceil((new Date(targetDateVal) - new Date()) / (1000 * 60 * 60 * 24));
-      const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Due today' : `${daysLeft}d left`;
-      deadlineStr = `<span style="font-size: 0.6875rem; color: var(--text-muted);">${formatDate(targetDateVal)} (${countdown})</span>`;
-    }
+  container.innerHTML = active
+    .map(p => {
+      let deadlineStr = '';
+      const targetDateVal = p.targetDate || p.deadline;
+      if (targetDateVal) {
+        const daysLeft = Math.ceil((new Date(targetDateVal) - new Date()) / (1000 * 60 * 60 * 24));
+        const countdown =
+          daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Due today' : `${daysLeft}d left`;
+        deadlineStr = `<span style="font-size: 0.6875rem; color: var(--text-muted);">${formatDate(targetDateVal)} (${countdown})</span>`;
+      }
 
-    return `
+      return `
       <div class="mission-preview-card">
         <div class="mission-header-row">
           <span class="mission-title">${escapeHTML(p.name)}</span>
@@ -449,14 +466,18 @@ function renderActiveProjects(projects) {
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.6875rem;">
           <div class="mission-tech-stack">
-            ${(p.technologies || []).slice(0, 2).map(t => `<span class="mission-tech-tag">${escapeHTML(t)}</span>`).join('')}
+            ${(p.technologies || [])
+              .slice(0, 2)
+              .map(t => `<span class="mission-tech-tag">${escapeHTML(t)}</span>`)
+              .join('')}
           </div>
           <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${p.progress}%</span>
         </div>
         ${deadlineStr ? `<div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4px; display: flex; justify-content: flex-end;">${deadlineStr}</div>` : ''}
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 /**
@@ -476,15 +497,16 @@ function renderUpcomingGoals(goals) {
     return;
   }
 
-  container.innerHTML = active.map(g => {
-    let deadlineBadge = '';
-    if (g.deadline) {
-      const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-      const text = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
-      deadlineBadge = `<span style="font-size: 0.625rem; font-family: var(--font-mono); color: var(--text-muted); margin-left: 4px;">(${text})</span>`;
-    }
+  container.innerHTML = active
+    .map(g => {
+      let deadlineBadge = '';
+      if (g.deadline) {
+        const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+        const text = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
+        deadlineBadge = `<span style="font-size: 0.625rem; font-family: var(--font-mono); color: var(--text-muted); margin-left: 4px;">(${text})</span>`;
+      }
 
-    return `
+      return `
       <div class="milestone-item">
         <div class="milestone-info">
           <div class="milestone-title-row">
@@ -501,15 +523,20 @@ function renderUpcomingGoals(goals) {
         </span>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 }
 
 function getPriorityBadgeClass(priority) {
   switch (priority) {
-    case 'Critical': return 'badge-danger';
-    case 'High': return 'badge-orange';
-    case 'Medium': return 'badge-warning';
-    default: return 'badge-muted';
+    case 'Critical':
+      return 'badge-danger';
+    case 'High':
+      return 'badge-orange';
+    case 'Medium':
+      return 'badge-warning';
+    default:
+      return 'badge-muted';
   }
 }
 
@@ -526,9 +553,21 @@ function populateScoreModal(prod) {
     if (el) el.textContent = text;
   };
 
-  setEl('breakdown-consistency-val', `${b.consistency.points} / ${b.consistency.max} pts (${b.consistency.activeDays}/7 active days)`);
-  setEl('breakdown-hours-val', `${b.learningHours.points} / ${b.learningHours.max} pts (${b.learningHours.currentHours}h / ${b.learningHours.targetHours}h goal)`);
-  setEl('breakdown-projects-val', `${b.projects.points} / ${b.projects.max} pts (${b.projects.count} projects evaluated)`);
-  setEl('breakdown-skills-val', `${b.skills.points} / ${b.skills.max} pts (${b.skills.count} skills progressing)`);
+  setEl(
+    'breakdown-consistency-val',
+    `${b.consistency.points} / ${b.consistency.max} pts (${b.consistency.activeDays}/7 active days)`
+  );
+  setEl(
+    'breakdown-hours-val',
+    `${b.learningHours.points} / ${b.learningHours.max} pts (${b.learningHours.currentHours}h / ${b.learningHours.targetHours}h goal)`
+  );
+  setEl(
+    'breakdown-projects-val',
+    `${b.projects.points} / ${b.projects.max} pts (${b.projects.count} projects evaluated)`
+  );
+  setEl(
+    'breakdown-skills-val',
+    `${b.skills.points} / ${b.skills.max} pts (${b.skills.count} skills progressing)`
+  );
   setEl('breakdown-total-val', `${prod.score} / 100 — ${prod.level}`);
 }

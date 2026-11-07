@@ -33,13 +33,16 @@ export function renderAnalytics() {
   const monthlyHours = Math.round((monthMins / 60) * 10) / 10;
 
   const skillCompleted = skills.filter(s => s.status === 'Completed' || s.progress >= 100).length;
-  const skillCompletionRate = skills.length > 0 ? Math.round((skillCompleted / skills.length) * 100) : 0;
+  const skillCompletionRate =
+    skills.length > 0 ? Math.round((skillCompleted / skills.length) * 100) : 0;
 
   const projectCompleted = projects.filter(p => p.status === 'Completed').length;
-  const projectCompletionRate = projects.length > 0 ? Math.round((projectCompleted / projects.length) * 100) : 0;
+  const projectCompletionRate =
+    projects.length > 0 ? Math.round((projectCompleted / projects.length) * 100) : 0;
 
   const goalCompleted = goals.filter(g => g.status === 'Completed').length;
-  const goalCompletionRate = goals.length > 0 ? Math.round((goalCompleted / goals.length) * 100) : 0;
+  const goalCompletionRate =
+    goals.length > 0 ? Math.round((goalCompleted / goals.length) * 100) : 0;
 
   const streak = calculateStreak(activities);
 
@@ -100,7 +103,7 @@ function generateHabitInsights(activities, skills, goals) {
   activities.forEach(a => {
     if (a.date) {
       const d = new Date(a.date);
-      dayCounts[d.getDay()] += (Number(a.duration) || 0);
+      dayCounts[d.getDay()] += Number(a.duration) || 0;
     }
   });
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

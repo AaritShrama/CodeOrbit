@@ -6,7 +6,7 @@
 
 .orbital-section-card {
   position: relative;
-  background: radial-gradient(circle at 50% 50%, #111A35 0%, #0C1226 60%, #080D1B 100%);
+  background: radial-gradient(circle at 50% 50%, #111a35 0%, #0c1226 60%, #080d1b 100%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -20,11 +20,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+  background-size:
+    100% 100%,
+    40px 40px,
+    40px 40px;
   pointer-events: none;
 }
 
@@ -83,7 +86,12 @@
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(56, 189, 248, 0.08) 50%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.18) 0%,
+    rgba(56, 189, 248, 0.08) 50%,
+    transparent 70%
+  );
   pointer-events: none;
   filter: blur(50px);
 }
@@ -135,13 +143,19 @@
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.5) 0%, rgba(56, 189, 248, 0.25) 50%, transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.5) 0%,
+    rgba(56, 189, 248, 0.25) 50%,
+    transparent 75%
+  );
   animation: corePulse 3.5s infinite ease-in-out;
   pointer-events: none;
 }
 
 @keyframes corePulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(0.92);
     opacity: 0.65;
   }
@@ -155,9 +169,18 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #67E8F9 0%, #38BDF8 30%, #6366F1 70%, #4338CA 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #67e8f9 0%,
+    #38bdf8 30%,
+    #6366f1 70%,
+    #4338ca 100%
+  );
   border: 2px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 30px rgba(56, 189, 248, 0.45), inset -8px -8px 16px rgba(0, 0, 0, 0.5), inset 6px 6px 12px rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0 30px rgba(56, 189, 248, 0.45),
+    inset -8px -8px 16px rgba(0, 0, 0, 0.5),
+    inset 6px 6px 12px rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,14 +191,16 @@
 
 .dev-core-node:hover .dev-core-sphere {
   transform: scale(1.08);
-  box-shadow: 0 0 38px rgba(56, 189, 248, 0.6), inset -6px -6px 14px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 38px rgba(56, 189, 248, 0.6),
+    inset -6px -6px 14px rgba(0, 0, 0, 0.5);
 }
 
 .dev-core-sphere svg {
   width: 32px;
   height: 32px;
-  color: #FFFFFF;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 .dev-core-label {
@@ -260,8 +285,13 @@
   align-items: center;
   justify-content: center;
   border: 1.5px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), inset -6px -6px 12px rgba(0, 0, 0, 0.6), inset 4px 4px 8px rgba(255, 255, 255, 0.45);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.7),
+    inset -6px -6px 12px rgba(0, 0, 0, 0.6),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.45);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
   position: relative;
 }
 
@@ -286,33 +316,81 @@
 
 /* Planetary Colors by Category with 3D Radial Gradients */
 .planet-web {
-  background: radial-gradient(circle at 35% 30%, #7DD3FC 0%, #38BDF8 40%, #0284C7 85%, #0369A1 100%);
-  box-shadow: 0 0 16px var(--cyan-glow), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #7dd3fc 0%,
+    #38bdf8 40%,
+    #0284c7 85%,
+    #0369a1 100%
+  );
+  box-shadow:
+    0 0 16px var(--cyan-glow),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .planet-ai {
-  background: radial-gradient(circle at 35% 30%, #C084FC 0%, #A855F7 40%, #7C3AED 85%, #581C87 100%);
-  box-shadow: 0 0 16px var(--primary-glow), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #c084fc 0%,
+    #a855f7 40%,
+    #7c3aed 85%,
+    #581c87 100%
+  );
+  box-shadow:
+    0 0 16px var(--primary-glow),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .planet-data {
-  background: radial-gradient(circle at 35% 30%, #FDBA74 0%, #FB923C 40%, #EA580C 85%, #9A3412 100%);
-  box-shadow: 0 0 16px var(--orange-glow), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #fdba74 0%,
+    #fb923c 40%,
+    #ea580c 85%,
+    #9a3412 100%
+  );
+  box-shadow:
+    0 0 16px var(--orange-glow),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .planet-devops {
-  background: radial-gradient(circle at 35% 30%, #6EE7B7 0%, #34D399 40%, #059669 85%, #064E3B 100%);
-  box-shadow: 0 0 16px var(--success-glow), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #6ee7b7 0%,
+    #34d399 40%,
+    #059669 85%,
+    #064e3b 100%
+  );
+  box-shadow:
+    0 0 16px var(--success-glow),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .planet-cs {
-  background: radial-gradient(circle at 35% 30%, #A5B4FC 0%, #818CF8 40%, #4F46E5 85%, #312E81 100%);
-  box-shadow: 0 0 16px var(--secondary-glow), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #a5b4fc 0%,
+    #818cf8 40%,
+    #4f46e5 85%,
+    #312e81 100%
+  );
+  box-shadow:
+    0 0 16px var(--secondary-glow),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .planet-other {
-  background: radial-gradient(circle at 35% 30%, #CBD5E1 0%, #94A3B8 40%, #475569 85%, #1E293B 100%);
-  box-shadow: 0 0 12px rgba(148, 163, 184, 0.3), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #cbd5e1 0%,
+    #94a3b8 40%,
+    #475569 85%,
+    #1e293b 100%
+  );
+  box-shadow:
+    0 0 12px rgba(148, 163, 184, 0.3),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* Planet Progress Ring / Aura */
@@ -362,12 +440,16 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.25);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(99, 102, 241, 0.25);
   backdrop-filter: blur(16px);
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .planet-node-wrapper:hover .planet-tooltip-card {
@@ -379,7 +461,7 @@
 .tooltip-skill-name {
   font-size: var(--text-sm);
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 2px;
 }
 

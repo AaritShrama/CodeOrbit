@@ -14,8 +14,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Add your first skill to the developer universe.',
     icon: '🪐',
     category: 'Skills',
-    check: (data) => (data.skills || []).length >= 1,
-    progress: (data) => ({ current: Math.min(1, (data.skills || []).length), target: 1 })
+    check: data => (data.skills || []).length >= 1,
+    progress: data => ({ current: Math.min(1, (data.skills || []).length), target: 1 })
   },
   {
     id: 'first_mission',
@@ -23,8 +23,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Create your first Space Mission project.',
     icon: '🚀',
     category: 'Missions',
-    check: (data) => (data.projects || []).length >= 1,
-    progress: (data) => ({ current: Math.min(1, (data.projects || []).length), target: 1 })
+    check: data => (data.projects || []).length >= 1,
+    progress: data => ({ current: Math.min(1, (data.projects || []).length), target: 1 })
   },
   {
     id: 'learning_explorer',
@@ -32,8 +32,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Complete 5 learning sessions in your Mission Log.',
     icon: '🧭',
     category: 'Progress',
-    check: (data) => (data.activities || []).length >= 5,
-    progress: (data) => ({ current: Math.min(5, (data.activities || []).length), target: 5 })
+    check: data => (data.activities || []).length >= 5,
+    progress: data => ({ current: Math.min(5, (data.activities || []).length), target: 5 })
   },
   {
     id: 'orbit_streak',
@@ -41,8 +41,11 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Maintain a 3-day consecutive learning streak.',
     icon: '🔥',
     category: 'Habits',
-    check: (data) => calculateStreak(data.activities).longestStreak >= 3,
-    progress: (data) => ({ current: Math.min(3, calculateStreak(data.activities).longestStreak), target: 3 })
+    check: data => calculateStreak(data.activities).longestStreak >= 3,
+    progress: data => ({
+      current: Math.min(3, calculateStreak(data.activities).longestStreak),
+      target: 3
+    })
   },
   {
     id: 'deep_space_voyager',
@@ -50,8 +53,11 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Maintain a 7-day unbroken learning streak.',
     icon: '🌌',
     category: 'Habits',
-    check: (data) => calculateStreak(data.activities).longestStreak >= 7,
-    progress: (data) => ({ current: Math.min(7, calculateStreak(data.activities).longestStreak), target: 7 })
+    check: data => calculateStreak(data.activities).longestStreak >= 7,
+    progress: data => ({
+      current: Math.min(7, calculateStreak(data.activities).longestStreak),
+      target: 7
+    })
   },
   {
     id: 'skill_master',
@@ -59,9 +65,11 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Bring a skill to 100% completion in your universe.',
     icon: '⭐',
     category: 'Skills',
-    check: (data) => (data.skills || []).some(s => s.progress >= 100 || s.status === 'Completed'),
-    progress: (data) => {
-      const completed = (data.skills || []).filter(s => s.progress >= 100 || s.status === 'Completed').length;
+    check: data => (data.skills || []).some(s => s.progress >= 100 || s.status === 'Completed'),
+    progress: data => {
+      const completed = (data.skills || []).filter(
+        s => s.progress >= 100 || s.status === 'Completed'
+      ).length;
       return { current: Math.min(1, completed), target: 1 };
     }
   },
@@ -71,8 +79,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Complete 5 learning milestones.',
     icon: '🏆',
     category: 'Milestones',
-    check: (data) => (data.goals || []).filter(g => g.status === 'Completed').length >= 5,
-    progress: (data) => {
+    check: data => (data.goals || []).filter(g => g.status === 'Completed').length >= 5,
+    progress: data => {
       const completed = (data.goals || []).filter(g => g.status === 'Completed').length;
       return { current: Math.min(5, completed), target: 5 };
     }
@@ -83,12 +91,18 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Log 100 total hours of deep developer learning.',
     icon: '⏱',
     category: 'Progress',
-    check: (data) => {
-      const totalMinutes = (data.activities || []).reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+    check: data => {
+      const totalMinutes = (data.activities || []).reduce(
+        (sum, a) => sum + (Number(a.duration) || 0),
+        0
+      );
       return totalMinutes >= 6000; // 100 hours
     },
-    progress: (data) => {
-      const totalHours = Math.round(((data.activities || []).reduce((sum, a) => sum + (Number(a.duration) || 0), 0) / 60) * 10) / 10;
+    progress: data => {
+      const totalHours =
+        Math.round(
+          ((data.activities || []).reduce((sum, a) => sum + (Number(a.duration) || 0), 0) / 60) * 10
+        ) / 10;
       return { current: Math.min(100, totalHours), target: 100, unit: 'h' };
     }
   },
@@ -98,8 +112,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Complete 3 Space Mission developer projects.',
     icon: '🛰',
     category: 'Missions',
-    check: (data) => (data.projects || []).filter(p => p.status === 'Completed').length >= 3,
-    progress: (data) => {
+    check: data => (data.projects || []).filter(p => p.status === 'Completed').length >= 3,
+    progress: data => {
       const comp = (data.projects || []).filter(p => p.status === 'Completed').length;
       return { current: Math.min(3, comp), target: 3 };
     }
@@ -110,8 +124,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
     description: 'Have at least 6 active or completed skills orbiting simultaneously.',
     icon: '✨',
     category: 'Skills',
-    check: (data) => (data.skills || []).length >= 6,
-    progress: (data) => ({ current: Math.min(6, (data.skills || []).length), target: 6 })
+    check: data => (data.skills || []).length >= 6,
+    progress: data => ({ current: Math.min(6, (data.skills || []).length), target: 6 })
   }
 ];
 
@@ -124,7 +138,9 @@ export function initAchievements() {
   // Category filter pills
   document.querySelectorAll('#achievement-category-pills .pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#achievement-category-pills .pill-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('#achievement-category-pills .pill-btn')
+        .forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeCategory = btn.getAttribute('data-category') || 'All';
       renderAchievements();
@@ -154,8 +170,8 @@ export function evaluateAchievements() {
     const data = storage.getUniverse();
     const unlocked = data.achievements || [];
 
-    const newlySatisfied = ACHIEVEMENT_DEFINITIONS.filter(def =>
-      !unlocked.some(a => a.id === def.id) && def.check(data)
+    const newlySatisfied = ACHIEVEMENT_DEFINITIONS.filter(
+      def => !unlocked.some(a => a.id === def.id) && def.check(data)
     );
     if (newlySatisfied.length === 0) return false;
 
@@ -192,9 +208,10 @@ export function renderAchievements() {
   setEl('achieve-stat-unlocked', `${unlockedCount} / ${total}`);
   setEl('achieve-stat-pct', `${unlockPct}%`);
 
-  const filteredList = activeCategory === 'All'
-    ? ACHIEVEMENT_DEFINITIONS
-    : ACHIEVEMENT_DEFINITIONS.filter(def => def.category === activeCategory);
+  const filteredList =
+    activeCategory === 'All'
+      ? ACHIEVEMENT_DEFINITIONS
+      : ACHIEVEMENT_DEFINITIONS.filter(def => def.category === activeCategory);
 
   if (filteredList.length === 0) {
     container.innerHTML = `
@@ -207,13 +224,14 @@ export function renderAchievements() {
     return;
   }
 
-  container.innerHTML = filteredList.map(def => {
-    const unlockedRecord = unlockedList.find(a => a.id === def.id);
-    const isUnlocked = Boolean(unlockedRecord);
-    const prog = def.progress(data);
-    const progPct = Math.min(100, Math.round((prog.current / prog.target) * 100));
+  container.innerHTML = filteredList
+    .map(def => {
+      const unlockedRecord = unlockedList.find(a => a.id === def.id);
+      const isUnlocked = Boolean(unlockedRecord);
+      const prog = def.progress(data);
+      const progPct = Math.min(100, Math.round((prog.current / prog.target) * 100));
 
-    return `
+      return `
       <div class="card ${isUnlocked ? 'card-glow-orange' : ''} achievement-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: ${isUnlocked ? 'rgba(249, 115, 22, 0.5)' : 'var(--glass-border)'}; background: ${isUnlocked ? 'linear-gradient(135deg, rgba(25, 36, 61, 0.9) 0%, rgba(42, 26, 61, 0.6) 100%)' : 'var(--glass-surface)'}; box-shadow: ${isUnlocked ? '0 4px 20px rgba(0,0,0,0.4), 0 0 16px rgba(249, 115, 22, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)'};">
         <div>
           <!-- Header -->
@@ -241,12 +259,15 @@ export function renderAchievements() {
 
         <div>
           <!-- Progress or Unlock Date -->
-          ${isUnlocked ? `
+          ${
+            isUnlocked
+              ? `
             <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 10px; font-size: 0.6875rem; color: var(--cyan-accent); font-family: var(--font-mono); display: flex; align-items: center; justify-content: space-between;">
               <span>Unlocked</span>
               <span>${formatDate(unlockedRecord.unlockedAt)}</span>
             </div>
-          ` : `
+          `
+              : `
             <div>
               <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-bottom: 6px;">
                 <span>Requirement</span>
@@ -256,9 +277,11 @@ export function renderAchievements() {
                 <div class="progress-bar-fill fill-primary" style="width: ${progPct}%;"></div>
               </div>
             </div>
-          `}
+          `
+          }
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join('');
 }

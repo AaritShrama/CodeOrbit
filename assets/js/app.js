@@ -6,7 +6,12 @@
 
 import { storage } from './storage.js';
 import { navigation } from './navigation.js';
-import { setupModalDismissHandlers, openCommandPalette, renderPaletteResults, toast } from './components.js';
+import {
+  setupModalDismissHandlers,
+  openCommandPalette,
+  renderPaletteResults,
+  toast
+} from './components.js';
 import { initDashboard, renderDashboard } from './dashboard.js';
 import { initSkills, renderSkills, openSkillModal } from './skills.js';
 import { initProgress, renderProgress, openActivityModal } from './progress.js';
@@ -54,16 +59,20 @@ function initApp() {
   runStep('topbar', setupTopbarInteractions, failures);
 
   // 5. Register views with the router (cannot fail, but keep the pattern uniform)
-  runStep('routes', () => {
-    navigation.registerView('dashboard', renderDashboard);
-    navigation.registerView('skills', renderSkills);
-    navigation.registerView('progress', renderProgress);
-    navigation.registerView('projects', renderProjects);
-    navigation.registerView('goals', renderGoals);
-    navigation.registerView('achievements', renderAchievements);
-    navigation.registerView('analytics', renderAnalytics);
-    navigation.registerView('settings', renderSettings);
-  }, failures);
+  runStep(
+    'routes',
+    () => {
+      navigation.registerView('dashboard', renderDashboard);
+      navigation.registerView('skills', renderSkills);
+      navigation.registerView('progress', renderProgress);
+      navigation.registerView('projects', renderProjects);
+      navigation.registerView('goals', renderGoals);
+      navigation.registerView('achievements', renderAchievements);
+      navigation.registerView('analytics', renderAnalytics);
+      navigation.registerView('settings', renderSettings);
+    },
+    failures
+  );
 
   // 6. Page controllers: each one only wires its own listeners, so one broken
   //    page must not stop the others.
@@ -118,12 +127,16 @@ if (document.readyState === 'loading') {
    GLOBAL KEYBOARD SHORTCUTS
    ========================================================================== */
 function setupGlobalShortcuts() {
-  window.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', e => {
     // Ctrl+K or Cmd+K or "/" to open Command Palette
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       openCommandPalette();
-    } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    } else if (
+      e.key === '/' &&
+      document.activeElement.tagName !== 'INPUT' &&
+      document.activeElement.tagName !== 'TEXTAREA'
+    ) {
       e.preventDefault();
       openCommandPalette();
     }
@@ -132,7 +145,7 @@ function setupGlobalShortcuts() {
   // Search input typing in Command Palette
   const paletteInput = document.getElementById('palette-search-input');
   if (paletteInput) {
-    paletteInput.addEventListener('input', (e) => {
+    paletteInput.addEventListener('input', e => {
       renderPaletteResults(e.target.value);
     });
   }
@@ -153,7 +166,7 @@ function setupTopbarInteractions() {
   const quickMenu = document.getElementById('quick-action-menu');
 
   if (quickBtn && quickMenu) {
-    quickBtn.addEventListener('click', (e) => {
+    quickBtn.addEventListener('click', e => {
       e.stopPropagation();
       quickMenu.classList.toggle('active');
     });
@@ -184,7 +197,7 @@ function setupTopbarInteractions() {
   const notifMenu = document.getElementById('notifications-dropdown-menu');
 
   if (notifBtn && notifMenu) {
-    notifBtn.addEventListener('click', (e) => {
+    notifBtn.addEventListener('click', e => {
       e.stopPropagation();
       notifMenu.classList.toggle('active');
       updateNotificationsPanel();
@@ -192,7 +205,7 @@ function setupTopbarInteractions() {
   }
 
   // Close dropdowns on outside click
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', e => {
     if (quickMenu && !quickMenu.contains(e.target) && e.target !== quickBtn) {
       quickMenu.classList.remove('active');
     }
@@ -239,14 +252,17 @@ function updateNotificationsPanel() {
   });
 
   // 2. Check recent achievements
-  (data.achievements || []).slice(-2).reverse().forEach(a => {
-    notifs.push({
-      icon: '⭐',
-      iconBg: 'var(--orange-subtle)',
-      title: `Unlocked Achievement!`,
-      time: formatDate(a.unlockedAt)
+  (data.achievements || [])
+    .slice(-2)
+    .reverse()
+    .forEach(a => {
+      notifs.push({
+        icon: '⭐',
+        iconBg: 'var(--orange-subtle)',
+        title: `Unlocked Achievement!`,
+        time: formatDate(a.unlockedAt)
+      });
     });
-  });
 
   // 3. Welcome / Streak info
   notifs.push({
@@ -260,7 +276,9 @@ function updateNotificationsPanel() {
     badge.style.display = notifs.length > 0 ? 'block' : 'none';
   }
 
-  container.innerHTML = notifs.map(n => `
+  container.innerHTML = notifs
+    .map(
+      n => `
     <div class="notif-item">
       <div class="notif-icon" style="background: ${n.iconBg};">
         ${n.icon}
@@ -270,7 +288,9 @@ function updateNotificationsPanel() {
         <div class="notif-time">${escapeHTML(n.time)}</div>
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join('');
 }
 
 /* ==========================================================================
