@@ -61,3 +61,4 @@ ENV/
 
 # README graphics fonts (download separately)
 .github/readme/src/fonts/
+__pycache__/
