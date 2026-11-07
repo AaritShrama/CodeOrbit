@@ -54,6 +54,59 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - **B. Move to GitHub Pages:** enable Pages, keep the workflow, update README links. *Cost:* the public URL changes.
 - **Recommended:** A. Render already works and deploys automatically from `main`; the failing workflow adds nothing but a red ❌ on every commit.
 
+### D-005: Render only the visible page; `init` functions only wire listeners
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** Every page's `initX()` rendered its page, then the router rendered the visible page again. Measured in Chrome: **9 chart builds on startup** while the dashboard shows 2.
+- **Decision:** `initX()` attaches listeners only. The router renders a page when it becomes visible (it already did this on every navigation). `initSettings` still fills the sidebar profile card, the one shared element a page module owns.
+- **Why:** Hidden pages are re-rendered anyway when opened, so rendering them at startup was pure waste. Measured after: **2 chart builds**.
+- **Trade-off accepted:** The first visit to each page renders on click instead of being ready in advance. With localStorage data this is instant; it would matter only with slow data sources.
+- **Alternatives rejected:** Skipping the router's render instead: then navigating to a page would show stale data.
+
+### D-006: One `data-changed` listener for re-rendering; batch achievement unlocks
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** `achievements.js` and `app.js` both listened to `data-changed` and both evaluated achievements. Each unlock was a separate save, and each save re-rendered the page.
+- **Decision:**
+  1. Remove the listener in `achievements.js`; `app.js` owns evaluation and re-rendering.
+  2. `storage.unlockAchievements(ids)` saves every new unlock in **one** write.
+  3. `evaluateAchievements()` returns `true` when it saved; the outer listener then returns early, because the nested synchronous `data-changed` round already re-rendered.
+- **Why:** One place to reason about re-renders. Measured: adding a skill that unlocks a badge now rebuilds the dashboard charts once (was twice).
+- **Trade-off accepted:** The early-return relies on `dispatchEvent` being synchronous and on the `isEvaluating` guard. Both are documented in `FLOW.md` §6, and a comment in `app.js` explains it.
+- **Alternatives rejected:** Debouncing renders with `requestAnimationFrame`: fewer renders, but the UI would briefly show stale data and tests would need to wait a frame.
+
+### D-007: One definition of "last N days": local calendar days
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** Four different calculations existed: local dates (score), UTC dates (dashboard), rolling `now − N×24h` against UTC-parsed date strings (analytics, mission logs), and UTC day keys built from local midnight (both charts). Measured in Chrome at 02:00 IST: dashboard said **11h** this week, analytics said **13h**, and the weekly chart put Saturday's session under Sunday and a previous Sunday's session under Monday.
+- **Decision:** Add `toLocalISO`, `getLastNDaysISO` and `isWithinLastNDays` to `utils.js`. "Last 7 days" = today plus the 6 previous **local calendar days**. Every screen and chart uses these helpers.
+- **Why:** Users think in calendar days where they live, and activity dates are stored as plain `YYYY-MM-DD` with no timezone. Measured after: dashboard and analytics both say **3h**; chart bars sit on the right days.
+- **Trade-off accepted:** If a user travels across timezones, "today" follows the device clock, so a session can appear on a different day than where it happened. Acceptable for a personal tracker.
+- **Alternatives rejected:** Storing UTC timestamps: needs a data migration and still has to be converted to local days for display.
+
+### D-008: Save preferences once
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** Saving the preferences form wrote all settings, then `applyTheme(theme)` wrote the theme again: two data-change loops per click.
+- **Decision:** Call `applyTheme(theme, false)` after `saveSettings`, since the theme is already in the saved settings.
+- **Why:** Rule: one user action = one save. Measured: 2 → 1 `data-changed` event.
+- **Trade-off accepted:** None found.
+
+### D-009: New users start with an empty universe; demo data is opt-in; unreadable data is kept
+- **Date:** 2026-11-07 · **Status:** Accepted · Supersedes B-008
+- **Context:** First visits loaded a fake user ("Alex Rivera") with 6 skills and 5 sessions, which immediately unlocked **6 of 10 achievements** the real user never earned. Unreadable stored data was silently overwritten with the same demo data.
+- **Decision:**
+  1. First visit → `getEmptyUniverse()`. Demo data loads only from Settings → Load Demo Universe (the button already existed).
+  2. Unreadable data is copied to `codeorbit_universe_v1_corrupt_backup` before starting fresh.
+  3. If `localStorage` is blocked, run in memory instead of crashing.
+  4. `importJSON` fills a missing profile/settings from the blank defaults, not the demo user.
+- **Why:** A progress tracker that starts with someone else's progress and unearned badges misrepresents the user's data, which is the core of the product. Losing a user's data without a copy is worse than showing an empty screen.
+- **Trade-off accepted:** First-time visitors to the live demo now see empty screens instead of a full dashboard, which is less impressive at first glance. Every screen already has an empty state, and the demo is one click away. Visitors who already have demo data stored keep it (no migration), so old browsers are unaffected.
+- **Alternatives rejected:** A `?demo` URL parameter: adds a second entry path to maintain; can be added later if the README demo link needs it.
+
+### D-010: Startup steps are isolated; render errors are contained
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** `initApp()` ran every step inside one `try/catch`. Simulated in Chrome: if the Goals page's init throws, **navigation never initialises** and the whole app is dead with no visible error.
+- **Decision:** Each startup step runs through `runStep()`, which logs and records failures and continues. One `toast.error` names the failed steps. `navigation.renderCurrentView()` renders with its own error boundary and is used by both navigation and the data-change listener (replacing an 8-branch `if/else` in `app.js`).
+- **Why:** A broken page should cost that page, not the app. Measured after: with Goals broken, navigation still works and the user sees which part failed.
+- **Trade-off accepted:** A partially broken app keeps running, so a bug can look less urgent than a blank screen. The error toast and console log keep it visible.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)
@@ -74,6 +127,7 @@ These choices were made before this log existed. **The original reasons were not
   - A `version` field exists (`DATA_VERSION = 1`), but there is **no migration code** yet. A future schema change must add one.
 
 ### B-003: Pages communicate only through `storage` + a `codeorbit:data-changed` event
+- **Status:** Still in force; the re-render rules around it were tightened in D-005 and D-006
 - **Likely why:** Page modules stay independent (none imports another). Any write anywhere refreshes whatever is on screen.
 - **Trade-offs:** The event says only "something changed", so listeners re-render whole pages. Dispatch is synchronous, so a save inside a listener (achievement unlocks) triggers a nested round of re-renders (see `FLOW.md` §6).
 
@@ -94,6 +148,7 @@ These choices were made before this log existed. **The original reasons were not
 - **Trade-off:** Safety depends on **every** template remembering to call `escapeHTML()` on every user-supplied field. One missed call is a stored XSS bug. A framework or `textContent`-based rendering would make that impossible by default.
 
 ### B-008: Pre-fill demo data ("Alex Rivera") on first visit
+- **Status:** Superseded by D-009
 - **Likely why:** A new visitor immediately sees a full, impressive dashboard instead of empty screens.
 - **Trade-offs:** Real users start with someone else's data and must find "Reset" in Settings; achievements unlock from fake activity on first load. **Open issue: start empty and offer a "Load demo" button.**
 

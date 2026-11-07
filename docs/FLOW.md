@@ -19,15 +19,17 @@ index.html
         └─ initApp()
               ├─ theme, starfield, shortcuts, topbar
               ├─ register 8 views with the router
-              ├─ init every page (each one renders itself once)
-              ├─ navigation.init()  → shows the page named in the URL hash
+              ├─ init every page (wires listeners only, no rendering)
+              ├─ evaluateAchievements() once
+              ├─ navigation.init()  → renders ONLY the page named in the URL hash
               └─ listen for 'codeorbit:data-changed'
+   (every step runs in its own try/catch: one failure does not stop the rest)
 
 After that, everything is driven by user events, and every data change follows ONE loop:
 
   user action → page handler → storage.saveX() → storage.saveUniverse()
              → localStorage write → dispatch 'codeorbit:data-changed'
-             → listeners re-check achievements, update badges, re-render the visible page
+             → listeners update sidebar badges, re-check achievements, re-render the visible page
 ```
 
 ---
@@ -56,8 +58,9 @@ Effective evaluation order:
 1. **`utils.js`**: pure helper functions + creates the `sounds` singleton (`new SoundEffects()`; no audio context yet).
 2. **`storage.js`**: creates the `storage` singleton. Its constructor calls `storage.init()` **immediately**:
    - reads `localStorage['codeorbit_universe_v1']`
-   - **empty?** → builds `getDefaultUniverse()` (demo user "Alex Rivera") and saves it
-   - **corrupt?** (not an object, or `skills` is not an array) → replaces it with the demo universe
+   - **localStorage blocked?** → runs in memory with `getEmptyUniverse()` (nothing persists)
+   - **empty (first visit)?** → `startFresh()` saves `getEmptyUniverse()`. Demo data ("Alex Rivera", `getDefaultUniverse()`) is loaded **only** from Settings → Load Demo Universe.
+   - **unreadable?** (bad JSON, not an object, or `skills` is not an array) → copies the raw string to `codeorbit_universe_v1_corrupt_backup`, then `startFresh()`
    - **valid?** → keeps it in `storage.cache`
    - The first-visit save fires `codeorbit:data-changed`, but no one is listening yet, so nothing happens.
 3. **`navigation.js`**: creates the `navigation` singleton (`currentRoute = 'dashboard'`, empty view map).
@@ -70,28 +73,26 @@ Effective evaluation order:
 
 ## 4. Phase 2: `initApp()` startup sequence (`app.js`)
 
-Runs once, in this exact order:
+Runs once, in this exact order. **Every step runs through `runStep(name, fn, failures)`**: if a step throws, the error is logged, its name is recorded, and the next step still runs. If anything failed, one `toast.error` at the end names the failed steps.
 
 | Step | Call | What it does |
 |---|---|---|
 | 1 | `storage.getSettings()` → `applyTheme(theme, false)` *(settings.js)* | Sets `data-theme` on `<html>`, swaps the topbar theme icon. `false` = don't save. |
 | 2 | `initCosmicStarfield()` *(app.js)* | Draws the background star canvas; starts a `requestAnimationFrame` loop unless the OS asks for reduced motion. |
-| 3 | `setupModalDismissHandlers()` *(components.js)* | Global listeners: **Esc** closes the open modal + command palette; clicking a backdrop or `[data-modal-close]` closes its modal. |
-| 4 | `setupGlobalShortcuts()` *(app.js)* | **Ctrl/Cmd+K** or **/** → `openCommandPalette()`; typing in the palette → `renderPaletteResults(query)`. |
-| 5 | `setupTopbarInteractions()` *(app.js)* | Quick-action menu (log session / add skill / new project / new goal → each page's `openXModal()`), notifications dropdown, close-on-outside-click; calls `updateNotificationsPanel()` once. |
-| 6 | `navigation.registerView(route, fn)` ×8 | Maps `'dashboard' → renderDashboard`, `'skills' → renderSkills`, … `'settings' → renderSettings`. |
-| 7 | `initDashboard()`, `initSkills()`, `initProgress()`, `initProjects()`, `initGoals()`, `initAchievements()`, `initAnalytics()`, `initSettings()` | Each attaches its page's button/form/filter listeners **and renders its page once** (see §5). |
-| 8 | `navigation.init()` | Attaches sidebar + mobile-menu listeners, listens for `hashchange`, then calls `handleHashChange()` → `navigateTo(route)` → **renders the visible page again**. Also calls `updateBadges()` and subscribes it to `data-changed`. |
+| 3 | `setupModalDismissHandlers()` *(components.js)*, `setupGlobalShortcuts()` *(app.js)* | **Esc** closes the open modal + command palette; backdrop / `[data-modal-close]` clicks close modals. **Ctrl/Cmd+K** or **/** → `openCommandPalette()`; typing → `renderPaletteResults(query)`. |
+| 4 | `setupTopbarInteractions()` *(app.js)* | Quick-action menu (log session / add skill / new project / new goal → each page's `openXModal()`), notifications dropdown, close-on-outside-click; calls `updateNotificationsPanel()` once. |
+| 5 | `navigation.registerView(route, fn)` ×8 | Maps `'dashboard' → renderDashboard`, `'skills' → renderSkills`, … `'settings' → renderSettings`. |
+| 6 | `initDashboard()` … `initSettings()` (8 calls, each its own step) | Each attaches its page's button/form/filter listeners. **None of them render** (see §5). `initSettings` also fills the sidebar profile card, because it is visible on every page. |
+| 7 | `evaluateAchievements()` *(achievements.js)* | Unlocks anything already earned (e.g. data imported in another session) **before** the first paint. No listener is registered yet, so its save causes no render. |
+| 8 | `navigation.init()` | Attaches sidebar + mobile-menu listeners, listens for `hashchange`, then `handleHashChange()` → `navigateTo(route)` → `renderCurrentView()`: **the only render during startup.** Also calls `updateBadges()` and subscribes it to `data-changed`. |
 | 9 | `window.addEventListener('codeorbit:data-changed', …)` | The main re-render listener (see §6). |
-| 10 | `lucide.createIcons()` | Replaces `<i data-lucide="…">` placeholders with SVG icons. |
-
-The whole sequence is wrapped in `try/catch`: if any step throws, the error is logged and **later steps do not run**.
+| 10 | `refreshIcons()` | `lucide.createIcons()` replaces `<i data-lucide="…">` placeholders with SVG icons. |
 
 ---
 
 ## 5. What each page's `init` does
 
-Every page module follows the same shape: **`initX()` = attach listeners + `renderX()`**. Listeners only change module state or call `storage`; they never edit other pages.
+Every page module follows the same shape: **`initX()` attaches listeners only; `renderX()` draws the page and is called by the router** when the page is shown or when data changes while it is shown. Listeners only change module state or call `storage`; they never edit other pages.
 
 | Module | `init` attaches | `render` reads | `render` calls |
 |---|---|---|---|
@@ -100,9 +101,9 @@ Every page module follows the same shape: **`initX()` = attach listeners + `rend
 | `progress.js` | Search, type filter, skill filter, sort, "Launch session" button, form submit | `activities`, `skills` | `populateSkillFilterOptions`, `openActivityModal`, delete via `showConfirmDialog` |
 | `projects.js` | Search, status pills, sort, Create button, form submit, progress slider label, technology tag input | `projects` | `renderModalTags`, `openProjectModal`, delete via `showConfirmDialog` |
 | `goals.js` | Search, status pills, priority filter, Create button, form submit, progress slider label | `goals` | `toggleGoalComplete`, `openGoalModal`, delete via `showConfirmDialog` |
-| `achievements.js` | Category pills; **its own `data-changed` listener** | `achievements` + `ACHIEVEMENT_DEFINITIONS` | `evaluateAchievements()` before first render |
+| `achievements.js` | Category pills (no `data-changed` listener of its own) | `achievements` + `ACHIEVEMENT_DEFINITIONS` | (evaluation happens in `app.js`, see §6) |
 | `analytics.js` | nothing (no listeners) | whole universe | `calculateStreak`, 5 × `chartManager.render…Chart`, `generateHabitInsights` |
-| `settings.js` | Section nav, profile form, preferences form, theme select, topbar theme toggle, avatar picker, export, import, load demo, reset | `profile`, `settings` | `applyTheme`, `updateSidebarProfile` |
+| `settings.js` | Section nav, profile form, preferences form, theme select, topbar theme toggle, avatar picker, export, import, load demo, reset; **fills the sidebar profile card** | `profile`, `settings` | `applyTheme(theme, false)`, `updateSidebarProfile` |
 
 ---
 
@@ -126,20 +127,34 @@ Example: **user adds a skill.**
                                                 ├─ this.cache = data
                                                 ├─ localStorage.setItem(KEY, JSON.stringify(data))
                                                 └─ window.dispatchEvent('codeorbit:data-changed')   ← synchronous
-5. Listeners fire in registration order:
-   a. achievements.js (registered in step 7 of initApp)  → evaluateAchievements() + renderAchievements()
-   b. navigation.js   (registered in step 8)             → updateBadges()   (sidebar counters)
-   c. app.js          (registered in step 9)             → evaluateAchievements()
-                                                          → render<CurrentRoute>()
-                                                          → updateNotificationsPanel()
-                                                          → lucide.createIcons()
+5. Two listeners fire, in registration order:
+   a. navigation.js (registered in startup step 8) → updateBadges()   (sidebar counters)
+   b. app.js        (registered in startup step 9) → evaluateAchievements()
+                                                       └─ unlocked something? → return (see below)
+                                                    → navigation.renderCurrentView()   (error-contained)
+                                                    → updateNotificationsPanel()
+                                                    → refreshIcons()
 ```
 
 The same loop applies to every write: `saveActivity`, `saveProject`, `saveGoal`, `deleteX`, `saveProfile`, `saveSettings`, `unlockAchievement`, `importJSON`, `resetAllData`, `loadDemoUniverse`.
 
 ### When an achievement unlocks inside the loop
 
-`evaluateAchievements()` → `storage.unlockAchievement(id)` → `saveUniverse()` → **dispatches `data-changed` again, while the first dispatch is still running.** The nested round runs all three listeners again (re-rendering the page a second time). Infinite recursion is prevented only by the `isEvaluating` flag in `achievements.js`, which makes the nested `evaluateAchievements()` calls return immediately. Then `toast.achievement(...)` shows the popup and plays the chime.
+```
+app.js listener (outer round)
+  └─ evaluateAchievements()            isEvaluating = true
+       ├─ collect ALL newly satisfied definitions
+       ├─ storage.unlockAchievements(ids)   ← ONE save for all of them
+       │    └─ dispatch 'data-changed'  (synchronous, nested round)
+       │         ├─ updateBadges()
+       │         └─ app.js listener → evaluateAchievements() returns false (isEvaluating)
+       │                            → renderCurrentView(), notifications, icons
+       ├─ toast.achievement(...) for each unlocked badge
+       └─ return true
+  └─ return early: the nested round already re-rendered everything
+```
+
+Result: one save that unlocks N badges = 2 `data-changed` events and **one** page render.
 
 ---
 
@@ -154,7 +169,7 @@ Browser fires hashchange → navigation.handleHashChange()
                                 ├─ hide all .view-page, show #view-<route>
                                 ├─ highlight the active .nav-link
                                 ├─ set topbar title/subtitle from ROUTE_CONFIG
-                                ├─ call the registered render function (try/catch)
+                                ├─ renderCurrentView()  (registered render function, try/catch)
                                 ├─ scroll to top
                                 └─ lucide.createIcons()
 ```
@@ -172,6 +187,8 @@ Command-palette results navigate the same way: they set `window.location.hash` d
 **Import:** file input `change` → `handleImportFile()` → `FileReader.readAsText` → `showConfirmDialog` → `storage.importJSON(text)` (validates required arrays, fills missing profile/settings from defaults, clamps progress to 0–100, duration ≥ 1) → `saveUniverse` → normal data-change loop → `renderSettings()` → toast.
 
 **Load demo / Reset:** confirm dialog → `storage.loadDemoUniverse()` / `storage.resetAllData()` → data-change loop → `renderSettings()`.
+
+**Save preferences:** `handlePreferencesSubmit()` → `storage.saveSettings(all)` (one data-change loop) → `applyTheme(theme, false)` (visual only, no second save).
 
 **Theme toggle:** topbar button → `applyTheme(next)` → sets `data-theme` → `storage.saveSettings({ theme })` (save defaults to `true`) → data-change loop. Charts pick up the theme through `chartManager.getThemeColors()` the next time they render.
 
@@ -193,7 +210,7 @@ settings.js ──► storage, utils, components
 navigation.js ──► storage
 components.js ──► storage, utils
 storage.js ──► utils
-charts.js ──► (none — uses global window.Chart)
+charts.js ──► utils (plus the global window.Chart)
 utils.js ──► (none)
 ```
 
@@ -201,17 +218,13 @@ utils.js ──► (none)
 
 ---
 
-## 10. Behaviour to know about (current state, not yet fixed)
+## 10. Rules that keep this flow correct
 
-These are facts about the code as of this document, found while tracing it. Each should become an issue.
+1. **Calendar days are local, never UTC.** Use `getTodayISO()`, `getRelativeISO(n)`, `toLocalISO(date)`, `getLastNDaysISO(n)` and `isWithinLastNDays(dateStr, n)` from `utils.js`. Never use `date.toISOString().slice(0, 10)` for a day: it is UTC and shifts the date for users east or west of Greenwich (in India, every day before 05:30).
+2. **`init` functions never render.** The router renders the visible page; rendering hidden pages at startup is wasted work.
+3. **Only `app.js` listens to `data-changed` for re-rendering.** Pages must not add their own listener; they will be re-rendered when visible.
+4. **One user action = one save.** If a handler needs to change several things, change them together and call `storage` once.
+5. **Startup steps go through `runStep`.** A new startup step must not be able to take down the others.
 
-1. **Every page renders twice on load.** Each `initX()` renders its page, then `navigation.init()` renders the visible page again.
-2. **One save triggers `evaluateAchievements()` twice** (the `achievements.js` and `app.js` listeners both call it), and an unlock re-renders the current page a second time (§6).
-3. **Three different definitions of "the last 7 days":**
-   - `utils.calculateProductivityScore` uses **local** dates (`getRelativeISO`).
-   - `dashboard.renderDashboard` uses **UTC** dates (`toISOString()`). In India (UTC+5:30), between 00:00 and 05:30 the dashboard's "this week" window is shifted by a day relative to the score.
-   - `analytics.renderAnalytics` uses a rolling `now − 7×24h` window.
-   The same sessions can show different weekly hours on different screens.
-4. **Saving preferences writes twice:** `handlePreferencesSubmit` calls `storage.saveSettings()` and then `applyTheme(theme)`, which saves again, so the data-change loop runs twice.
-5. **First visit loads demo data** (`getDefaultUniverse`), so `initAchievements()` unlocks badges from fake activity before the user has done anything.
-6. **`initApp()` fails as a whole.** One exception in any step stops all later steps (e.g. no navigation, no re-render listener).
+### History
+The issues originally listed here (double render on load, duplicate achievement checks, three "last 7 days" definitions, double save on preferences, demo data on first visit, all-or-nothing startup) were fixed together; see `DECISIONS.md` D-005 to D-010.
