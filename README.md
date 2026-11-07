@@ -240,6 +240,8 @@ CodeOrbit/
 │   ├── screenshots/
 │   │   └── README.md               # Screenshot capture instructions and specifications
 │   ├── ARCHITECTURE.md             # System design & data schema reference
+│   ├── DECISIONS.md                # Decision log: what we chose, why, and the trade-offs
+│   ├── FLOW.md                     # Code execution flow: entry point, call order, data loop
 │   └── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
 ├── CODE_OF_CONDUCT.md              # Contributor Covenant 2.1 code of conduct
 ├── CONTRIBUTING.md                 # Contributor onboarding & workflow guide

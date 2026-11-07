@@ -39,3 +39,5 @@ Before submitting, please ensure your PR satisfies:
 - [ ] I have preserved all existing unrelated code, docstrings, and comments.
 - [ ] Any user-facing HTML injection is sanitized with `escapeHTML()` to prevent XSS.
 - [ ] I have updated corresponding documentation if my changes modify existing features or settings.
+- [ ] If this PR makes a design choice (new library, data-shape change, trade-off), I added an entry to [`docs/DECISIONS.md`](https://github.com/LetsCook-Organization/CodeOrbit/blob/main/docs/DECISIONS.md).
+- [ ] If this PR changes which function calls which, or the startup order, I updated [`docs/FLOW.md`](https://github.com/LetsCook-Organization/CodeOrbit/blob/main/docs/FLOW.md).

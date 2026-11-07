@@ -53,6 +53,8 @@ codeorbit/
 │       └── favicon.svg         # High-resolution cosmic browser tab favicon
 ├── docs/
 │   ├── ARCHITECTURE.md         # This architectural specification
+│   ├── DECISIONS.md            # Decision log with reasons and trade-offs
+│   ├── FLOW.md                 # Code execution flow between files
 │   └── MAINTAINER_SECURITY.md  # Administrative security checklist
 └── .github/
     └── workflows/
