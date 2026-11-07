@@ -35,7 +35,7 @@ codeorbit/
 │   │   └── responsive.css      # Desktop (1440px), Laptop (1024px), Tablet (768px), Mobile (375px)
 │   ├── js/
 │   │   ├── app.js              # Bootstrap orchestrator, event bus & canvas starfield
-│   │   ├── storage.js          # Centralized LocalStorage manager & migration engine
+│   │   ├── storage.js          # Centralized LocalStorage manager (no migrations yet, see issue #17)
 │   │   ├── utils.js            # Sanitization (XSS safe), streaks, score math, web audio
 │   │   ├── navigation.js       # Hash-based routing (#dashboard, #skills, etc.)
 │   │   ├── components.js       # Modal controller, Toast engine, Command Palette (Ctrl+K)
@@ -164,9 +164,12 @@ $$\text{Score} = \text{Consistency} (30) + \text{Hours Target} (30) + \text{Miss
 - **Missions Progress:** $(\text{Average Progress of Space Missions} / 100) \times 20$
 - **Skill Growth:** $(\text{Average Progress of Skills} / 100) \times 20$
 
+If the user has no projects (or no skills), that part counts as a neutral 10/20, **but only after at least one session has been logged**. An empty universe scores 0 (see `DECISIONS.md` D-015).
+
 ---
 
 ## 5. Security Architecture
-- All dynamic data rendered into the DOM passes through `escapeHTML()` to neutralize cross-site scripting (XSS).
-- JSON imports are validated against the schema before committing to storage.
+- All dynamic data rendered into the DOM passes through `escapeHTML()` to neutralize cross-site scripting (XSS). Helpers whose output goes into `innerHTML` (e.g. `formatDate`) never return their raw input.
+- JSON imports are validated before committing to storage: required lists must exist, numbers are clamped, and **malformed dates are dropped** (sessions and achievements without a valid date are removed). See `DECISIONS.md` D-018.
+- `tests/` includes security regression tests for both of the above.
 - External links (`GitHub`, `Live Demo`) enforce safe `http/https` protocols and carry `rel="noopener noreferrer"`.
