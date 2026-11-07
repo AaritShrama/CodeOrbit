@@ -161,6 +161,36 @@
   line-height: 1.6;
 }
 
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+#home-quick-add {
+  max-width: 100%;
+}
+
+.btn-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-quick-done {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: calc(-1 * var(--space-md));
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.home-quick-done[hidden] {
+  display: none;
+}
+
 .home-orbit-figure {
   grid-column: span 6;
   display: flex;

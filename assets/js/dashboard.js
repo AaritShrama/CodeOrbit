@@ -24,6 +24,9 @@ import { openSkillModal } from './skills.js';
 import { openActivityModal } from './progress.js';
 
 const MAX_PLANETS = 12;
+const QUICK_MINUTES = 30;
+let lastQuickAddId = null;
+let quickDoneTimer = null;
 
 export function initDashboard() {
   // No render here: navigation.init() renders whichever page is visible.
@@ -31,6 +34,8 @@ export function initDashboard() {
   document
     .getElementById('home-add-first-skill')
     ?.addEventListener('click', () => openSkillModal());
+  document.getElementById('home-quick-add')?.addEventListener('click', quickAdd);
+  document.getElementById('home-quick-undo')?.addEventListener('click', undoQuickAdd);
   document.getElementById('home-load-sample')?.addEventListener('click', () => {
     // Only shown when there is nothing saved yet, so there is nothing to overwrite.
     storage.loadDemoUniverse();
@@ -55,6 +60,7 @@ export function renderDashboard() {
 
   renderGreeting(data.profile || {});
   renderWeek(activities, settings);
+  renderQuickAdd(skills, activities);
   renderOrbit(skills);
   renderDays(activities);
   renderComingUp(goals, activities);
@@ -170,6 +176,67 @@ function renderOrbit(skills) {
       ? 'Each planet is one of your skills. The bigger it is, the further along you are. Red means finished.'
       : 'Add a skill and it will appear here as a planet.'
   );
+}
+
+/**
+ * The skill for one-tap logging: the one you studied most recently, if it still
+ * exists; otherwise your first skill. Returns null when there are no skills.
+ */
+function quickSkill(skills, activities) {
+  const names = new Set(skills.map(s => s.name));
+  const last = [...activities]
+    .filter(a => a && a.date && names.has(a.skill))
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+  if (last) return { name: last.skill, type: last.type || 'Other' };
+  return skills.length ? { name: skills[0].name, type: 'Other' } : null;
+}
+
+function renderQuickAdd(skills, activities) {
+  const btn = document.getElementById('home-quick-add');
+  if (!btn) return;
+  const pick = quickSkill(skills, activities);
+  btn.hidden = !pick;
+  if (!pick) return;
+  // Label in a span so a long skill name is cut with "…" instead of widening the button.
+  const label = document.createElement('span');
+  label.className = 'btn-label';
+  label.textContent = `+${QUICK_MINUTES} min on ${pick.name}`;
+  btn.replaceChildren(label);
+  btn.title = `Add ${QUICK_MINUTES} minutes on ${pick.name}, today`;
+}
+
+/** Adds 30 minutes, today, on the quick skill. Undo stays available for 10 seconds. */
+function quickAdd() {
+  const data = storage.getUniverse();
+  const pick = quickSkill(data.skills || [], data.activities || []);
+  if (!pick) return;
+
+  storage.saveActivity({
+    title: `Studied ${pick.name}`,
+    skill: pick.name,
+    duration: QUICK_MINUTES,
+    type: pick.type,
+    date: getTodayISO(),
+    notes: ''
+  });
+  // saveActivity puts new sessions first
+  lastQuickAddId = (storage.getUniverse().activities || [])[0]?.id || null;
+
+  setText('home-quick-done-text', `Added ${QUICK_MINUTES} min on ${pick.name}.`);
+  setHidden('home-quick-done', false);
+  clearTimeout(quickDoneTimer);
+  quickDoneTimer = setTimeout(() => {
+    setHidden('home-quick-done', true);
+    lastQuickAddId = null;
+  }, 10000);
+}
+
+function undoQuickAdd() {
+  if (lastQuickAddId) storage.deleteActivity(lastQuickAddId);
+  lastQuickAddId = null;
+  clearTimeout(quickDoneTimer);
+  setHidden('home-quick-done', true);
+  toast.info('Undone', `The ${QUICK_MINUTES} minutes were removed.`);
 }
 
 /** Shows the chosen planet's skill under the orbit, in place of the caption. */
