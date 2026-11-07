@@ -1,0 +1,78 @@
+name: Bug Report
+description: Report a reproducible bug or unexpected behavior in CodeOrbit.
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **CodeOrbit** under **LET'S COOK — THE FOUNDRY**!
+        Please fill out this form to help us diagnose and fix the problem.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and what went wrong...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Provide step-by-step instructions to reproduce the issue.
+      placeholder: |
+        1. Open CodeOrbit in your browser
+        2. Navigate to '...'
+        3. Click on '...'
+        4. Observe the error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+      placeholder: Describe the expected behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually occurred? Include any console error messages or unexpected UI states.
+      placeholder: Describe the actual behavior and paste any DevTools console errors...
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & Operating System
+      description: Please tell us what browser and OS you are using.
+      placeholder: "e.g., Google Chrome 124 on Windows 11 / Firefox 125 on Ubuntu 22.04 / Safari on macOS"
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or Screen Recordings
+      description: Drag and drop screenshots or screen recordings here if helpful.
+      placeholder: Attach visual evidence here (optional)...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-Submission Checklist
+      options:
+        - label: I have checked existing issues to ensure this bug has not already been reported.
+          required: true
+        - label: I am using the latest version of CodeOrbit from the main branch.
+          required: true

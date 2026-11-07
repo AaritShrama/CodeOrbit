@@ -1,0 +1,69 @@
+name: Feature Request
+description: Propose an idea, improvement, or new capability for CodeOrbit.
+title: "[FEATURE]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an enhancement to **CodeOrbit** under **LET'S COOK — THE FOUNDRY**!
+        CodeOrbit is built on core principles: 100% client-side, zero required backend, privacy-first, and beginner-accessible.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a specific problem or friction in your developer workflow?
+      placeholder: I am frustrated when... / It is currently difficult to track...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_feature
+    attributes:
+      label: Proposed Feature & Solution
+      description: Describe the feature or capability you would like added to CodeOrbit.
+      placeholder: A clear and concise description of what you want to happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior & User Experience
+      description: How should this feature look, feel, and function from the user's perspective?
+      placeholder: Describe the visual interaction, buttons, modal, or display behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: List specific, testable conditions for this feature to be considered complete.
+      placeholder: |
+        - [ ] Feature can be toggled or configured in Settings
+        - [ ] Works offline with LocalStorage persistence
+        - [ ] Responsive across mobile and desktop viewports
+        - [ ] Generates zero console warnings or errors
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions, designs, or workarounds?
+      placeholder: Describe any alternative approaches or existing tools...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Alignment Checklist
+      options:
+        - label: This feature does not require a paid API, cloud database, or mandatory external backend.
+          required: true
+        - label: I would be willing to contribute or test an implementation of this feature.
+          required: false
