@@ -240,16 +240,13 @@ CodeOrbit/
 │   ├── screenshots/
 │   │   └── README.md               # Screenshot capture instructions and specifications
 │   ├── ARCHITECTURE.md             # System design & data schema reference
-│   ├── CODE_OF_CONDUCT.md          # Contributor Covenant 2.1 code of conduct
-│   ├── CONTRIBUTING.md             # Contributor onboarding & workflow guide
-│   ├── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
-│   └── SECURITY.md                 # Security policies & reporting guidelines
-├── CODE_OF_CONDUCT.md              # Root Code of Conduct link
-├── CONTRIBUTING.md                 # Root Contributing guide
+│   └── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
+├── CODE_OF_CONDUCT.md              # Contributor Covenant 2.1 code of conduct
+├── CONTRIBUTING.md                 # Contributor onboarding & workflow guide
 ├── index.html                      # Semantic single-page application entry point
 ├── LICENSE                         # MIT License
 ├── README.md                       # Main project documentation
-└── SECURITY.md                     # Root Security policy link
+└── SECURITY.md                     # Security policy & vulnerability reporting
 ```
 
 ---

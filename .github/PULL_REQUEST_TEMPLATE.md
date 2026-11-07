@@ -34,7 +34,7 @@ Please explain how you tested your changes and verify that the application remai
 Before submitting, please ensure your PR satisfies:
 
 - [ ] My code adheres to the project's vanilla standards (HTML5, CSS3, ES6+ modules; zero heavy frontend frameworks or build steps).
-- [ ] I have read and followed the [Contributing Guidelines](CONTRIBUTING.md).
+- [ ] I have read and followed the [Contributing Guidelines](https://github.com/LetsCook-Organization/CodeOrbit/blob/main/CONTRIBUTING.md).
 - [ ] I have performed a self-review of my own code.
 - [ ] I have preserved all existing unrelated code, docstrings, and comments.
 - [ ] Any user-facing HTML injection is sanitized with `escapeHTML()` to prevent XSS.

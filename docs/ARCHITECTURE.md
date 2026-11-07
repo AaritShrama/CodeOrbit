@@ -53,7 +53,7 @@ codeorbit/
 │       └── favicon.svg         # High-resolution cosmic browser tab favicon
 ├── docs/
 │   ├── ARCHITECTURE.md         # This architectural specification
-│   └── CONTRIBUTING.md         # Guidelines for open-source contributors
+│   └── MAINTAINER_SECURITY.md  # Administrative security checklist
 └── .github/
     └── workflows/
         └── deploy.yml          # GitHub Pages automated deployment workflow
