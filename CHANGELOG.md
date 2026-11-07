@@ -15,6 +15,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Fixed
 - A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
 - The planet at the centre of the dashboard said "Alex Rivera" (the demo user) on hover for everyone. It now says "Your profile".
+- Analytics "Peak Velocity Day" showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US). ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
 
 ### Security
 - Importing a backup file made by someone else could run their code in your browser, through fake dates or a session's skill name. Invalid dates are now shown as "Invalid date" and dropped on import, and those names are escaped. Sessions and achievements without a valid date are removed when importing.

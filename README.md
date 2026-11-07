@@ -244,7 +244,6 @@ An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **
 | # | What to do | Area |
 | :--- | :--- | :--- |
 | [#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8) | Deadlines show the wrong day depending on your timezone | bug · dates |
-| [#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9) | "Peak Velocity Day" is one day off for users west of UTC | bug · dates |
 | [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10) | Importing a 0-minute session turns it into 30 minutes | bug · data |
 | [#11](https://github.com/LetsCook-Organization/CodeOrbit/issues/11) | Add tests for the date and duration helpers | tests |
 | [#12](https://github.com/LetsCook-Organization/CodeOrbit/issues/12) | Add real screenshots of the app to this README | docs |
@@ -327,7 +326,7 @@ The live site updates **only when all checks pass**, and the `main` branch is pr
 
 **✅ Done in v0.1.0:** dashboard, skills, study sessions, projects, goals, 10 achievements, 5 charts, the 0–100 score, search, dark/light theme, backup and restore, automatic checks and tests.
 
-**🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), a friendlier first visit ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
+**🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), a friendlier first visit ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
 
 **🌌 Later:** backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), Markdown/CSV reports ([#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19)), importing real activity from GitHub ([#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20)), a focus timer, working offline as an app.
 
