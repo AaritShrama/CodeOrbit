@@ -80,7 +80,7 @@
   --danger-subtle: rgba(255, 77, 106, 0.12);
 
   /* Text */
-  --text-primary: #f5f5f4;
+  --text-primary: #ebebea; /* slightly off-white: pure white on black glares */
   --text-secondary: #b9b9be;
   --text-muted: #8f8f95;
   --text-inverse: #0a0a0b;
