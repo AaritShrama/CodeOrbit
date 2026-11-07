@@ -150,6 +150,23 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - The whole repository (docs included, hidden folders excluded) is published, since there is no build step. All of it is already public on GitHub.
 - **Alternatives rejected:** A new Render account owned by Let's Cook: works, but adds a second service and login to manage for a static site that GitHub can host for free.
 
+### D-013: Version as 0.1.0 (pre-1.0), keep a changelog, describe only what exists
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** The app, README, ARCHITECTURE and SECURITY all said **1.0.0**, and the README said every feature was "fully implemented". On the same day the app had six flow bugs, a date bug affecting every user in India, fake demo data on first visit, no tests, no lint, no data migrations, and no release history. Other claims were also untrue: "zero-dependency" (it loads two CDN libraries), a "migration engine" in `storage.js` (none exists), and an ASCII mock-up presented as an "Application Preview".
+- **Decision:**
+  1. Version **0.1.0**, following Semantic Versioning: below 1.0.0, features and the stored data format may still change.
+  2. Add `CHANGELOG.md` (Keep a Changelog format) and tag `v0.1.0`.
+  3. Rewrite claims to match the code: remove "fully implemented", "zero-dependency" and "migration engine"; label the ASCII preview as illustrative.
+  4. Replace the all-ticked roadmap with **Shipped / Next (v0.2.0) / Later**, listing real gaps (lint, tests, migrations, onboarding, screenshots, accessibility, GitHub import, sync).
+  5. SECURITY.md supports **latest `main`** instead of a `1.0.x` line that does not exist.
+- **Why:**
+  - Contributors decide whether to join by reading the README. "1.0, fully implemented" signals there is nothing to do; an honest roadmap gives them concrete work.
+  - Calling it 1.0 promises a stable data format. With no migration code, the next schema change would break existing users' data; a 0.x version is honest about that risk.
+  - Reviewers (GSoC mentors, judges, employers) check claims against code. One false claim makes every other claim suspect.
+  - Keeping SECURITY's old table would have marked the real current version as "Unsupported".
+- **Trade-off accepted:** "v0.1.0" looks less finished than "v1.0.0" at first glance. Every new user-visible change now needs a changelog line (enforced by a PR-template checkbox).
+- **Alternatives rejected:** Keeping 1.0.0 and only fixing the wording: the version number itself is the biggest claim of stability.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

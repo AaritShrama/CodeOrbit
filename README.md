@@ -54,7 +54,7 @@ Experience CodeOrbit's developer command center and explore your personal develo
 
 ## 📸 Application Preview
 
-The CodeOrbit Command Center brings a space-inspired aesthetic into modern developer workflow tracking:
+The CodeOrbit Command Center brings a space-inspired aesthetic into modern developer workflow tracking. *Illustrative layout, not a screenshot; open the live app for the real thing.*
 
 ```text
 +----------------------------------------------------------------------------------------------------+
@@ -100,7 +100,7 @@ Everything runs **100% client-side** using browser `localStorage` — prioritizi
 
 ## ✨ Core Features
 
-All features listed below are fully implemented in the current release:
+These features work in the current release (**v0.1.0**). CodeOrbit is early-stage: expect rough edges, and see the [Roadmap](#%EF%B8%8F-project-roadmap) for what is still missing.
 
 <table>
   <tr>
@@ -156,7 +156,7 @@ CodeOrbit is deliberately built with clean, standards-compliant web technologies
 | **HTML5** | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) | Semantic structure, accessible dialogs, and clean application shell |
 | **CSS3** | ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) | Custom design system tokens, glassmorphism, responsive grid, and orbital animations |
 | **JavaScript** | ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | Modular architecture using native ES Modules (`import`/`export`) |
-| **Chart.js** | ![Chart.js](https://img.shields.io/badge/Chart.js-4.4+-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | Responsive canvas charts configured with custom cosmic gradients |
+| **Chart.js** | ![Chart.js](https://img.shields.io/badge/Chart.js-4.4.7-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | Responsive canvas charts configured with custom cosmic gradients |
 | **Lucide Icons** | ![Lucide](https://img.shields.io/badge/Lucide-Icons-F56565?style=flat-square&logo=feather&logoColor=white) | Modern, consistent SVG iconography |
 | **LocalStorage** | ![LocalStorage](https://img.shields.io/badge/Storage-Browser_LocalStorage-22C55E?style=flat-square) | Fast, atomic, client-side data persistence with zero network latency |
 | **GitHub Pages** | ![GitHub Pages](https://img.shields.io/badge/Hosting-GitHub_Pages-222222?style=flat-square&logo=githubpages&logoColor=white) | Static hosting with HTTPS, deployed by GitHub Actions on every push to `main` |
@@ -223,7 +223,7 @@ CodeOrbit/
 │   │   └── logo.svg                # Brand vector mark
 │   └── js/
 │       ├── app.js                  # Application orchestrator & canvas starfield
-│       ├── storage.js              # Centralized LocalStorage manager & migration engine
+│       ├── storage.js              # Centralized LocalStorage manager (the only module that touches storage)
 │       ├── utils.js                # XSS sanitization, math scoring, Web Audio chimes
 │       ├── navigation.js           # Hash-based routing (#dashboard, #skills, etc.)
 │       ├── components.js           # Modal dialog system, toasts, Command Palette (Ctrl+K)
@@ -243,6 +243,7 @@ CodeOrbit/
 │   ├── DECISIONS.md                # Decision log: what we chose, why, and the trade-offs
 │   ├── FLOW.md                     # Code execution flow: entry point, call order, data loop
 │   └── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
+├── CHANGELOG.md                    # Release history (what changed in each version)
 ├── CODE_OF_CONDUCT.md              # Contributor Covenant 2.1 code of conduct
 ├── CONTRIBUTING.md                 # Contributor onboarding & workflow guide
 ├── index.html                      # Semantic single-page application entry point
@@ -276,19 +277,32 @@ Whether you are fixing a typo in documentation, polishing responsive styles, or 
 
 ## 🛰️ Project Roadmap
 
-- [x] Initial Command Center dashboard with hero telemetry and streak tracking
+**Current version: v0.1.0** ([changelog](CHANGELOG.md)). Pre-1.0 means the app works, but the data format and features may still change.
+
+### ✅ Shipped in v0.1.0
+- [x] Command Center dashboard with streak tracking and Developer Velocity Index (0–100)
 - [x] Skill Universe with 7 categories, proficiency tiers, and quick-step progression
-- [x] Mission Logs with multi-activity tracking and animated daily goal gauge
-- [x] Space Missions project manager with tech tags and repository links
-- [x] Milestones goal management with priority tiering and overdue horizon detection
-- [x] Deterministic Developer Velocity Index (0–100) and automated habit insights
-- [x] 10 reactive Universe Achievements with synthesized Web Audio chimes
-- [x] Global Command Palette (`Ctrl+K` / `Cmd+K`) with instant keyboard navigation
-- [x] Dual themes (Cosmic Dark & Orbital Light) and complete JSON backup/restore
-- [ ] Interactive in-dashboard Pomodoro focus sprint timer
-- [ ] Exportable resume-ready skill matrices and progress reports (Markdown & CSV)
-- [ ] Custom tag color configuration for project technologies
-- [ ] Progressive Web App (PWA) offline service worker caching
+- [x] Mission Logs, Space Missions (projects) and Milestones (goals)
+- [x] 10 achievements, 5 analytics charts, automated habit insights
+- [x] Command Palette (`Ctrl+K` / `Cmd+K`), dark/light themes, JSON export/import
+
+### 🔧 Next: v0.2.0 (contributors welcome)
+- [ ] **Lint and format checks** (ESLint + Prettier) running on every PR and push
+- [ ] **Unit tests** for the core logic in `utils.js` and `storage.js` (streaks, score, import validation)
+- [ ] **Data migrations**: `storage.js` stores a `version` number but has no code to upgrade old data yet
+- [ ] **First-run onboarding**: guide new users from the empty dashboard to their first skill, or to the demo data
+- [ ] **Real screenshots** in this README (replace the illustrative layout above)
+- [ ] **Accessibility pass**: keyboard-only navigation, focus order, colour contrast, screen-reader labels
+
+### 🌌 Later
+- [ ] **Import real activity from GitHub** (commits, PRs, active days) so streaks and hours reflect actual work
+- [ ] **Backup reminders / sync**: data currently lives in one browser and is lost if site data is cleared
+- [ ] Pomodoro focus timer in the dashboard
+- [ ] Export skill matrices and progress reports (Markdown & CSV)
+- [ ] Custom colours for project technology tags
+- [ ] Progressive Web App (offline support)
+
+Want to work on one? Check [open issues](https://github.com/LetsCook-Organization/CodeOrbit/issues) or open one to discuss it first.
 
 ---
 

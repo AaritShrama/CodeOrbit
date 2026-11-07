@@ -12,10 +12,10 @@ CodeOrbit is an open-source, client-side web application. Security updates and p
 
 | Version | Supported | Status |
 | :--- | :--- | :--- |
-| **1.0.x** | :white_check_mark: | Currently Supported (Latest `main` release) |
-| **< 1.0.0** | :x: | Unsupported |
+| **Latest `main`** (currently 0.1.x) | :white_check_mark: | Supported: this is what is deployed to the live site |
+| Older commits and forks | :x: | Unsupported |
 
-We strongly advise all users and self-hosters to keep their deployments updated to the latest commit on the `main` branch to ensure they receive all security refinements.
+CodeOrbit is pre-1.0 and has no long-term support branches: fixes land on `main` and deploy immediately. Self-hosters should stay on the latest commit of `main`. Released versions are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 

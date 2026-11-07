@@ -2,13 +2,13 @@
 
 **Tagline:** Your Universe of Developer Growth  
 **Organization:** LET'S COOK — THE FOUNDRY  
-**Version:** 1.0.0  
+**Version:** 0.1.0 (see [CHANGELOG](../CHANGELOG.md))  
 
 ---
 
 ## 1. Architectural Philosophy
 
-CodeOrbit is engineered as a **zero-dependency, frontend-only Single Page Application (SPA)** that puts complete data sovereignty into the developer's hands.
+CodeOrbit is a **frontend-only Single Page Application (SPA) with no build step** that keeps all data in the developer's own browser. Its only runtime dependencies are two pinned CDN libraries: Chart.js (charts) and Lucide (icons).
 
 ### Core Tenets:
 1. **Zero External Backend / Zero API Costs:** All data is held strictly in browser `localStorage`.
