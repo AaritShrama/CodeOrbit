@@ -47,7 +47,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** Readers must search for a function instead of jumping to a line. Known bugs stay live a little longer.
 
 ### D-004: Deployment target: keep Render, remove the GitHub Pages workflow
-- **Date:** 2026-11-07 · **Status:** Accepted (option A)
+- **Date:** 2026-11-07 · **Status:** Superseded by D-012
 - **Context:** The live site runs on Render, but `.github/workflows/deploy.yml` deploys to GitHub Pages, which is not enabled. The workflow has failed on every run, and four Dependabot PRs exist only to update that workflow's actions.
 - **Options:**
   - **A. Keep Render:** delete `deploy.yml`, close the Dependabot PRs for it. *Cost:* deploys depend on a third-party account outside the GitHub org.
@@ -134,6 +134,21 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 2. Compute the hash: `curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A`, then prefix it with `sha384-`.
 3. Update `src` and `integrity` in `index.html`, open the app, and check that the console shows no integrity errors and icons/charts render.
 4. Add a decision entry if the upgrade changes behaviour.
+
+### D-012: Host on GitHub Pages under the LetsCook-Organization org (replaces Render)
+- **Date:** 2026-11-07 · **Status:** Accepted · Supersedes D-004
+- **Context:** After D-004 it turned out the Render service was created from a contributor's **personal** Render account and connected to a personal copy of the repo, not to `LetsCook-Organization/CodeOrbit`. None of the org repo's pushes deployed: the live site stayed on the morning's version (demo data, date bugs, unpinned scripts) while `main` moved on. The risk D-004 accepted ("deploys depend on an account outside the GitHub org") had already happened.
+- **Decision:** Deploy with GitHub Pages from this repo via `.github/workflows/deploy-pages.yml` on every push to `main`. Live URL: `https://letscook-organization.github.io/CodeOrbit/`. The personal Render service is to be suspended by its owner.
+- **Why:**
+  - The org owns the repo, the deploy, and the URL. No personal account can silently stop deployments or serve a different version.
+  - Free, HTTPS, no extra account, and the deploy status is visible as a check on every commit.
+  - The app is a static site with only relative paths, so it works unchanged under the `/CodeOrbit/` sub-path.
+- **How the workflow is hardened:** actions pinned to full commit SHAs (version in a comment; Dependabot updates them), least-privilege `permissions`, `persist-credentials: false`, a 10-minute timeout, and no cancelling a deploy halfway.
+- **Trade-off accepted:**
+  - The public URL changes. Anyone holding the old Render link needs the new one (or the Render service could serve a redirect page until it is retired).
+  - The URL is a `github.io` sub-path, not a custom domain. A custom domain (e.g. a subdomain of `letscook.co.in`) can be added later in Settings → Pages without code changes.
+  - The whole repository (docs included, hidden folders excluded) is published, since there is no build step. All of it is already public on GitHub.
+- **Alternatives rejected:** A new Render account owned by Let's Cook: works, but adds a second service and login to manage for a static site that GitHub can host for free.
 
 ---
 

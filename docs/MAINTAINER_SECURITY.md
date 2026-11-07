@@ -70,7 +70,7 @@ To protect the integrity of the production codebase, direct pushes to the primar
 
 - [ ] **Zero Secrets in Code:** Never commit API keys, cloud access tokens, passwords, or deployment keys directly into repository files.
 - [ ] **Use GitHub Actions Secrets:** Store sensitive parameters strictly in **Settings $\rightarrow$ Secrets and Variables $\rightarrow$ Actions**.
-- [ ] **Scope Secrets Appropriately:** Restrict deployment secrets to specific production environments (e.g., `production`) rather than repository-wide or organization-wide exposure.
+- [ ] **Scope Secrets Appropriately:** Restrict deployment secrets to specific production environments (e.g., `github-pages`) rather than repository-wide or organization-wide exposure.
 - [ ] **Incident Credential Rotation:** If a token or key is ever committed or exposed, immediately consider it compromised:
   1. Revoke the token at the source provider immediately.
   2. Issue a replacement credential and update GitHub Secrets.

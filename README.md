@@ -26,7 +26,7 @@
   <!-- Shields.io Badges Row -->
   <p align="center">
     <a href="https://github.com/LetsCook-Organization/CodeOrbit"><img src="https://img.shields.io/badge/GitHub-LetsCook--Organization%2FCodeOrbit-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository"></a>
-    <a href="https://codeorbit-c7q4.onrender.com/"><img src="https://img.shields.io/badge/Deployment-Render_Live-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Render Deployment"></a>
+    <a href="https://letscook-organization.github.io/CodeOrbit/"><img src="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/deploy-pages.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge" alt="MIT License"></a>
     <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
     <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
@@ -44,9 +44,9 @@ Experience CodeOrbit's developer command center and explore your personal develo
 
 <div align="center">
 
-[![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://codeorbit-c7q4.onrender.com/)
+[![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://letscook-organization.github.io/CodeOrbit/)
 
-*Hosted live as a Static Site on Render with automated global distribution.*
+*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main`.*
 
 </div>
 
@@ -80,7 +80,7 @@ The CodeOrbit Command Center brings a space-inspired aesthetic into modern devel
 ```
 
 > [!TIP]
-> Visit the [Live Application](https://codeorbit-c7q4.onrender.com/) to interact with the animated orbital canvas, dynamic telemetry gauges, and cosmic dark theme in real time. For contributors preparing visual materials, see [docs/screenshots/README.md](docs/screenshots/README.md) for full image capture specifications.
+> Visit the [Live Application](https://letscook-organization.github.io/CodeOrbit/) to interact with the animated orbital canvas, dynamic telemetry gauges, and cosmic dark theme in real time. For contributors preparing visual materials, see [docs/screenshots/README.md](docs/screenshots/README.md) for full image capture specifications.
 
 ---
 
@@ -159,7 +159,7 @@ CodeOrbit is deliberately built with clean, standards-compliant web technologies
 | **Chart.js** | ![Chart.js](https://img.shields.io/badge/Chart.js-4.4+-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | Responsive canvas charts configured with custom cosmic gradients |
 | **Lucide Icons** | ![Lucide](https://img.shields.io/badge/Lucide-Icons-F56565?style=flat-square&logo=feather&logoColor=white) | Modern, consistent SVG iconography |
 | **LocalStorage** | ![LocalStorage](https://img.shields.io/badge/Storage-Browser_LocalStorage-22C55E?style=flat-square) | Fast, atomic, client-side data persistence with zero network latency |
-| **Render** | ![Render](https://img.shields.io/badge/Hosting-Render_Static_Site-46E3B7?style=flat-square&logo=render&logoColor=white) | Continuous deployment and static site hosting with automated SSL |
+| **GitHub Pages** | ![GitHub Pages](https://img.shields.io/badge/Hosting-GitHub_Pages-222222?style=flat-square&logo=githubpages&logoColor=white) | Static hosting with HTTPS, deployed by GitHub Actions on every push to `main` |
 
 ---
 
@@ -207,7 +207,9 @@ CodeOrbit/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.yml          # Structured GitHub bug report issue form
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
-│   ├── dependabot.yml              # Automated updates for GitHub Actions (none yet)
+│   ├── workflows/
+│   │   └── deploy-pages.yml        # Deploys to GitHub Pages on every push to main
+│   ├── dependabot.yml              # Keeps the workflow's GitHub Actions up to date
 │   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
 │   ├── css/
@@ -320,7 +322,7 @@ See the [LICENSE](LICENSE) file for complete terms and permissions.
   Built with curiosity, code, and community.<br>
   <strong>CodeOrbit</strong> • <strong>LET'S COOK — THE FOUNDRY</strong>
   <br><br>
-  <a href="https://codeorbit-c7q4.onrender.com/">Live Demo</a> ·
+  <a href="https://letscook-organization.github.io/CodeOrbit/">Live Demo</a> ·
   <a href="https://github.com/LetsCook-Organization/CodeOrbit">GitHub</a> ·
   <a href="CONTRIBUTING.md">Contributing</a> ·
   <a href="LICENSE">License</a>

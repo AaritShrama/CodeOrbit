@@ -4,7 +4,7 @@ This directory holds official screenshots of the CodeOrbit web application for u
 
 ## Recommended Screenshots to Capture
 
-Capture these screenshots from the live application at [https://codeorbit-c7q4.onrender.com](https://codeorbit-c7q4.onrender.com) (or local `http://localhost:3000`):
+Capture these screenshots from the live application at [https://letscook-organization.github.io/CodeOrbit/](https://letscook-organization.github.io/CodeOrbit/) (or local `http://localhost:3000`):
 
 | File Name | View / Section | Viewport & Focus |
 | :--- | :--- | :--- |

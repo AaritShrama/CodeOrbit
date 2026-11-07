@@ -56,10 +56,12 @@ codeorbit/
 │   ├── DECISIONS.md            # Decision log with reasons and trade-offs
 │   ├── FLOW.md                 # Code execution flow between files
 │   └── MAINTAINER_SECURITY.md  # Administrative security checklist
-└── .github/                    # Issue/PR templates and Dependabot config
+└── .github/
+    └── workflows/
+        └── deploy-pages.yml    # Deploys to GitHub Pages on every push to main
 ```
 
-**Deployment:** Render static site, deployed automatically by Render on every push to `main` (no GitHub Actions workflow involved). See `DECISIONS.md` D-004.
+**Deployment:** GitHub Pages, owned by the LetsCook-Organization org, deployed by `.github/workflows/deploy-pages.yml` on every push to `main`. See `DECISIONS.md` D-012.
 
 ---
 

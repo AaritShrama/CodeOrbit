@@ -83,7 +83,7 @@ The following assets and components are in-scope for security evaluations:
 - The **CodeOrbit web application** source code (`index.html`, `assets/css/*`, `assets/js/*`).
 - Official repository configuration files and issue/PR templates (`.github/`).
 - GitHub Actions CI/CD workflows (`.github/workflows/*`).
-- The official live static deployment: `https://codeorbit-c7q4.onrender.com`.
+- The official live static deployment: `https://letscook-organization.github.io/CodeOrbit/`.
 - Data persistence and serialization mechanisms (browser `localStorage` schemas, JSON backup export and import validation).
 
 ### Out-of-Scope
