@@ -528,7 +528,10 @@
               <span class="label-mono">Badges</span><br>
               <strong id="progress-badges-count">0 of 10 earned</strong>
             </div>
-            <a href="#achievements" class="btn btn-secondary">See all badges →</a>
+            <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary" id="open-recap-btn">Last week in review</button>
+              <a href="#achievements" class="btn btn-secondary">See all badges →</a>
+            </div>
           </div>
 
           <!-- Key Statistics Strip -->
@@ -1101,6 +1104,43 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- WEEK IN REVIEW (recap.js) -->
+  <div class="modal-backdrop" id="recap-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="recap-title">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon-badge"><i data-lucide="calendar-check"></i></div>
+          <h3 class="modal-title" id="recap-title">Your week in review</h3>
+        </div>
+        <button class="modal-close-btn" data-modal-close aria-label="Close">&times;</button>
+      </div>
+      <form id="recap-goal-form">
+        <div class="modal-body">
+          <span class="label-mono" id="recap-range">This week</span>
+          <div class="recap-figure">
+            <span class="recap-hours" id="recap-hours">0</span>
+            <span class="recap-unit">hours studied</span>
+          </div>
+          <p class="recap-compare" id="recap-compare"></p>
+          <dl class="recap-facts">
+            <div><dt>Days you studied</dt><dd id="recap-days">0 of 7</dd></div>
+            <div><dt>Your best day</dt><dd id="recap-best">—</dd></div>
+            <div><dt>Most studied skill</dt><dd id="recap-skill">—</dd></div>
+            <div><dt>Study sessions</dt><dd id="recap-sessions">0</dd></div>
+          </dl>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label" for="recap-goal">Your goal for next week (hours)</label>
+            <input type="number" class="form-input" id="recap-goal" min="1" max="80" step="0.5" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
           <button type="submit" class="btn btn-primary">Save goal</button>
         </div>
       </form>

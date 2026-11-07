@@ -223,6 +223,74 @@ export function backupReminder(settings = {}, sessionCount = 0, now = new Date()
 }
 
 /**
+ * Numbers for "Your week in review": the Monday–Sunday week that ended on the
+ * most recent Sunday (today, if today is Sunday), compared with the week before.
+ * All dates are LOCAL calendar days (see toLocalISO).
+ * @param {Array<{date?: string, duration?: number, skill?: string}>} activities
+ * @param {Date} [now]
+ * @returns {{ start: string, end: string, minutes: number, prevMinutes: number,
+ *   sessions: number, activeDays: number,
+ *   bestDay: null | { date: string, minutes: number },
+ *   topSkill: null | { name: string, minutes: number } }}
+ */
+export function weeklyRecap(activities = [], now = new Date()) {
+  const day = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
+  const sinceSunday = day.getDay(); // 0 = Sunday
+  const end = new Date(day);
+  end.setDate(day.getDate() - sinceSunday);
+  const dayISO = offset => {
+    const d = new Date(end);
+    d.setDate(end.getDate() + offset);
+    return toLocalISO(d);
+  };
+  const week = Array.from({ length: 7 }, (_, i) => dayISO(i - 6)); // Mon..Sun
+  const prevStart = dayISO(-13);
+  const prevEnd = dayISO(-7);
+
+  const byDay = Object.fromEntries(week.map(d => [d, 0]));
+  const bySkill = new Map();
+  let minutes = 0;
+  let prevMinutes = 0;
+  let sessions = 0;
+
+  for (const a of activities) {
+    const d = a && typeof a.date === 'string' ? a.date.slice(0, 10) : '';
+    const mins = Number(a && a.duration) || 0;
+    if (Object.hasOwn(byDay, d)) {
+      byDay[d] += mins;
+      minutes += mins;
+      sessions += 1;
+      const name = (a.skill || 'Other').toString();
+      bySkill.set(name, (bySkill.get(name) || 0) + mins);
+    } else if (d >= prevStart && d <= prevEnd) {
+      prevMinutes += mins;
+    }
+  }
+
+  let bestDay = null;
+  for (const d of week) {
+    if (byDay[d] > 0 && (!bestDay || byDay[d] > bestDay.minutes)) {
+      bestDay = { date: d, minutes: byDay[d] };
+    }
+  }
+  let topSkill = null;
+  for (const [name, mins] of bySkill) {
+    if (!topSkill || mins > topSkill.minutes) topSkill = { name, minutes: mins };
+  }
+
+  return {
+    start: week[0],
+    end: week[6],
+    minutes,
+    prevMinutes,
+    sessions,
+    activeDays: week.filter(d => byDay[d] > 0).length,
+    bestDay,
+    topSkill
+  };
+}
+
+/**
  * Formats minutes into hours with one decimal place.
  * @param {number} minutes - Minutes
  * @returns {number} Hours

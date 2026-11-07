@@ -17,7 +17,8 @@ import {
   calculateStreak,
   calculateProductivityScore,
   streakMessage,
-  backupReminder
+  backupReminder,
+  weeklyRecap
 } from '../assets/js/utils.js';
 import { freezeTime, TZ } from './helpers/clock.js';
 
@@ -315,5 +316,45 @@ describe('backupReminder', () => {
     assert.deepEqual(backupReminder({ backupSnoozeUntil: daysAgo(1) }, 10, now), {
       daysSince: null
     });
+  });
+});
+
+describe('weeklyRecap', () => {
+  // Local dates. 2026-11-08 is a Sunday.
+  const acts = [
+    { date: '2026-11-02', duration: 30, skill: 'Go' }, // Mon
+    { date: '2026-11-04', duration: 90, skill: 'SQL' }, // Wed (best day)
+    { date: '2026-11-04', duration: 20, skill: 'Go' },
+    { date: '2026-11-08', duration: 60, skill: 'Go' }, // Sun
+    { date: '2026-10-30', duration: 45, skill: 'Go' }, // week before
+    { date: '2026-11-09', duration: 999, skill: 'Go' } // next week: ignored
+  ];
+
+  test('on Sunday it covers Monday to today', t => {
+    freezeTime(t, new Date(2026, 10, 8, 20));
+    const r = weeklyRecap(acts);
+    assert.equal(r.start, '2026-11-02');
+    assert.equal(r.end, '2026-11-08');
+    assert.equal(r.minutes, 200);
+    assert.equal(r.prevMinutes, 45);
+    assert.equal(r.sessions, 4);
+    assert.equal(r.activeDays, 3);
+    assert.deepEqual(r.bestDay, { date: '2026-11-04', minutes: 110 });
+    assert.deepEqual(r.topSkill, { name: 'Go', minutes: 110 });
+  });
+
+  test('on Monday it still shows the week that just ended', t => {
+    freezeTime(t, new Date(2026, 10, 9, 8));
+    const r = weeklyRecap(acts);
+    assert.equal(r.end, '2026-11-08');
+    assert.equal(r.minutes, 200);
+  });
+
+  test('an empty week has no best day or top skill', t => {
+    freezeTime(t, new Date(2026, 10, 8, 12));
+    const r = weeklyRecap([]);
+    assert.equal(r.minutes, 0);
+    assert.equal(r.bestDay, null);
+    assert.equal(r.topSkill, null);
   });
 });

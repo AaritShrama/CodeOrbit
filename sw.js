@@ -34,6 +34,7 @@ const APP_FILES = [
   'assets/js/navigation.js',
   'assets/js/progress.js',
   'assets/js/projects.js',
+  'assets/js/recap.js',
   'assets/js/settings.js',
   'assets/js/skills.js',
   'assets/js/storage.js',

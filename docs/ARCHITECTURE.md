@@ -42,6 +42,7 @@ codeorbit/
 │   │   ├── navigation.js       # Hash-based routing (#dashboard, #skills, etc.)
 │   │   ├── components.js       # Modal controller, Toast engine, Command Palette (Ctrl+K)
 │   │   ├── icons.js            # Small inline line icons (replaces emoji)
+│   │   ├── recap.js            # "Your week in review" pop-up and next week's goal
 │   │   ├── dashboard.js        # Home: week hours, orbit, last 7 days, coming up, first visit
 │   │   ├── skills.js           # Skills page: add/edit/delete, filters, search, sorting
 │   │   ├── progress.js         # Study sessions page and daily goal ring

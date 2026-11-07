@@ -324,6 +324,20 @@
   color: var(--text-primary);
 }
 
+button.next-row {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border-light);
+  font: inherit;
+  cursor: pointer;
+}
+
+button.next-row .next-title {
+  color: var(--accent-text);
+}
+
 .next-body {
   flex: 1;
   min-width: 0;
@@ -365,6 +379,57 @@
 .next-row:hover .next-arrow {
   transform: translateX(4px);
   color: var(--accent-text);
+}
+
+/* Week in review (pop-up) */
+.recap-figure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin: var(--space-xs) 0;
+}
+
+.recap-hours {
+  font-weight: 900;
+  font-size: 4.5rem;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.recap-unit {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.recap-compare {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.recap-facts {
+  border-top: 1px solid var(--border);
+  margin-bottom: var(--space-lg);
+}
+
+.recap-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+
+.recap-facts dt {
+  color: var(--text-secondary);
+}
+
+.recap-facts dd {
+  font-weight: 600;
+  text-align: right;
 }
 
 /* Backup reminder (bottom of Home) */

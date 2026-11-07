@@ -194,6 +194,7 @@ CodeOrbit/
 │       ├── navigation.js ← switches between screens (#skills, #goals, …)
 │       ├── components.js ← pop-ups, messages, the Ctrl+K search
 │       ├── icons.js      ← small line icons
+│       ├── recap.js      ← "Your week in review"
 │       ├── dashboard.js, skills.js, progress.js, projects.js,
 │       │   goals.js, achievements.js, analytics.js, settings.js
 │       │                 ← one file per screen

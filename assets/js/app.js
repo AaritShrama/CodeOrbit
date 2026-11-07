@@ -20,6 +20,7 @@ import { initGoals, renderGoals } from './goals.js';
 import { initAchievements, renderAchievements, evaluateAchievements } from './achievements.js';
 import { initAnalytics, renderAnalytics } from './analytics.js';
 import { initSettings, renderSettings, applyTheme } from './settings.js';
+import { initRecap } from './recap.js';
 
 /**
  * Runs one startup step in isolation. A failing step is logged and recorded,
@@ -83,6 +84,7 @@ function initApp() {
   runStep('achievements page', initAchievements, failures);
   runStep('analytics page', initAnalytics, failures);
   runStep('settings page', initSettings, failures);
+  runStep('week in review', initRecap, failures);
 
   // 6. Unlock anything already earned (e.g. after an import) before the first render
   runStep('achievement check', evaluateAchievements, failures);

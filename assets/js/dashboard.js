@@ -25,6 +25,7 @@ import { toast } from './components.js';
 import { openSkillModal } from './skills.js';
 import { openActivityModal } from './progress.js';
 import { downloadBackup } from './settings.js';
+import { openRecap, shouldOfferRecap } from './recap.js';
 
 const MAX_PLANETS = 12;
 const QUICK_MINUTES = 30;
@@ -75,7 +76,7 @@ export function renderDashboard() {
   renderQuickAdd(skills, activities);
   renderOrbit(skills);
   renderDays(activities);
-  renderComingUp(goals, activities);
+  renderComingUp(goals, activities, shouldOfferRecap(data));
   renderBackupReminder(settings, activities.length);
 }
 
@@ -310,7 +311,7 @@ function renderDays(activities) {
 }
 
 /** The nearest unfinished goal and the most recent study session. */
-function renderComingUp(goals, activities) {
+function renderComingUp(goals, activities, offerRecap = false) {
   const container = document.getElementById('home-next-list');
   if (!container) return;
 
@@ -344,9 +345,23 @@ function renderComingUp(goals, activities) {
     });
   }
 
-  container.innerHTML = rows
-    .map(
-      r => `
+  // Sundays and Mondays: the week that just ended, until it has been opened once
+  const recapRow = offerRecap
+    ? `
+      <button type="button" class="next-row" id="home-open-recap">
+        <span class="next-body">
+          <span class="next-kind">Your week in review</span>
+          <span class="next-title">See how your week went</span>
+        </span>
+        <span class="next-arrow" aria-hidden="true">→</span>
+      </button>`
+    : '';
+
+  container.innerHTML =
+    recapRow +
+    rows
+      .map(
+        r => `
       <a class="next-row" href="${r.href}">
         <span class="next-body">
           <span class="next-kind">${escapeHTML(r.kind)}</span>
@@ -355,8 +370,9 @@ function renderComingUp(goals, activities) {
         ${r.meta ? `<span class="next-meta">${escapeHTML(r.meta)}</span>` : ''}
         <span class="next-arrow" aria-hidden="true">→</span>
       </a>`
-    )
-    .join('');
+      )
+      .join('');
+  document.getElementById('home-open-recap')?.addEventListener('click', () => openRecap());
 }
 
 function goalDueText(deadline, today) {
