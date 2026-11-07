@@ -80,8 +80,8 @@ It uses a small space theme: on Home, each skill you add is a planet in your orb
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🛸 See everything at once</h3>
-      The home screen shows your study streak, total hours, active projects, upcoming goals, a weekly chart, and your skills as planets that grow with your progress.
+      <h3>🛸 See your week at a glance</h3>
+      Home shows the hours you studied in the last 7 days against your weekly goal, your skills as planets that grow with your progress, hours for each day, and what is coming up. Add 30 minutes with one tap. On Sundays, look back at your week.
     </td>
     <td width="50%" valign="top">
       <h3>🪐 Track your skills</h3>
@@ -115,14 +115,14 @@ It uses a small space theme: on Home, each skill you add is a planet in your orb
     </td>
     <td width="50%" valign="top">
       <h3>⚙️ Make it yours</h3>
-      Daily and weekly study goals, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file.
+      Daily and weekly study goals, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file. Install it on your phone; it works offline.
     </td>
   </tr>
 </table>
 
-### The productivity score (0–100), explained
+### The progress score (0–100), explained
 
-The home screen shows one number that sums up your week. It is made of four simple parts:
+The **Progress** page shows one number that sums up your week. It is made of four simple parts:
 
 | Part | Points | How you earn them |
 | :--- | ---: | :--- |
@@ -131,7 +131,7 @@ The home screen shows one number that sums up your week. It is made of four simp
 | **Projects** | 20 | Average progress of your projects |
 | **Skills** | 20 | Average progress of your skills |
 
-A brand-new account scores **0**. In the app, click **"How is this computed?"** next to the score to see exactly how yours was calculated.
+A brand-new account scores **0**. In the app, click **"How is this worked out?"** next to the score to see exactly how yours was calculated.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
