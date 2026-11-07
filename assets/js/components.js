@@ -204,7 +204,7 @@ export function showConfirmDialog({
           <p id="confirm-message" style="font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.5;"></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
           <button type="button" class="btn ${confirmClass}" id="confirm-proceed-btn">Proceed</button>
         </div>
       </div>

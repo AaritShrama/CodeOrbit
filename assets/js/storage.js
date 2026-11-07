@@ -645,6 +645,7 @@ class StorageManager {
         typeof parsed.settings === 'object' && parsed.settings
           ? { ...defaults.settings, ...parsed.settings }
           : defaults.settings;
+      this.keepCurrentTheme(parsed);
       parsed.skills = Array.isArray(parsed.skills) ? parsed.skills : [];
       parsed.activities = Array.isArray(parsed.activities) ? parsed.activities : [];
       parsed.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
@@ -695,12 +696,22 @@ class StorageManager {
   }
 
   resetAllData() {
-    return this.saveUniverse(getEmptyUniverse());
+    return this.saveUniverse(this.keepCurrentTheme(getEmptyUniverse()));
   }
 
   loadDemoUniverse() {
-    const demo = getDefaultUniverse();
-    return this.saveUniverse(demo);
+    return this.saveUniverse(this.keepCurrentTheme(getDefaultUniverse()));
+  }
+
+  /**
+   * Light/dark is a choice about this device, not part of the data. Replacing
+   * the data (sample data, restore, delete all) must not switch it: it used to
+   * flip a light-mode user back to dark on the next page load (D-023).
+   */
+  keepCurrentTheme(universe) {
+    const theme = this.getSettings().theme === 'light' ? 'light' : 'dark';
+    universe.settings = { ...(universe.settings || {}), theme };
+    return universe;
   }
 }
 

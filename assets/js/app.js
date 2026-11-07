@@ -182,6 +182,10 @@ function initCosmicStarfield() {
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
+    // Stars are light dots on dark, and faint ink dots on the light theme.
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const rgb = isLight ? '10, 10, 11' : '248, 250, 252';
+    const strength = isLight ? 0.35 : 1;
 
     for (let i = 0; i < stars.length; i++) {
       const s = stars[i];
@@ -192,7 +196,7 @@ function initCosmicStarfield() {
         }
       }
 
-      ctx.fillStyle = `rgba(248, 250, 252, ${s.alpha})`;
+      ctx.fillStyle = `rgba(${rgb}, ${s.alpha * strength})`;
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
       ctx.fill();
@@ -204,4 +208,12 @@ function initCosmicStarfield() {
   }
 
   draw();
+
+  // With reduced motion the stars are drawn once, so redraw them when the theme changes.
+  if (prefersReduced) {
+    new MutationObserver(draw).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+  }
 }

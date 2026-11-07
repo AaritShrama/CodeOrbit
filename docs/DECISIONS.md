@@ -304,6 +304,14 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** Code and storage still say `missions`, `activities`, `Completed`, so contributors see two vocabularies; the label helpers are the bridge and must be used in new templates.
 - **Alternatives rejected:** Keeping the space words with a glossary: the user should not need one. Migrating stored values: risk to existing data.
 
+### D-023: Light/dark is a device choice; replacing the data keeps it
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** The theme is stored inside the same data as skills and sessions. *Load sample data*, *Restore from backup* and *Delete all my data* replace that data, so a user in light mode was silently switched back to dark on the next page load (the sample data and most backups say `dark`).
+- **Decision:** `storage.keepCurrentTheme()` copies the current theme into the new data in `loadDemoUniverse`, `resetAllData` and `importJSON`. Every other setting in a backup (daily and weekly goals, sounds) is still restored. Three regression tests cover it.
+- **Why:** Light or dark depends on the screen and room someone is in, not on their study data. A backup made on a laptop in dark mode should not change the look of a phone in light mode.
+- **Trade-off accepted:** A backup can no longer carry a theme across devices; the user sets it once per device.
+- **Alternatives rejected:** Moving the theme to its own `localStorage` key: cleaner, but it changes the stored format and needs a migration (issue #17 covers migrations).
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

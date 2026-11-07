@@ -42,6 +42,8 @@
   --circuit-node: transparent;
   --bg-input: #121214;
   --bg-topbar: rgba(10, 10, 11, 0.88);
+  --overlay: rgba(0, 0, 0, 0.72);
+  --avatar-bg: #121214;
 
   /* Brand: Let's Cook crimson. Fill colour carries white text only;
      on dark backgrounds crimson TEXT uses --accent-text so it stays readable. */
@@ -158,6 +160,8 @@
   --glass-border-hover: #c4c4c0;
   --bg-input: #ffffff;
   --bg-topbar: rgba(250, 250, 249, 0.9);
+  --overlay: rgba(10, 10, 11, 0.36);
+  --avatar-bg: #ececea;
 
   --accent-text: #b8002f;
   --secondary: #45454b;

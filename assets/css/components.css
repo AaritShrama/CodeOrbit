@@ -411,7 +411,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: var(--overlay);
   z-index: 200;
   align-items: center;
   justify-content: center;
@@ -1071,7 +1071,7 @@
 }
 
 .settings-nav-btn.active {
-  color: #ffffff;
+  color: var(--text-primary);
   background: var(--bg-card-hover);
   border-color: var(--border-strong);
 }

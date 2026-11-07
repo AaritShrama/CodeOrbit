@@ -26,6 +26,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Finished goals no longer show as "late".
 - The chosen profile picture in Settings is now visibly selected.
 - Search results can be opened with the keyboard.
+- Light mode switched back to dark after loading sample data, restoring a backup or deleting all data. Your light/dark choice now stays.
+- Light mode fixes: the selected Settings tab was white on white, the screen behind pop-ups was too dark, profile pictures were black circles, the *Cancel* button in "Are you sure?" pop-ups was squashed, and the background stars were invisible.
 - Pop-ups (add study time, add skill, search, and the rest) now slide in and fade out instead of appearing and disappearing in one jump. The motion is turned off if your device asks for reduced motion.
 - A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
 - The planet at the centre of the dashboard said "Alex Rivera" (the demo user) on hover for everyone. It now says "Your profile".
