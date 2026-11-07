@@ -9,7 +9,9 @@ import { toast, showConfirmDialog } from './components.js';
 
 export function initSettings() {
   setupSettingsEventListeners();
-  renderSettings();
+  // The sidebar profile card is visible on every page, so fill it now.
+  // The settings form itself is filled by renderSettings() when the page is opened.
+  updateSidebarProfile(storage.getProfile());
 }
 
 function setupSettingsEventListeners() {

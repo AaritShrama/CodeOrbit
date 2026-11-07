@@ -55,7 +55,11 @@ function initApp() {
     initAnalytics();
     initSettings();
 
-    // 7. Initialize Navigation Router
+    // Unlock anything already earned (e.g. after an import) before the first render,
+    // so the first paint already shows the correct badges.
+    evaluateAchievements();
+
+    // 7. Initialize Navigation Router (renders the visible page: the ONLY startup render)
     navigation.init();
 
     // 8. Global State Change Listener (Event Bus)

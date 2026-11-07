@@ -13,7 +13,8 @@ let activePriority = 'All';
 
 export function initGoals() {
   setupGoalEventListeners();
-  renderGoals();
+  // No render here: navigation.init() renders whichever page is visible, and
+  // navigateTo() renders each page when the user opens it.
 }
 
 function setupGoalEventListeners() {

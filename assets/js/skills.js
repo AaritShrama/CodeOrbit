@@ -15,7 +15,8 @@ let activeSort = 'progress-desc';
 
 export function initSkills() {
   setupSkillEventListeners();
-  renderSkills();
+  // No render here: navigation.init() renders whichever page is visible, and
+  // navigateTo() renders each page when the user opens it.
 }
 
 function setupSkillEventListeners() {

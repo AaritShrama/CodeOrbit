@@ -23,7 +23,8 @@ let activeSort = 'date-desc';
 
 export function initProgress() {
   setupProgressEventListeners();
-  renderProgress();
+  // No render here: navigation.init() renders whichever page is visible, and
+  // navigateTo() renders each page when the user opens it.
 }
 
 function setupProgressEventListeners() {

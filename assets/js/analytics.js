@@ -8,7 +8,7 @@ import { calculateStreak, isWithinLastNDays } from './utils.js';
 import { chartManager } from './charts.js';
 
 export function initAnalytics() {
-  renderAnalytics();
+  // Nothing to wire up yet. The router calls renderAnalytics() when the page is shown.
 }
 
 export function renderAnalytics() {

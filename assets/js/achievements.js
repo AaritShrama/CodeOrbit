@@ -118,8 +118,8 @@ export const ACHIEVEMENT_DEFINITIONS = [
 let activeCategory = 'All';
 
 export function initAchievements() {
-  evaluateAchievements();
-  renderAchievements();
+  // No evaluate/render here: initApp() evaluates once at startup and the router
+  // renders this page when it is visible.
 
   // Category filter pills
   document.querySelectorAll('#achievement-category-pills .pill-btn').forEach(btn => {

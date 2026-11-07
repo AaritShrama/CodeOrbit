@@ -14,7 +14,8 @@ let modalTechTags = [];
 
 export function initProjects() {
   setupProjectEventListeners();
-  renderProjects();
+  // No render here: navigation.init() renders whichever page is visible, and
+  // navigateTo() renders each page when the user opens it.
 }
 
 function setupProjectEventListeners() {

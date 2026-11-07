@@ -22,7 +22,8 @@ let currentOrbitView = 'orbital'; // 'orbital' | 'constellation'
 let currentTelemetryMode = 'weekly'; // 'weekly' | 'monthly'
 
 export function initDashboard() {
-  renderDashboard();
+  // No render here: navigation.init() renders whichever page is visible, and
+  // navigateTo() renders each page when the user opens it.
 
   // Orbital controls
   const pauseBtn = document.getElementById('orbital-pause-btn');
