@@ -416,13 +416,51 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-md);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
 }
 
+/* Open/close motion. Keyframes (not transitions) because the backdrop goes from
+   display: none to flex in one step, and transitions never run across that. */
 .modal-backdrop.active {
   display: flex;
-  opacity: 1;
+  animation: modalFadeIn 0.2s ease-out both;
+}
+
+.modal-backdrop.active .modal-container {
+  animation: modalRiseIn 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.modal-backdrop.closing {
+  animation: modalFadeOut 0.16s ease-in both;
+}
+
+.modal-backdrop.closing .modal-container {
+  animation: modalDropOut 0.16s ease-in both;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modalFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+}
+
+@keyframes modalDropOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
 }
 
 .modal-container {
@@ -435,13 +473,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-lg);
-  transform: translateY(16px) scale(0.98);
-  transition: transform var(--transition-normal);
   overflow: hidden;
-}
-
-.modal-backdrop.active .modal-container {
-  transform: translateY(0) scale(1);
 }
 
 .modal-container.modal-lg {
@@ -458,7 +490,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(14, 21, 40, 0.5);
 }
 
 .modal-title-wrap {
@@ -510,7 +541,6 @@
 .modal-footer {
   padding: var(--space-md) var(--space-lg);
   border-top: 1px solid var(--border);
-  background: rgba(14, 21, 40, 0.5);
   display: flex;
   align-items: center;
   justify-content: flex-end;

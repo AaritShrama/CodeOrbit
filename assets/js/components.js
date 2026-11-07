@@ -109,6 +109,7 @@ export const toast = new ToastManager();
 export function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (!modal) return;
+  modal.classList.remove('closing');
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -126,10 +127,23 @@ export function openModal(modalId) {
 
 export function closeModal(modalId) {
   const modal = document.getElementById(modalId);
-  if (!modal) return;
-  modal.classList.remove('active');
+  if (!modal || !modal.classList.contains('active')) return;
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+
+  // Play the short closing animation, then hide. The timer is a fallback in
+  // case animationend never fires (e.g. the element is detached).
+  modal.classList.add('closing');
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    // Re-opened while closing? openModal() removed 'closing'; keep it open.
+    if (!modal.classList.contains('closing')) return;
+    modal.classList.remove('closing', 'active');
+  };
+  modal.addEventListener('animationend', finish, { once: true });
+  setTimeout(finish, 250);
 }
 
 /**
@@ -138,7 +152,7 @@ export function closeModal(modalId) {
 export function setupModalDismissHandlers() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-      const activeModal = document.querySelector('.modal-backdrop.active');
+      const activeModal = document.querySelector('.modal-backdrop.active:not(.closing)');
       if (activeModal) {
         closeModal(activeModal.id);
       }
@@ -223,6 +237,7 @@ export function showConfirmDialog({
 export function openCommandPalette() {
   const modal = document.getElementById('command-palette-modal');
   if (!modal) return;
+  modal.classList.remove('closing');
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 
@@ -235,11 +250,7 @@ export function openCommandPalette() {
 }
 
 export function closeCommandPalette() {
-  const modal = document.getElementById('command-palette-modal');
-  if (modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  }
+  closeModal('command-palette-modal');
 }
 
 export function renderPaletteResults(query) {

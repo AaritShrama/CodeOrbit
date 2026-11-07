@@ -26,6 +26,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Finished goals no longer show as "late".
 - The chosen profile picture in Settings is now visibly selected.
 - Search results can be opened with the keyboard.
+- Pop-ups (add study time, add skill, search, and the rest) now slide in and fade out instead of appearing and disappearing in one jump. The motion is turned off if your device asks for reduced motion.
 - A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
 - The planet at the centre of the dashboard said "Alex Rivera" (the demo user) on hover for everyone. It now says "Your profile".
 - Analytics "Peak Velocity Day" showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US). ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
