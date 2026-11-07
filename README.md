@@ -115,7 +115,7 @@ It uses a small space theme: on Home, each skill you add is a planet in your orb
     </td>
     <td width="50%" valign="top">
       <h3>⚙️ Make it yours</h3>
-      Dark or light theme, daily and weekly study targets, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file.
+      Daily and weekly study goals, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file.
     </td>
   </tr>
 </table>
@@ -327,7 +327,7 @@ The live site updates **only when all checks pass**, and the `main` branch is pr
 
 ## 10 — Roadmap
 
-**✅ Done in v0.1.0:** dashboard, skills, study sessions, projects, goals, 10 achievements, 5 charts, the 0–100 score, search, dark/light theme, backup and restore, automatic checks and tests.
+**✅ Done in v0.1.0:** dashboard, skills, study sessions, projects, goals, 10 achievements, 5 charts, the 0–100 score, search, backup and restore, automatic checks and tests.
 
 **🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), a friendlier first visit ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
 

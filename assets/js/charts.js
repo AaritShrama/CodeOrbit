@@ -1,6 +1,6 @@
 /**
  * CODEORBIT — CHART.JS INTEGRATION MODULE
- * Cosmic-themed Chart.js configurations, gradients, and lifecycle management.
+ * Chart.js set-up and lifecycle for the Progress page.
  */
 
 import { toLocalISO } from './utils.js';
@@ -10,20 +10,26 @@ class ChartManager {
     this.instances = new Map();
   }
 
+  /** Chart colours: dark background, greys, one crimson (D-020). */
   getThemeColors() {
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
     return {
-      textColor: isDark ? '#8F8F95' : '#63636A',
-      gridColor: isDark ? 'rgba(44, 44, 49, 0.7)' : 'rgba(226, 226, 224, 0.9)',
-      tooltipBg: isDark ? '#121214' : '#FFFFFF',
-      tooltipText: isDark ? '#F5F5F4' : '#0A0A0B',
-      tooltipBorder: isDark ? '#3A3A40' : '#C4C4C0',
-      // Black, white and greys with one crimson (Let's Cook); see D-020
-      bar: isDark ? '#B9B9BE' : '#45454B',
+      textColor: '#8F8F95',
+      gridColor: 'rgba(44, 44, 49, 0.7)',
+      tooltipBg: '#121214',
+      tooltipText: '#EBEBEA',
+      tooltipBorder: '#3A3A40',
+      bar: '#B9B9BE',
       accent: '#B8002F',
-      palette: isDark
-        ? ['#B8002F', '#F5F5F4', '#8F8F95', '#FF4D6A', '#4A4A52', '#B9B9BE', '#2C2C31', '#6B6B72']
-        : ['#B8002F', '#0A0A0B', '#8F8F95', '#FF4D6A', '#C4C4C0', '#45454B', '#E2E2E0', '#6B6B72']
+      palette: [
+        '#B8002F',
+        '#EBEBEA',
+        '#8F8F95',
+        '#FF4D6A',
+        '#4A4A52',
+        '#B9B9BE',
+        '#2C2C31',
+        '#6B6B72'
+      ]
     };
   }
 

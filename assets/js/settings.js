@@ -1,6 +1,6 @@
 /**
  * CODEORBIT — SETTINGS & DATA MANAGEMENT MODULE
- * Profile editing, avatar presets, theme toggles, JSON backup/restore, and data reset.
+ * Profile editing, avatar presets, JSON backup/restore, and data reset.
  */
 
 import { storage } from './storage.js';
@@ -46,25 +46,6 @@ function setupSettingsEventListeners() {
   const prefForm = document.getElementById('settings-preferences-form');
   if (prefForm) {
     prefForm.addEventListener('submit', handlePreferencesSubmit);
-  }
-
-  // Theme selector in settings
-  const themeSelect = document.getElementById('settings-theme-select');
-  if (themeSelect) {
-    themeSelect.addEventListener('change', e => {
-      applyTheme(e.target.value);
-    });
-  }
-
-  // Topbar theme toggle button
-  const topbarThemeBtn = document.getElementById('topbar-theme-toggle');
-  if (topbarThemeBtn) {
-    topbarThemeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      if (themeSelect) themeSelect.value = next;
-    });
   }
 
   // Avatar preset options
@@ -186,18 +167,13 @@ export function renderSettings() {
   });
 
   // Populate Preferences Inputs
-  const themeSelect = document.getElementById('settings-theme-select');
   const dailyTargetInput = document.getElementById('settings-daily-target');
   const weeklyTargetInput = document.getElementById('settings-weekly-target');
   const soundCheckbox = document.getElementById('settings-sound-enabled');
 
-  if (themeSelect) themeSelect.value = settings.theme || 'dark';
   if (dailyTargetInput) dailyTargetInput.value = settings.dailyTargetHours || 2;
   if (weeklyTargetInput) weeklyTargetInput.value = settings.weeklyTargetHours || 12;
   if (soundCheckbox) soundCheckbox.checked = settings.soundEnabled !== false;
-
-  // Apply initial theme
-  applyTheme(settings.theme || 'dark', false);
 
   // Update sidebar profile card
   updateSidebarProfile(profile);
@@ -226,43 +202,19 @@ function handleProfileSubmit(e) {
 function handlePreferencesSubmit(e) {
   e.preventDefault();
 
-  const theme = document.getElementById('settings-theme-select').value;
   const dailyTargetHours = parseFloat(document.getElementById('settings-daily-target').value) || 2;
   const weeklyTargetHours =
     parseFloat(document.getElementById('settings-weekly-target').value) || 10;
   const soundEnabled = document.getElementById('settings-sound-enabled').checked;
 
   const newSettings = {
-    theme,
     dailyTargetHours,
     weeklyTargetHours,
     soundEnabled
   };
 
   storage.saveSettings(newSettings);
-  applyTheme(theme, false); // theme is already in newSettings; saving again would run the data-change loop twice
   toast.success('Saved', 'Your preferences were updated.');
-}
-
-export function applyTheme(themeName, save = true) {
-  if (themeName === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-  }
-
-  // Update topbar theme button icon
-  const topbarThemeBtn = document.getElementById('topbar-theme-toggle');
-  if (topbarThemeBtn) {
-    topbarThemeBtn.innerHTML =
-      themeName === 'light'
-        ? `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>`
-        : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>`;
-  }
-
-  if (save) {
-    storage.saveSettings({ theme: themeName });
-  }
 }
 
 function updateSidebarProfile(profile) {

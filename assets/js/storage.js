@@ -26,7 +26,6 @@ function getEmptyUniverse() {
       joinedDate: getTodayISO()
     },
     settings: {
-      theme: 'dark',
       dailyTargetHours: 2,
       weeklyTargetHours: 10,
       soundEnabled: true,
@@ -62,7 +61,6 @@ function getDefaultUniverse() {
       joinedDate: '2026-01-15'
     },
     settings: {
-      theme: 'dark', // 'dark' | 'light'
       dailyTargetHours: 2,
       weeklyTargetHours: 12,
       soundEnabled: true,
@@ -652,7 +650,7 @@ class StorageManager {
         typeof parsed.settings === 'object' && parsed.settings
           ? { ...defaults.settings, ...parsed.settings }
           : defaults.settings;
-      this.keepCurrentTheme(parsed);
+      this.keepDeviceSettings(parsed);
       // You just restored from a file, so a backup exists.
       parsed.settings.lastBackupAt = new Date().toISOString();
       parsed.skills = Array.isArray(parsed.skills) ? parsed.skills : [];
@@ -705,23 +703,21 @@ class StorageManager {
   }
 
   resetAllData() {
-    return this.saveUniverse(this.keepCurrentTheme(getEmptyUniverse()), 'replace');
+    return this.saveUniverse(this.keepDeviceSettings(getEmptyUniverse()), 'replace');
   }
 
   loadDemoUniverse() {
-    return this.saveUniverse(this.keepCurrentTheme(getDefaultUniverse()), 'replace');
+    return this.saveUniverse(this.keepDeviceSettings(getDefaultUniverse()), 'replace');
   }
 
   /**
-   * Light/dark is a choice about this device, not part of the data. Replacing
-   * the data (sample data, restore, delete all) must not switch it: it used to
-   * flip a light-mode user back to dark on the next page load (D-023).
+   * The backup reminder state is about this device, not the data. Replacing the
+   * data (sample data, restore, delete all) keeps it as it was.
    */
-  keepCurrentTheme(universe) {
+  keepDeviceSettings(universe) {
     const current = this.getSettings();
-    const theme = current.theme === 'light' ? 'light' : 'dark';
-    universe.settings = { ...(universe.settings || {}), theme };
-    // Backup reminder state is also about this device, not the data.
+    universe.settings = { ...(universe.settings || {}) };
+    delete universe.settings.theme; // there is only one (dark) look since D-025
     for (const key of ['lastBackupAt', 'backupSnoozeUntil']) {
       if (current[key]) universe.settings[key] = current[key];
       else delete universe.settings[key];

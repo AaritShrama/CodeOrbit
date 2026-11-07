@@ -12,7 +12,7 @@
  * and bump CACHE_VERSION when you remove or rename one.
  */
 
-const CACHE_VERSION = 'codeorbit-v1';
+const CACHE_VERSION = 'codeorbit-v2';
 
 const APP_FILES = [
   './',
@@ -46,8 +46,7 @@ const APP_FILES = [
   'assets/images/icon-192.png',
   'assets/images/icon-512.png',
   'assets/images/icon-maskable-512.png',
-  'assets/images/letscook-mark-dark.png',
-  'assets/images/letscook-mark-light.png'
+  'assets/images/letscook-mark-dark.png'
 ];
 
 // Pinned, SRI-checked libraries from index.html (D-011). Cached as CORS responses,

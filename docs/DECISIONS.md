@@ -305,7 +305,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Alternatives rejected:** Keeping the space words with a glossary: the user should not need one. Migrating stored values: risk to existing data.
 
 ### D-023: Light/dark is a device choice; replacing the data keeps it
-- **Date:** 2026-11-07 · **Status:** Accepted
+- **Date:** 2026-11-07 · **Status:** Superseded by D-025 (the light theme was removed; the same rule still keeps the backup-reminder state)
 - **Context:** The theme is stored inside the same data as skills and sessions. *Load sample data*, *Restore from backup* and *Delete all my data* replace that data, so a user in light mode was silently switched back to dark on the next page load (the sample data and most backups say `dark`).
 - **Decision:** `storage.keepCurrentTheme()` copies the current theme into the new data in `loadDemoUniverse`, `resetAllData` and `importJSON`. Every other setting in a backup (daily and weekly goals, sounds) is still restored. Three regression tests cover it.
 - **Why:** Light or dark depends on the screen and room someone is in, not on their study data. A backup made on a laptop in dark mode should not change the look of a phone in light mode.
@@ -322,6 +322,14 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - The worker never touches `localStorage`, so it cannot lose or change data.
 - **Trade-off accepted:** On a slow connection every load still waits for the network before falling back. Adding a file the app needs now means adding it to `APP_FILES` (the test enforces it). A broken `sw.js` could serve stale files; bump `CACHE_VERSION` to drop old caches. iPhones have no install prompt: users use Share → *Add to Home Screen*.
 - **Alternatives rejected:** Cache first / stale-while-revalidate: faster, but users would run old code after fixes, including security fixes. A build tool such as Workbox: conflicts with the no-build rule (B-001).
+
+### D-025: One dark look; the light theme is removed
+- **Date:** 2026-11-07 · **Status:** Accepted · Supersedes D-023
+- **Context:** After the redesign, the light theme needed its own colour tokens, logo and icon versions, chart colours, star colours and fixes (D-023 and a round of light-mode bugs), and it was the part of the look that kept breaking. The founder decided CodeOrbit should have one look.
+- **Decision:** Remove the light theme: the top-bar switch, the *Appearance* setting, the light tokens and logo, `applyTheme()`, and the theme branch in the charts and the starfield. `theme` is no longer written to new data; an old saved `theme` value is simply ignored, so nobody's data needs changing. `storage.keepDeviceSettings()` (was `keepCurrentTheme`) still keeps the backup-reminder state when data is replaced. Offline cache bumped to `codeorbit-v2` so removed files are dropped.
+- **Why:** The brand is black, white and crimson on dark; a single look halves the styling to keep consistent and test, and removes a whole class of "white text on white" bugs.
+- **Trade-off accepted:** Some people read better on a light background (bright rooms, astigmatism). They lose that option. If users ask for it, it can be restored from git history (`63b20f9` has the last complete version), ideally driven by the system setting (`prefers-color-scheme`) rather than a manual switch.
+- **Alternatives rejected:** Keeping it but hiding the switch: unmaintained code that still has to be tested.
 
 ---
 

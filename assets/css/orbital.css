@@ -138,10 +138,6 @@
   height: auto;
 }
 
-[data-theme='light'] .orbit-core img {
-  content: url('../images/letscook-mark-light.png');
-}
-
 /* First-visit orbit: dashed, empty */
 .home-orbit.is-empty .orbit-ring.r3 {
   border-style: dashed;

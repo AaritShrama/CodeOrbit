@@ -30,7 +30,7 @@ codeorbit/
 ├── .gitignore                  # Clean repository ignores
 ├── assets/
 │   ├── css/
-│   │   ├── style.css           # Fonts, colour tokens (dark + light), top bar, page layout
+│   │   ├── style.css           # Fonts, colour tokens (one dark look, D-025), top bar, page layout
 │   │   ├── components.css      # Buttons, cards, inputs, modals, toasts, dropdowns
 │   │   ├── dashboard.css       # Home page, shared number strip, progress score
 │   │   ├── orbital.css         # The orbit on Home (one planet per skill)
@@ -50,11 +50,12 @@ codeorbit/
 │   │   ├── goals.js            # Goals page, due dates and late goals
 │   │   ├── achievements.js     # Badge rules and the Badges page
 │   │   ├── analytics.js        # Progress page: score, badges count, charts, observations
-│   │   ├── settings.js         # Profile editor, avatars, theme toggle, JSON backup/restore
+│   │   ├── settings.js         # Profile editor, avatars, goals, JSON backup/restore, install button
 │   │   └── charts.js           # Chart.js setup (black, white, grey, crimson) & lifecycle
 │   ├── fonts/                  # Inter + JetBrains Mono (SIL OFL), served locally (D-021)
 │   └── images/
-│       ├── letscook-mark-dark.png / -light.png  # Let's Cook mark used in the app (dark / light theme)
+│       ├── letscook-mark-dark.png  # Let's Cook mark used in the app
+│       ├── icon-*.png, apple-touch-icon.png, favicon-32.png  # App icons (manifest, browser tab)
 │       ├── logo.svg            # Older CodeOrbit planet logo (no longer shown in the app)
 │       └── favicon.svg         # High-resolution cosmic browser tab favicon
 ├── docs/
@@ -87,7 +88,6 @@ All persistent data is stored under the atomic key: `codeorbit_universe_v1`.
     "joinedDate": "2026-01-15"
   },
   "settings": {
-    "theme": "dark",
     "dailyTargetHours": 2,
     "weeklyTargetHours": 12,
     "soundEnabled": true,

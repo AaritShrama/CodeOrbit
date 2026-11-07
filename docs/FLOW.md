@@ -17,7 +17,7 @@ index.html
         │   creating 5 singletons: sounds, storage, navigation, toast, chartManager
         │
         └─ initApp()
-              ├─ theme, starfield, shortcuts
+              ├─ starfield, offline support, shortcuts
               ├─ register 8 views with the router
               ├─ init every page (wires listeners only, no rendering)
               ├─ evaluateAchievements() once
@@ -79,7 +79,6 @@ Runs once, in this exact order. **Every step runs through `runStep(name, fn, fai
 
 | Step | Call | What it does |
 |---|---|---|
-| 1 | `storage.getSettings()` → `applyTheme(theme, false)` *(settings.js)* | Sets `data-theme` on `<html>`, swaps the top-bar theme icon. `false` = don't save. |
 | 2 | `initCosmicStarfield()` *(app.js)* | Draws the background star canvas; starts a `requestAnimationFrame` loop unless the OS asks for reduced motion. |
 | 3 | `setupModalDismissHandlers()` *(components.js)*, `setupGlobalShortcuts()` *(app.js)* | **Esc** closes the open modal + command palette; backdrop / `[data-modal-close]` clicks close modals. **Ctrl/Cmd+K** or **/** → `openCommandPalette()`; typing → `renderPaletteResults(query)`. |
 | 4 | `navigation.registerView(route, fn)` ×8 | Maps `'dashboard' → renderDashboard`, `'skills' → renderSkills`, … `'settings' → renderSettings`. |
@@ -104,7 +103,7 @@ Every page module follows the same shape: **`initX()` attaches listeners only; `
 | `goals.js` | Search, status pills, priority filter, Create button, form submit, progress slider label | `goals` | `toggleGoalComplete`, `openGoalModal`, delete via `showConfirmDialog` |
 | `achievements.js` | Category pills (no `data-changed` listener of its own) | `achievements` + `ACHIEVEMENT_DEFINITIONS` | (evaluation happens in `app.js`, see §6) |
 | `analytics.js` (Progress) | score-breakdown button → `openModal('score-breakdown-modal')` | whole universe | `calculateProductivityScore`, `populateScoreModal`, badges count, `calculateStreak`, 5 × `chartManager.render…Chart`, `generateHabitInsights` |
-| `settings.js` | Section nav, profile form, preferences form, theme select, top-bar theme toggle, avatar picker, export, import, load demo, reset; **fills the top-bar profile picture** | `profile`, `settings` | `applyTheme(theme, false)`, `updateSidebarProfile` |
+| `settings.js` | Section nav, profile form, preferences form, avatar picker, export (`downloadBackup`), import, load demo, reset, install button; **fills the top-bar profile picture** | `profile`, `settings` | `updateSidebarProfile` |
 
 ---
 
@@ -186,9 +185,7 @@ Command-palette results navigate the same way: they set `window.location.hash` d
 
 **Load demo / Reset:** confirm dialog → `storage.loadDemoUniverse()` / `storage.resetAllData()` → data-change loop → `renderSettings()`.
 
-**Save preferences:** `handlePreferencesSubmit()` → `storage.saveSettings(all)` (one data-change loop) → `applyTheme(theme, false)` (visual only, no second save).
-
-**Theme toggle:** top-bar button → `applyTheme(next)` → sets `data-theme` → `storage.saveSettings({ theme })` (save defaults to `true`) → data-change loop. Charts pick up the theme through `chartManager.getThemeColors()` the next time they render.
+**Save preferences:** `handlePreferencesSubmit()` → `storage.saveSettings(all)` (one data-change loop).
 
 **Charts:** every `chartManager.render…Chart(canvasId, data)` first checks the canvas exists and `window.Chart` is loaded, calls `destroyChart(canvasId)` to free the old instance, builds a new `Chart`, and stores it in `chartManager.instances`.
 

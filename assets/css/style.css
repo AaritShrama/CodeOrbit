@@ -143,55 +143,6 @@
   --page-gutter: clamp(1.25rem, 4vw, 3rem);
 }
 
-/* Light theme: same system, inverted. Crimson text is the fill colour here (enough contrast on white). */
-[data-theme='light'] {
-  color-scheme: light;
-
-  --bg-main: #fafaf9;
-  --bg-secondary: #f4f4f3;
-  --bg-sidebar: #fafaf9;
-  --bg-card: #ffffff;
-  --bg-card-elevated: #f4f4f3;
-  --bg-card-hover: #efefed;
-  --bg-glass: #ffffff;
-  --glass-surface: #ffffff;
-  --glass-surface-elevated: #f4f4f3;
-  --glass-border: #e2e2e0;
-  --glass-border-hover: #c4c4c0;
-  --bg-input: #ffffff;
-  --bg-topbar: rgba(250, 250, 249, 0.9);
-  --overlay: rgba(10, 10, 11, 0.36);
-  --avatar-bg: #ececea;
-
-  --accent-text: #b8002f;
-  --secondary: #45454b;
-  --secondary-subtle: rgba(10, 10, 11, 0.05);
-  --cyan-accent: #0a0a0b;
-  --cyan-subtle: rgba(10, 10, 11, 0.05);
-  --orbital-orange: #b8002f;
-  --orange-subtle: rgba(184, 0, 47, 0.08);
-
-  --success: #17784a;
-  --success-subtle: rgba(23, 120, 74, 0.1);
-  --warning: #8a5a00;
-  --warning-subtle: rgba(138, 90, 0, 0.1);
-  --danger: #b8002f;
-  --danger-subtle: rgba(184, 0, 47, 0.08);
-
-  --text-primary: #0a0a0b;
-  --text-secondary: #45454b;
-  --text-muted: #63636a;
-  --text-inverse: #fafaf9;
-
-  --border: #e2e2e0;
-  --border-strong: #c4c4c0;
-  --border-light: #ececea;
-  --border-focus: #b8002f;
-
-  --shadow-md: 0 8px 24px rgba(10, 10, 11, 0.08);
-  --shadow-lg: 0 16px 48px rgba(10, 10, 11, 0.12);
-}
-
 /* ==========================================================================
    RESET & BASE STYLES
    ========================================================================== */
@@ -352,10 +303,6 @@ svg {
   width: 40px;
   height: 25px;
   object-fit: contain;
-}
-
-[data-theme='light'] .brand-logo-img {
-  content: url('../images/letscook-mark-light.png');
 }
 
 .brand-title {

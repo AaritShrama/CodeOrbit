@@ -195,7 +195,7 @@ describe('import and export', () => {
     storage.importJSON(minimal());
     const u = storage.getUniverse();
     assert.equal(u.profile.name, 'Developer');
-    assert.equal(u.settings.theme, 'dark');
+    assert.equal(u.settings.weeklyTargetHours, 10);
     assert.deepEqual(u.goals, []);
     assert.deepEqual(u.achievements, []);
   });
@@ -265,36 +265,6 @@ describe('reset and demo', () => {
     storage.loadDemoUniverse();
     assert.equal(storage.getProfile().name, 'Alex Rivera');
     assert.ok(storage.getSkills().length > 0);
-  });
-});
-
-// Regression for D-023: replacing the data flipped light mode back to dark.
-describe('light/dark choice survives replacing the data', () => {
-  beforeEach(() => {
-    freshVisit();
-    storage.saveSettings({ theme: 'light' });
-  });
-
-  test('loading sample data keeps light mode', () => {
-    storage.loadDemoUniverse();
-    assert.equal(storage.getSettings().theme, 'light');
-  });
-
-  test('deleting all data keeps light mode', () => {
-    storage.resetAllData();
-    assert.equal(storage.getSettings().theme, 'light');
-  });
-
-  test('restoring a backup made in dark mode keeps light mode', () => {
-    const backup = JSON.stringify({
-      skills: [],
-      activities: [],
-      projects: [],
-      settings: { theme: 'dark', weeklyTargetHours: 20 }
-    });
-    assert.equal(storage.importJSON(backup).success, true);
-    assert.equal(storage.getSettings().theme, 'light');
-    assert.equal(storage.getSettings().weeklyTargetHours, 20);
   });
 });
 
