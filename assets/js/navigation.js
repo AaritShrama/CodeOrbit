@@ -48,6 +48,15 @@ const ROUTE_CONFIG = {
   }
 };
 
+/**
+ * True only for the app's own pages. A plain `ROUTE_CONFIG[name]` check is not
+ * enough: every object also has inherited keys like `constructor`, `toString`
+ * and `__proto__`, so `#constructor` used to pass and show a blank app.
+ */
+export function isRoute(name) {
+  return typeof name === 'string' && Object.hasOwn(ROUTE_CONFIG, name);
+}
+
 class NavigationManager {
   constructor() {
     this.currentRoute = 'dashboard';
@@ -101,20 +110,21 @@ class NavigationManager {
     try {
       cb();
     } catch (err) {
-      console.error(`Error rendering view [${route}]:`, err);
+      // Constant format string: never put a value from the URL in console's first argument.
+      console.error('Error rendering view [%s]:', route, err);
     }
   }
 
   handleHashChange() {
     let hash = window.location.hash.replace('#', '').trim();
-    if (!hash || !ROUTE_CONFIG[hash]) {
+    if (!isRoute(hash)) {
       hash = 'dashboard';
     }
     this.navigateTo(hash, false);
   }
 
   navigateTo(route, updateHash = true) {
-    if (!ROUTE_CONFIG[route]) route = 'dashboard';
+    if (!isRoute(route)) route = 'dashboard';
     this.currentRoute = route;
 
     if (updateHash && window.location.hash !== `#${route}`) {

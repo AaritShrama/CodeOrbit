@@ -196,7 +196,7 @@ CodeOrbit/
 │       │   goals.js, achievements.js, analytics.js, settings.js
 │       │                 ← one file per screen
 │       └── charts.js     ← draws the charts (using Chart.js)
-├── tests/                ← automatic tests (52 of them)
+├── tests/                ← automatic tests (60+ of them)
 ├── docs/                 ← deeper documentation (see below)
 └── CHANGELOG.md          ← what changed in each version
 ```
@@ -315,7 +315,7 @@ Every change, from anyone, is checked automatically before it can go live:
 | :--- | :--- |
 | **ESLint** | Code mistakes, like a variable that is used but never defined |
 | **Prettier** | Messy formatting, so all code looks the same |
-| **52 unit tests** | Wrong answers in dates, streaks, the score, saving and importing |
+| **60+ unit tests** | Wrong answers in dates, streaks, the score, saving and importing |
 | **…in 4 timezones** | India, UTC, US West and UTC+14. Date bugs hide in one timezone and show in another: before these tests, the weekly chart put every session one day early for users in India. |
 
 The live site updates **only when all checks pass**, and the `main` branch is protected, so nobody can merge a pull request with a red ❌.

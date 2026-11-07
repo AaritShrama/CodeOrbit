@@ -10,7 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 - Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.
-- 52 unit tests for dates, streaks, the productivity score, storage, import/export and achievement rules, run in four timezones on every pull request and push.
+- Unit tests for dates, streaks, the productivity score, storage, import/export, page addresses and achievement rules, run in four timezones on every pull request and push.
 
 ### Fixed
 - A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
@@ -18,6 +18,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Analytics "Peak Velocity Day" showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US). ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
 
 ### Security
+- A page address like `#constructor` or `#toString` passed the page check and showed a completely blank app; only the 8 real pages are accepted now. An error message no longer uses the page address as a console format string (found by CodeQL).
 - Importing a backup file made by someone else could run their code in your browser, through fake dates or a session's skill name. Invalid dates are now shown as "Invalid date" and dropped on import, and those names are escaped. Sessions and achievements without a valid date are removed when importing.
 
 ### Removed
