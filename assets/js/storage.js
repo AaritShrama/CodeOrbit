@@ -6,10 +6,41 @@
 import { generateId, getTodayISO, getRelativeISO } from './utils.js';
 
 const STORAGE_KEY = 'codeorbit_universe_v1';
+const CORRUPT_BACKUP_KEY = 'codeorbit_universe_v1_corrupt_backup';
 const DATA_VERSION = 1;
 
 /**
- * Default realistic developer universe data for immediate out-of-the-box immersion.
+ * A blank universe: what every new user starts with, and what Reset restores.
+ */
+function getEmptyUniverse() {
+  return {
+    version: DATA_VERSION,
+    profile: {
+      name: 'Developer',
+      title: 'Explorer',
+      bio: 'Welcome to my CodeOrbit developer universe.',
+      avatar: 'astronaut',
+      github: '',
+      joinedDate: getTodayISO()
+    },
+    settings: {
+      theme: 'dark',
+      dailyTargetHours: 2,
+      weeklyTargetHours: 10,
+      soundEnabled: true,
+      reducedMotion: false
+    },
+    skills: [],
+    activities: [],
+    projects: [],
+    goals: [],
+    achievements: []
+  };
+}
+
+/**
+ * Demo universe ("Alex Rivera"). Loaded ONLY when the user clicks
+ * Settings → Load Demo Universe, never automatically.
  */
 function getDefaultUniverse() {
   const today = getTodayISO();
@@ -280,27 +311,48 @@ class StorageManager {
    * Initializes local storage and migrates or sets default state.
    */
   init() {
+    let raw = null;
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        const defaultData = getDefaultUniverse();
-        this.saveUniverse(defaultData);
-        this.cache = defaultData;
-      } else {
-        const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.skills)) {
-          // Corrupted or invalid structure, reset to defaults
-          const defaultData = getDefaultUniverse();
-          this.saveUniverse(defaultData);
-          this.cache = defaultData;
-        } else {
-          this.cache = parsed;
-        }
-      }
+      raw = localStorage.getItem(STORAGE_KEY);
     } catch (e) {
-      console.warn('CodeOrbit Storage Init Error:', e);
-      this.cache = getDefaultUniverse();
+      // localStorage blocked (e.g. some private modes): run in memory only.
+      console.warn('CodeOrbit: localStorage unavailable, data will not persist.', e);
+      this.cache = getEmptyUniverse();
+      return;
     }
+
+    // First visit: start empty. Demo data is opt-in from Settings.
+    if (!raw) {
+      this.startFresh();
+      return;
+    }
+
+    let parsed = null;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      parsed = null;
+    }
+
+    if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.skills)) {
+      // Unreadable data: keep a copy instead of silently destroying it, then start empty.
+      console.warn(`CodeOrbit: stored data was unreadable. A copy was kept under "${CORRUPT_BACKUP_KEY}".`);
+      try {
+        localStorage.setItem(CORRUPT_BACKUP_KEY, raw);
+      } catch (e) {
+        console.warn('CodeOrbit: could not back up unreadable data.', e);
+      }
+      this.startFresh();
+      return;
+    }
+
+    this.cache = parsed;
+  }
+
+  startFresh() {
+    const empty = getEmptyUniverse();
+    this.cache = empty;
+    this.saveUniverse(empty);
   }
 
   /**
@@ -570,7 +622,7 @@ class StorageManager {
         throw new Error('Missing essential CodeOrbit collections (skills, activities, projects).');
       }
 
-      const defaults = getDefaultUniverse();
+      const defaults = getEmptyUniverse();
       parsed.version = DATA_VERSION;
       parsed.profile = (typeof parsed.profile === 'object' && parsed.profile) ? { ...defaults.profile, ...parsed.profile } : defaults.profile;
       parsed.settings = (typeof parsed.settings === 'object' && parsed.settings) ? { ...defaults.settings, ...parsed.settings } : defaults.settings;
@@ -603,30 +655,7 @@ class StorageManager {
   }
 
   resetAllData() {
-    const cleanUniverse = {
-      version: DATA_VERSION,
-      profile: {
-        name: 'Developer',
-        title: 'Explorer',
-        bio: 'Welcome to my CodeOrbit developer universe.',
-        avatar: 'astronaut',
-        github: '',
-        joinedDate: getTodayISO()
-      },
-      settings: {
-        theme: 'dark',
-        dailyTargetHours: 2,
-        weeklyTargetHours: 10,
-        soundEnabled: true,
-        reducedMotion: false
-      },
-      skills: [],
-      activities: [],
-      projects: [],
-      goals: [],
-      achievements: []
-    };
-    return this.saveUniverse(cleanUniverse);
+    return this.saveUniverse(getEmptyUniverse());
   }
 
   loadDemoUniverse() {
