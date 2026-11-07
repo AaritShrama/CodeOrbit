@@ -6,7 +6,7 @@
 
 import { storage } from './storage.js';
 import { navigation } from './navigation.js';
-import { setupModalDismissHandlers, openCommandPalette, closeCommandPalette, renderPaletteResults, openModal, closeModal } from './components.js';
+import { setupModalDismissHandlers, openCommandPalette, closeCommandPalette, renderPaletteResults, openModal, closeModal, toast } from './components.js';
 import { initDashboard, renderDashboard } from './dashboard.js';
 import { initSkills, renderSkills, openSkillModal } from './skills.js';
 import { initProgress, renderProgress, openActivityModal } from './progress.js';
@@ -17,83 +17,94 @@ import { initAnalytics, renderAnalytics } from './analytics.js';
 import { initSettings, renderSettings, applyTheme } from './settings.js';
 import { escapeHTML, formatDate, formatRelativeTime, getTodayISO } from './utils.js';
 
-function initApp() {
+/**
+ * Runs one startup step in isolation. A failing step is logged and recorded,
+ * and startup continues with the next step instead of stopping the whole app.
+ */
+function runStep(name, fn, failures) {
   try {
-    console.log('🚀 Initializing CodeOrbit — Your Universe of Developer Growth');
-
-    // 1. Initialize Settings & Theme
-    const settings = storage.getSettings();
-    applyTheme(settings.theme || 'dark', false);
-
-    // 2. Initialize Cosmic Starfield Canvas
-    initCosmicStarfield();
-
-    // 3. Setup Generic Modal Listeners & Shortcuts
-    setupModalDismissHandlers();
-    setupGlobalShortcuts();
-
-    // 4. Initialize Topbar Menus (Search, Notifications, Quick Actions)
-    setupTopbarInteractions();
-
-    // 5. Register Views with Navigation Router
-    navigation.registerView('dashboard', () => renderDashboard());
-    navigation.registerView('skills', () => renderSkills());
-    navigation.registerView('progress', () => renderProgress());
-    navigation.registerView('projects', () => renderProjects());
-    navigation.registerView('goals', () => renderGoals());
-    navigation.registerView('achievements', () => renderAchievements());
-    navigation.registerView('analytics', () => renderAnalytics());
-    navigation.registerView('settings', () => renderSettings());
-
-    // 6. Initialize Page Controllers
-    initDashboard();
-    initSkills();
-    initProgress();
-    initProjects();
-    initGoals();
-    initAchievements();
-    initAnalytics();
-    initSettings();
-
-    // Unlock anything already earned (e.g. after an import) before the first render,
-    // so the first paint already shows the correct badges.
-    evaluateAchievements();
-
-    // 7. Initialize Navigation Router (renders the visible page: the ONLY startup render)
-    navigation.init();
-
-    // 8. Global State Change Listener (Event Bus)
-    window.addEventListener('codeorbit:data-changed', () => {
-      // If this unlocks achievements it saves, which dispatches data-changed again;
-      // that nested round re-renders everything below, so stop here to avoid a double render.
-      if (evaluateAchievements()) return;
-
-      // Re-render currently active view
-      const current = navigation.currentRoute;
-      if (current === 'dashboard') renderDashboard();
-      else if (current === 'skills') renderSkills();
-      else if (current === 'progress') renderProgress();
-      else if (current === 'projects') renderProjects();
-      else if (current === 'goals') renderGoals();
-      else if (current === 'achievements') renderAchievements();
-      else if (current === 'analytics') renderAnalytics();
-      else if (current === 'settings') renderSettings();
-
-      // Refresh notifications count
-      updateNotificationsPanel();
-
-      // Re-create icons if Lucide is available
-      if (window.lucide && window.lucide.createIcons) {
-        window.lucide.createIcons();
-      }
-    });
-
-    // Initial Lucide Icons Render
-    if (window.lucide && window.lucide.createIcons) {
-      window.lucide.createIcons();
-    }
+    fn();
   } catch (err) {
-    console.error('Fatal initialization error in CodeOrbit:', err?.message || err, err?.stack);
+    failures.push(name);
+    console.error(`CodeOrbit startup step failed: ${name}`, err);
+  }
+}
+
+function refreshIcons() {
+  if (window.lucide && window.lucide.createIcons) {
+    window.lucide.createIcons();
+  }
+}
+
+function initApp() {
+  console.log('🚀 Initializing CodeOrbit — Your Universe of Developer Growth');
+  const failures = [];
+
+  // 1. Theme
+  runStep('theme', () => applyTheme(storage.getSettings().theme || 'dark', false), failures);
+
+  // 2. Background starfield (purely decorative)
+  runStep('starfield', initCosmicStarfield, failures);
+
+  // 3. Modal dismiss handlers + keyboard shortcuts
+  runStep('modals', setupModalDismissHandlers, failures);
+  runStep('shortcuts', setupGlobalShortcuts, failures);
+
+  // 4. Topbar menus (quick actions, notifications)
+  runStep('topbar', setupTopbarInteractions, failures);
+
+  // 5. Register views with the router (cannot fail, but keep the pattern uniform)
+  runStep('routes', () => {
+    navigation.registerView('dashboard', renderDashboard);
+    navigation.registerView('skills', renderSkills);
+    navigation.registerView('progress', renderProgress);
+    navigation.registerView('projects', renderProjects);
+    navigation.registerView('goals', renderGoals);
+    navigation.registerView('achievements', renderAchievements);
+    navigation.registerView('analytics', renderAnalytics);
+    navigation.registerView('settings', renderSettings);
+  }, failures);
+
+  // 6. Page controllers: each one only wires its own listeners, so one broken
+  //    page must not stop the others.
+  runStep('dashboard page', initDashboard, failures);
+  runStep('skills page', initSkills, failures);
+  runStep('mission logs page', initProgress, failures);
+  runStep('projects page', initProjects, failures);
+  runStep('goals page', initGoals, failures);
+  runStep('achievements page', initAchievements, failures);
+  runStep('analytics page', initAnalytics, failures);
+  runStep('settings page', initSettings, failures);
+
+  // 7. Unlock anything already earned (e.g. after an import) before the first render
+  runStep('achievement check', evaluateAchievements, failures);
+
+  // 8. Router: renders the visible page (the ONLY startup render)
+  runStep('navigation', () => navigation.init(), failures);
+
+  // 9. Global data-change listener (event bus)
+  window.addEventListener('codeorbit:data-changed', () => {
+    // If this unlocks achievements it saves, which dispatches data-changed again;
+    // that nested round re-renders everything below, so stop here to avoid a double render.
+    if (evaluateAchievements()) return;
+
+    navigation.renderCurrentView();
+    try {
+      updateNotificationsPanel();
+    } catch (err) {
+      console.error('CodeOrbit: notifications panel failed to update', err);
+    }
+    refreshIcons();
+  });
+
+  // 10. Icons
+  runStep('icons', refreshIcons, failures);
+
+  if (failures.length > 0) {
+    toast.error(
+      'Some parts failed to load',
+      `${failures.join(', ')}. The rest of CodeOrbit still works. See the browser console for details.`
+    );
   }
 }
 

@@ -90,6 +90,21 @@ class NavigationManager {
     this.viewCallbacks.set(route, callback);
   }
 
+  /**
+   * Re-renders the page currently on screen. A render error is logged and
+   * contained so it cannot break navigation or the data-change loop.
+   */
+  renderCurrentView() {
+    const route = this.currentRoute;
+    const cb = this.viewCallbacks.get(route);
+    if (typeof cb !== 'function') return;
+    try {
+      cb();
+    } catch (err) {
+      console.error(`Error rendering view [${route}]:`, err);
+    }
+  }
+
   handleHashChange() {
     let hash = window.location.hash.replace('#', '').trim();
     if (!hash || !ROUTE_CONFIG[hash]) {
@@ -134,14 +149,7 @@ class NavigationManager {
     if (subtitleEl) subtitleEl.textContent = config.subtitle;
 
     // Trigger page-specific refresh callback
-    const cb = this.viewCallbacks.get(route);
-    if (typeof cb === 'function') {
-      try {
-        cb();
-      } catch (err) {
-        console.error(`Error rendering view [${route}]:`, err);
-      }
-    }
+    this.renderCurrentView();
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
