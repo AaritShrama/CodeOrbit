@@ -206,7 +206,7 @@ function handlePreferencesSubmit(e) {
   };
 
   storage.saveSettings(newSettings);
-  applyTheme(theme);
+  applyTheme(theme, false); // theme is already in newSettings; saving again would run the data-change loop twice
   toast.success('Preferences Saved', 'System preferences updated.');
 }
 
