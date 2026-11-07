@@ -147,17 +147,27 @@ export function renderGoals() {
   container.innerHTML = filtered.map(g => {
     const isCompleted = g.status === 'Completed';
     const isOverdue = !isCompleted && g.deadline && g.deadline < today;
+    const ringCircum = 2 * Math.PI * 20; // 125.66 for r=20
+    const ringOffset = ringCircum - (Math.min(100, Number(g.progress) || 0) / 100) * ringCircum;
+    const priorityColor = getPriorityBorderColor(g.priority);
+
+    let deadlineDisplay = 'No deadline';
+    if (g.deadline) {
+      const daysLeft = Math.ceil((new Date(g.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+      const text = daysLeft < 0 ? '⚠️ Overdue' : daysLeft === 0 ? 'Due Today' : `${daysLeft}d remaining`;
+      deadlineDisplay = `${text} &bull; ${formatDate(g.deadline)}`;
+    }
 
     return `
-      <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid ${getPriorityBorderColor(g.priority)};">
+      <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid ${priorityColor};">
         <div>
           <!-- Header Row -->
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 6px;">
               <span class="badge ${getPriorityBadge(g.priority)}" style="font-size: 0.625rem;">
                 ${escapeHTML(g.priority)}
               </span>
-              <span class="badge badge-muted" style="font-size: 0.625rem;">
+              <span class="badge badge-muted" style="font-size: 0.625rem; font-family: var(--font-mono);">
                 ${escapeHTML(g.category)}
               </span>
             </div>
@@ -172,31 +182,39 @@ export function renderGoals() {
             </div>
           </div>
 
-          <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
-            ${escapeHTML(g.title)}
-          </h3>
+          <!-- Goal Info with Circular Progress Ring -->
+          <div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px;">
+            <div class="goal-ring-wrap" title="${g.progress}% Complete">
+              <svg class="goal-ring-svg" viewBox="0 0 50 50">
+                <circle class="goal-ring-bg" cx="25" cy="25" r="20"></circle>
+                <circle class="goal-ring-fill ${isCompleted ? 'fill-done' : ''}" cx="25" cy="25" r="20"
+                  stroke-dasharray="125.66" stroke-dashoffset="${ringOffset}"></circle>
+              </svg>
+              <span class="goal-ring-text">${g.progress}%</span>
+            </div>
 
-          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 12px; min-height: 34px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-            ${escapeHTML(g.description || 'No additional notes.')}
-          </p>
+            <div style="flex: 1;">
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 4px; letter-spacing: -0.01em;">
+                ${escapeHTML(g.title)}
+              </h3>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; min-height: 32px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0;">
+                ${escapeHTML(g.description || 'No additional notes.')}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div>
-          <!-- Progress -->
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 4px;">
-            <span style="color: var(--text-muted);">Completion</span>
-            <span style="font-family: var(--font-mono); font-weight: 700; color: ${isCompleted ? 'var(--success)' : 'var(--orbital-orange)'};">${g.progress}%</span>
-          </div>
-
+          <!-- Progress Bar Meter -->
           <div class="progress-bar-container" style="height: 6px; margin-bottom: 12px;">
             <div class="progress-bar-fill ${isCompleted ? 'fill-success' : 'fill-orange'}" style="width: ${g.progress}%;"></div>
           </div>
 
           <!-- Bottom Footer & Quick Complete -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs);">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.6875rem; color: ${isOverdue ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: ${isOverdue ? '700' : '500'};">
-                ${isOverdue ? '⚠️ Overdue' : `Due: ${formatDate(g.deadline)}`}
+              <span style="font-size: 0.6875rem; color: ${isOverdue ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: ${isOverdue ? '700' : '500'}; font-family: var(--font-mono);">
+                ${deadlineDisplay}
               </span>
               <span style="font-size: 0.625rem; color: var(--text-muted);">${formatRelativeTime(g.deadline)}</span>
             </div>

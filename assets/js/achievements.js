@@ -115,12 +115,25 @@ export const ACHIEVEMENT_DEFINITIONS = [
   }
 ];
 
+let activeCategory = 'All';
+
 export function initAchievements() {
   evaluateAchievements();
   renderAchievements();
 
+  // Category filter pills
+  document.querySelectorAll('#achievement-category-pills .pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#achievement-category-pills .pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.getAttribute('data-category') || 'All';
+      renderAchievements();
+    });
+  });
+
   window.addEventListener('codeorbit:data-changed', () => {
     evaluateAchievements();
+    renderAchievements();
   });
 }
 
@@ -160,31 +173,49 @@ export function renderAchievements() {
   setEl('achieve-stat-unlocked', `${unlockedCount} / ${total}`);
   setEl('achieve-stat-pct', `${unlockPct}%`);
 
-  container.innerHTML = ACHIEVEMENT_DEFINITIONS.map(def => {
+  const filteredList = activeCategory === 'All'
+    ? ACHIEVEMENT_DEFINITIONS
+    : ACHIEVEMENT_DEFINITIONS.filter(def => def.category === activeCategory);
+
+  if (filteredList.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">🏆</div>
+        <h4 class="empty-state-title">No Badges in Category</h4>
+        <p class="empty-state-desc">Select another category or view all badges.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filteredList.map(def => {
     const unlockedRecord = unlockedList.find(a => a.id === def.id);
     const isUnlocked = Boolean(unlockedRecord);
     const prog = def.progress(data);
     const progPct = Math.min(100, Math.round((prog.current / prog.target) * 100));
 
     return `
-      <div class="card ${isUnlocked ? 'card-glow-orange' : ''} achievement-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: ${isUnlocked ? 'var(--orbital-orange)' : 'var(--border)'}; background: ${isUnlocked ? 'linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 26, 61, 0.4) 100%)' : 'var(--bg-card)'};">
+      <div class="card ${isUnlocked ? 'card-glow-orange' : ''} achievement-card" style="display: flex; flex-direction: column; justify-content: space-between; border-color: ${isUnlocked ? 'rgba(249, 115, 22, 0.5)' : 'var(--glass-border)'}; background: ${isUnlocked ? 'linear-gradient(135deg, rgba(25, 36, 61, 0.9) 0%, rgba(42, 26, 61, 0.6) 100%)' : 'var(--glass-surface)'}; box-shadow: ${isUnlocked ? '0 4px 20px rgba(0,0,0,0.4), 0 0 16px rgba(249, 115, 22, 0.2)' : '0 4px 16px rgba(0,0,0,0.3)'};">
         <div>
           <!-- Header -->
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px;">
-            <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: ${isUnlocked ? 'var(--orange-subtle)' : 'var(--bg-input)'}; border: 1px solid ${isUnlocked ? 'rgba(249, 115, 22, 0.4)' : 'var(--border)'}; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: ${isUnlocked ? '0 0 15px var(--orange-glow)' : 'none'};">
+            <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: ${isUnlocked ? 'var(--orange-subtle)' : 'var(--bg-input)'}; border: 1px solid ${isUnlocked ? 'rgba(249, 115, 22, 0.45)' : 'var(--border)'}; display: flex; align-items: center; justify-content: center; font-size: 1.45rem; box-shadow: ${isUnlocked ? '0 0 16px var(--orange-glow)' : 'none'};">
               ${def.icon}
             </div>
 
-            <span class="badge ${isUnlocked ? 'badge-orange' : 'badge-muted'}" style="font-size: 0.625rem;">
-              ${isUnlocked ? '⭐ Unlocked' : '🔒 Locked'}
-            </span>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+              <span class="badge ${isUnlocked ? 'badge-orange' : 'badge-muted'}" style="font-size: 0.625rem;">
+                ${isUnlocked ? '⭐ Unlocked' : '🔒 In Progress'}
+              </span>
+              <span style="font-size: 0.625rem; font-family: var(--font-mono); color: var(--text-muted);">${escapeHTML(def.category)}</span>
+            </div>
           </div>
 
-          <h3 style="font-size: var(--text-base); font-weight: 700; color: ${isUnlocked ? '#FDBA74' : 'var(--text-primary)'}; margin-bottom: 4px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: ${isUnlocked ? '#FDBA74' : '#FFFFFF'}; margin-bottom: 4px; letter-spacing: -0.01em;">
             ${escapeHTML(def.title)}
           </h3>
 
-          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 14px;">
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 14px; min-height: 34px;">
             ${escapeHTML(def.description)}
           </p>
         </div>
@@ -192,14 +223,15 @@ export function renderAchievements() {
         <div>
           <!-- Progress or Unlock Date -->
           ${isUnlocked ? `
-            <div style="border-top: 1px solid var(--border-light); padding-top: 10px; font-size: 0.6875rem; color: var(--cyan-accent); font-family: var(--font-mono);">
-              Unlocked: ${formatDate(unlockedRecord.unlockedAt)}
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 10px; font-size: 0.6875rem; color: var(--cyan-accent); font-family: var(--font-mono); display: flex; align-items: center; justify-content: space-between;">
+              <span>Unlocked</span>
+              <span>${formatDate(unlockedRecord.unlockedAt)}</span>
             </div>
           ` : `
             <div>
-              <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-bottom: 4px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); margin-bottom: 6px;">
                 <span>Requirement</span>
-                <span style="font-family: var(--font-mono);">${prog.current} / ${prog.target}${prog.unit || ''}</span>
+                <span style="font-family: var(--font-mono); color: var(--text-secondary);">${prog.current} / ${prog.target}${prog.unit || ''}</span>
               </div>
               <div class="progress-bar-container" style="height: 5px;">
                 <div class="progress-bar-fill fill-primary" style="width: ${progPct}%;"></div>

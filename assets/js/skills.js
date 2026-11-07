@@ -143,14 +143,15 @@ export function renderSkills() {
   // Render cards
   container.innerHTML = skills.map(s => {
     const isCompleted = s.status === 'Completed';
+    const catColor = getCategoryColor(s.category);
     return `
-      <div class="card card-glow-purple skill-item-card" data-skill-id="${s.id}" style="display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+      <div class="card card-glow-purple skill-item-card" data-skill-id="${s.id}" style="display: flex; flex-direction: column; justify-content: space-between; position: relative; border-top: 3px solid ${catColor};">
         <!-- Top Row -->
         <div>
-          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="skill-category-dot" style="width: 10px; height: 10px; border-radius: 50%; background: ${getCategoryColor(s.category)}; box-shadow: 0 0 8px ${getCategoryColor(s.category)};"></span>
-              <span style="font-size: 0.6875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">${escapeHTML(s.category)}</span>
+              <span class="skill-category-dot" style="width: 8px; height: 8px; border-radius: 50%; background: ${catColor}; box-shadow: 0 0 8px ${catColor};"></span>
+              <span style="font-size: 0.6875rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-mono);">${escapeHTML(s.category)}</span>
             </div>
             <div class="dropdown-wrap" style="position: relative;">
               <button class="btn btn-ghost btn-sm btn-icon-only skill-action-btn" data-id="${s.id}" title="Skill actions" style="padding: 2px;">
@@ -159,23 +160,23 @@ export function renderSkills() {
             </div>
           </div>
 
-          <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; letter-spacing: -0.01em;">
             ${escapeHTML(s.name)}
           </h3>
 
-          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; margin-bottom: 14px; min-height: 34px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 14px; min-height: 36px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
             ${escapeHTML(s.description || 'No description added.')}
           </p>
         </div>
 
         <!-- Progress and Badges -->
         <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <span class="badge ${getProficiencyBadgeClass(s.proficiency)}" style="font-size: 0.625rem;">${escapeHTML(s.proficiency)}</span>
             <span class="badge ${getStatusBadgeClass(s.status)}" style="font-size: 0.625rem;">${escapeHTML(s.status)}</span>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 6px;">
             <span style="color: var(--text-muted);">Proficiency Orbit</span>
             <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${s.progress}%</span>
           </div>
@@ -186,7 +187,7 @@ export function renderSkills() {
 
           <!-- Bottom Actions / Quick Stepper -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs);">
-            <span style="color: var(--text-muted); font-size: 0.6875rem;">
+            <span style="color: var(--text-muted); font-size: 0.6875rem; font-family: var(--font-mono);">
               Target: ${formatDate(s.targetDate)}
             </span>
             <div style="display: flex; gap: 4px;">

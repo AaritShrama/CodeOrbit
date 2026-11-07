@@ -795,6 +795,17 @@
             </div>
           </div>
 
+          <!-- Category Filter Bar -->
+          <div class="filter-bar">
+            <div class="pill-group" id="achievement-category-pills">
+              <button class="pill-btn active" data-category="All">All Badges</button>
+              <button class="pill-btn" data-category="Skills">Skills</button>
+              <button class="pill-btn" data-category="Missions">Missions</button>
+              <button class="pill-btn" data-category="Habits">Habits</button>
+              <button class="pill-btn" data-category="Progress">Progress</button>
+            </div>
+          </div>
+
           <!-- Achievements Grid -->
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-lg);" id="achievements-grid"></div>
         </section>
@@ -890,9 +901,29 @@
              VIEW 8: SETTINGS & DATA MANAGEMENT
              ================================================================ -->
         <section class="view-page" id="view-settings">
+          <!-- Section Navigation Bar -->
+          <div class="settings-nav-bar" id="settings-nav-bar">
+            <button class="settings-nav-btn active" data-target="section-profile">
+              <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+              <span>Profile Identity</span>
+            </button>
+            <button class="settings-nav-btn" data-target="section-preferences">
+              <i data-lucide="sliders" style="width: 16px; height: 16px;"></i>
+              <span>Preferences</span>
+            </button>
+            <button class="settings-nav-btn" data-target="section-data">
+              <i data-lucide="database" style="width: 16px; height: 16px;"></i>
+              <span>Data Sovereignty</span>
+            </button>
+            <button class="settings-nav-btn" data-target="section-about">
+              <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+              <span>About CodeOrbit</span>
+            </button>
+          </div>
+
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: var(--space-xl);">
             <!-- Developer Profile Settings -->
-            <div class="card">
+            <div class="card" id="section-profile">
               <div class="card-header">
                 <h3 class="card-title">
                   <i data-lucide="user" style="width: 18px; height: 18px; color: var(--cyan-accent);"></i>
@@ -951,7 +982,7 @@
             </div>
 
             <!-- Appearance & Sprint Targets -->
-            <div class="card">
+            <div class="card" id="section-preferences">
               <div class="card-header">
                 <h3 class="card-title">
                   <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--secondary);"></i>
@@ -992,7 +1023,7 @@
             </div>
 
             <!-- Data Management & LocalStorage Backups -->
-            <div class="card" style="grid-column: 1 / -1;">
+            <div class="card" id="section-data" style="grid-column: 1 / -1;">
               <div class="card-header">
                 <h3 class="card-title">
                   <i data-lucide="database" style="width: 18px; height: 18px; color: var(--orbital-orange);"></i>
@@ -1029,7 +1060,18 @@
             </div>
 
             <!-- About Section Branding -->
-            <div class="card card-elevated" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
+            <div class="card card-elevated" id="section-about" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
+              <div style="display: flex; align-items: center; gap: var(--space-md);">
+                <img src="assets/images/logo.svg" alt="CodeOrbit Logo" style="width: 48px; height: 48px;">
+                <div>
+                  <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary);">CodeOrbit — Your Universe of Developer Growth</h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-secondary);">Open-Source Developer Productivity & Learning Platform &bull; Created for LET'S COOK — THE FOUNDRY</p>
+                </div>
+              </div>
+              <span class="badge badge-primary">Version 1.0.0 &bull; MIT License</span>
+            </div>
+          </div>
+        </section>
               <div style="display: flex; align-items: center; gap: var(--space-md);">
                 <img src="assets/images/logo.svg" alt="CodeOrbit Logo" style="width: 48px; height: 48px;">
                 <div>

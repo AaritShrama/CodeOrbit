@@ -148,10 +148,28 @@ export function renderProjects() {
     return;
   }
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'In Progress': return 'var(--cyan-accent)';
+      case 'Planning': return 'var(--secondary)';
+      case 'Completed': return 'var(--success)';
+      default: return 'var(--border)';
+    }
+  };
+
   container.innerHTML = projects.map(p => {
     const isCompleted = p.status === 'Completed';
+    const statusColor = getStatusColor(p.status);
+
+    let targetDateDisplay = 'No target date';
+    if (p.targetDate) {
+      const daysLeft = Math.ceil((new Date(p.targetDate) - new Date()) / (1000 * 60 * 60 * 24));
+      const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Today' : `${daysLeft}d left`;
+      targetDateDisplay = `Target: ${formatDate(p.targetDate)} (${countdown})`;
+    }
+
     return `
-      <div class="card card-glow-cyan project-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="card card-glow-cyan project-item-card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 3px solid ${statusColor};">
         <div>
           <!-- Top Row -->
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
@@ -168,7 +186,7 @@ export function renderProjects() {
             </div>
           </div>
 
-          <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; letter-spacing: -0.01em;">
             ${escapeHTML(p.name)}
           </h3>
 
@@ -177,14 +195,14 @@ export function renderProjects() {
           </p>
 
           <!-- Tech Stack -->
-          <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px;">
             ${(p.technologies || []).map(t => `<span class="badge badge-muted" style="font-size: 0.625rem; font-family: var(--font-mono);">${escapeHTML(t)}</span>`).join('')}
           </div>
         </div>
 
         <div>
           <!-- Progress -->
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 6px;">
             <span style="color: var(--text-muted);">Flightpath Progress</span>
             <span style="font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);">${p.progress}%</span>
           </div>
@@ -194,24 +212,24 @@ export function renderProjects() {
           </div>
 
           <!-- Bottom Links and Dates -->
-          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs);">
-            <div style="display: flex; gap: 8px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; gap: 10px;">
               ${p.githubUrl ? `
-                <a href="${escapeHTML(p.githubUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px;" title="GitHub Repository">
+                <a href="${escapeHTML(p.githubUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="GitHub Repository">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                   <span style="font-size: 0.6875rem;">Repo</span>
                 </a>
               ` : ''}
               ${p.liveDemoUrl ? `
-                <a href="${escapeHTML(p.liveDemoUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-accent); display: inline-flex; align-items: center; gap: 4px;" title="Live Demo">
+                <a href="${escapeHTML(p.liveDemoUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-accent); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Live Demo">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   <span style="font-size: 0.6875rem;">Demo</span>
                 </a>
               ` : ''}
             </div>
 
-            <span style="font-size: 0.6875rem; color: var(--text-muted);">
-              ${p.targetDate ? `Target: ${formatDate(p.targetDate)}` : 'No target date'}
+            <span style="font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono);">
+              ${targetDateDisplay}
             </span>
           </div>
         </div>

@@ -13,6 +13,25 @@ export function initSettings() {
 }
 
 function setupSettingsEventListeners() {
+  // Section Navigation Bar
+  document.querySelectorAll('#settings-nav-bar .settings-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#settings-nav-bar .settings-nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const targetId = btn.getAttribute('data-target');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        targetEl.style.borderColor = 'var(--cyan-accent)';
+        targetEl.style.boxShadow = '0 0 25px var(--cyan-glow)';
+        setTimeout(() => {
+          targetEl.style.borderColor = '';
+          targetEl.style.boxShadow = '';
+        }, 1400);
+      }
+    });
+  });
+
   // Profile Form
   const profileForm = document.getElementById('settings-profile-form');
   if (profileForm) {

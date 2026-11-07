@@ -179,49 +179,82 @@ export function renderProgress() {
     return;
   }
 
-  // Render Timeline
-  container.innerHTML = filtered.map(act => `
-    <div class="activity-timeline-item card card-elevated" style="margin-bottom: 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
-      <div style="display: flex; gap: 14px; flex: 1;">
-        <div class="log-type-icon" style="width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0;">
-          ${getActivityIcon(act.type)}
+  // Render Timeline with Date Grouping
+  const groups = {};
+  filtered.forEach(act => {
+    const dStr = act.date ? act.date.slice(0, 10) : 'Unknown';
+    if (!groups[dStr]) groups[dStr] = [];
+    groups[dStr].push(act);
+  });
+
+  const dateKeys = Object.keys(groups);
+  const todayStr = getTodayISO();
+  const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+  const getDateGroupLabel = (dStr) => {
+    if (dStr === todayStr) return 'Today';
+    if (dStr === yesterdayStr) return 'Yesterday';
+    return formatDate(dStr, false);
+  };
+
+  container.innerHTML = dateKeys.map(dStr => {
+    const groupItems = groups[dStr];
+    const groupMins = groupItems.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+    const label = getDateGroupLabel(dStr);
+
+    return `
+      <div class="timeline-date-group">
+        <div class="timeline-date-header">
+          <span class="timeline-date-badge">🗓 ${label}</span>
+          <span class="timeline-date-summary">${groupItems.length} session${groupItems.length === 1 ? '' : 's'} &bull; ${formatDuration(groupMins)}</span>
         </div>
-        <div style="flex: 1;">
-          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
-              ${escapeHTML(act.title)}
-            </h4>
-            <span class="badge badge-primary" style="font-size: 0.625rem;">${escapeHTML(act.skill)}</span>
-            <span class="badge badge-muted" style="font-size: 0.625rem;">${escapeHTML(act.type)}</span>
-          </div>
+        <div class="timeline-stream">
+          ${groupItems.map(act => `
+            <div class="activity-timeline-item card card-elevated" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+              <div style="display: flex; gap: 14px; flex: 1;">
+                <div class="log-type-icon" style="width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0;">
+                  ${getActivityIcon(act.type)}
+                </div>
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
+                      ${escapeHTML(act.title)}
+                    </h4>
+                    <span class="badge badge-primary" style="font-size: 0.625rem;">${escapeHTML(act.skill)}</span>
+                    <span class="badge badge-muted" style="font-size: 0.625rem;">${escapeHTML(act.type)}</span>
+                  </div>
 
-          ${act.notes ? `
-            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; margin-bottom: 6px;">
-              ${escapeHTML(act.notes)}
-            </p>
-          ` : ''}
+                  ${act.notes ? `
+                    <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.45; margin-bottom: 6px;">
+                      ${escapeHTML(act.notes)}
+                    </p>
+                  ` : ''}
 
-          <div style="font-size: 0.6875rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
-            <span>🗓 ${formatDate(act.date, true)} (${formatRelativeTime(act.date)})</span>
-          </div>
+                  <div style="font-size: 0.6875rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-family: var(--font-mono);">
+                    <span>${formatDate(act.date, true)} (${formatRelativeTime(act.date)})</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
+                <span class="badge badge-cyan" style="font-family: var(--font-mono); font-size: var(--text-xs); padding: 4px 10px;">
+                  ⏱ ${formatDuration(act.duration)}
+                </span>
+                <div style="display: flex; gap: 4px;">
+                  <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" title="Edit log">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                  </button>
+                  <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" title="Delete log" style="color: var(--danger);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
         </div>
       </div>
-
-      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
-        <span class="badge badge-cyan" style="font-family: var(--font-mono); font-size: var(--text-xs); padding: 4px 10px;">
-          ⏱ ${formatDuration(act.duration)}
-        </span>
-        <div style="display: flex; gap: 4px;">
-          <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" title="Edit log">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
-          </button>
-          <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" title="Delete log" style="color: var(--danger);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   // Wire actions
   container.querySelectorAll('.edit-log-btn').forEach(btn => {
