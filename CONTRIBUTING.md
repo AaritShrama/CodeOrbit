@@ -2,7 +2,7 @@
 
 Welcome to **CodeOrbit**! We are thrilled that you are interested in contributing.
 
-CodeOrbit is an open-source developer productivity and learning management platform developed under **LET'S COOK — THE FOUNDRY**. Our mission is to provide students, engineers, and creators with a beautifully designed, zero-friction universe to track their skills, coding sprints, projects, and velocity.
+CodeOrbit is a free, open-source study tracker for people learning to code, made by **Let's Cook — The Foundry**. You add the skills you are learning, the time you study, your projects and your goals, and CodeOrbit shows your progress. Everything stays in your own browser.
 
 We actively encourage and welcome contributions from developers of **all skill levels** — especially beginners making their very first open-source contributions!
 
@@ -14,9 +14,11 @@ Before contributing code, please keep our core architectural rules in mind:
 
 1. **Zero Heavy Frontend Frameworks:**  
    CodeOrbit is intentionally built with **pure HTML5, CSS3, and Vanilla JavaScript ES6+ modules**. Please do not submit pull requests converting the application to React, Next.js, Vue, Angular, or Tailwind CSS. Keeping it vanilla ensures any beginner can open the code in any browser and inspect it without a complex Node/npm build chain.
-2. **Privacy-First & 100% Offline:**  
-   All data lives exclusively in browser `localStorage`. Do not introduce required external backends, cloud databases, user authentication services, or paid APIs.
-3. **Inclusive & Supportive Community:**  
+2. **Private, and works offline:**  
+   All data lives only in the browser's `localStorage`. Do not add a backend, a cloud database, sign-in, analytics, or paid APIs. The app works offline after the first visit (`sw.js`, see D-024 in [`docs/DECISIONS.md`](docs/DECISIONS.md)).
+3. **Plain words in the app:**  
+   Write what people see the way you would say it to a friend: "Study sessions", not "Mission logs"; "Finished", not "Completed"; "late", not "overdue". Stored values never change (old backups must keep working), so show them through the label helpers in [`assets/js/utils.js`](assets/js/utils.js): `statusLabel`, `projectStatusLabel`, `typeLabel`, `skillLabel` (D-022).
+4. **Inclusive & Supportive Community:**  
    We celebrate learners. No question is too simple, and mistakes are treated as learning opportunities. Please adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
@@ -88,20 +90,21 @@ Never work directly on your `main` branch. Create a new branch with a descriptiv
 git checkout -b feat/interactive-session-timer
 
 # For a bug fix:
-git checkout -b fix/orbital-canvas-resize
+git checkout -b fix/goal-days-left-timezone
 ```
 
 ### 3. Implement Your Changes
-- Follow the modular structure in `assets/js/*.js`.
-- Always sanitize any user-supplied strings before rendering into HTML by using `escapeHTML()` from [`assets/js/utils.js`](assets/js/utils.js).
-- Use design tokens from [`assets/css/style.css`](assets/css/style.css) (colors, spacing, typography) rather than hardcoded inline values.
-- Maintain documentation integrity: preserve existing comments and add helpful explanations for new logic.
+- Follow the structure in `assets/js/*.js`: one file per page, `storage.js` is the only file that touches `localStorage`. [`docs/FLOW.md`](docs/FLOW.md) shows what calls what.
+- **Text from the user or a backup file:** always pass it through `escapeHTML()` before putting it into HTML, and pass links through `safeUrl()` (both in [`assets/js/utils.js`](assets/js/utils.js)). `escapeHTML` alone does not stop a `javascript:` link.
+- Use the design tokens in [`assets/css/style.css`](assets/css/style.css) (colours, spacing, type) instead of new hard-coded values. There is one look: dark (D-025).
+- **Added, removed or renamed a file the app loads?** Update `APP_FILES` in [`sw.js`](sw.js) (a test checks it), and bump `CACHE_VERSION` when you remove or rename one.
+- Keep comments true: if your change makes a comment or a doc wrong, fix it in the same pull request.
 
 ### 4. Commit Conventions
 We use **Conventional Commits** to maintain a clean, readable Git history. Prefix your commit messages with one of the following:
 
-- `feat:` A new feature or capability (e.g. `feat: add category filter to milestones`)
-- `fix:` A bug fix (e.g. `fix: correct streak calculation across month boundaries`)
+- `feat:` A new feature or capability (e.g. `feat: add a category filter to goals`)
+- `fix:` A bug fix (e.g. `fix: count days in a row correctly across month boundaries`)
 - `style:` Visual, styling, or formatting refinements (e.g. `style: adjust card padding on mobile`)
 - `refactor:` Code changes that neither fix a bug nor add a feature
 - `docs:` Documentation updates or additions (e.g. `docs: update local setup guide`)
@@ -127,13 +130,13 @@ npm run format       # auto-fixes formatting
 npm run lint:fix     # auto-fixes the lint problems that can be fixed automatically
 ```
 
-**Writing tests.** Tests live in `tests/*.test.js` and use Node's built-in test runner (`node:test`); there is no test library to learn. If you change logic in `utils.js`, `storage.js` or the achievement rules, add or update a test. For anything involving dates, freeze the clock with `freezeTime()` from `tests/helpers/clock.js`; the runner repeats every test in four timezones, so a date bug cannot hide in the one timezone you happen to be in.
+**Writing tests.** Tests live in `tests/*.test.js` and use Node's built-in test runner (`node:test`); there is no test library to learn. If you change logic in `utils.js`, `storage.js`, `navigation.js` or the badge rules in `achievements.js`, add or update a test. For anything involving dates, freeze the clock with `freezeTime()` from `tests/helpers/clock.js`; the runner repeats every test in four timezones, so a date bug cannot hide in the one timezone you happen to be in.
 
 Prettier formats JavaScript, CSS, JSON and YAML. It does not touch `index.html` or Markdown files.
 
 **Manual checks.** Then perform these verification checks in the browser:
 
-1. **Browser Functionality:** Manually test the feature in your browser. Create, edit, and delete items to ensure CRUD pipelines work smoothly.
+1. **It works:** try your change in the browser. Add, edit and delete things, and check the numbers on Home and Progress still make sense.
 2. **Zero Console Errors:** Open browser DevTools (`F12` or `Ctrl+Shift+I` / `Cmd+Option+I`) and check the **Console** tab. Ensure there are **no red errors or unhandled exceptions**.
 3. **LocalStorage Persistence:** Refresh the browser page (`F5`) and confirm that your changes persisted in `localStorage`.
 4. **Responsive Layout:** Test the page at different window widths (Desktop 1440px, Tablet 768px, Mobile 375px) using the DevTools Device Toolbar to ensure no horizontal scrollbars or element clipping occur.
@@ -192,4 +195,4 @@ Every open issue says which files to change and exactly what "done" means. Use t
 
 ## ❓ Need Assistance?
 
-If you encounter any roadblocks, have questions about the codebase, or need guidance on Git, feel free to open a discussion or ask in your issue thread. We are here to help you grow!
+If you get stuck, have a question about the code, or need help with Git, ask in the issue you are working on (or open a new issue with your question). We are here to help you grow!

@@ -51,18 +51,22 @@ Organization owners should configure organization-level security baselines under
 
 ---
 
-## 4. Repository Branch Protection Checklist
+## 4. Protecting `main`
 
-To protect the integrity of the production codebase, direct pushes to the primary branch must be disabled. Configure a branch protection rule for `main` under **Repository Settings $\rightarrow$ Branches**:
+**What is set up today:** a repository ruleset called **"Protect main"** (**Settings → Rules → Rulesets**), enforced on `main`:
 
-- [ ] **Require a Pull Request Before Merging:** Disable direct pushes to `main`. All changes must arrive via a pull request.
-- [ ] **Require Approvals:** Require at least **1 approving review** from a maintainer before a pull request can be merged.
-- [ ] **Dismiss Stale Pull Request Approvals:** Automatically revoke previous approvals when new commits are pushed to an open pull request.
-- [ ] **Require Status Checks to Pass:** Require CI workflows (e.g., lint and test workflows) to pass before merging.
-- [ ] **Require Branches to be Up to Date:** Ensure changes are tested against the latest `main` commit prior to merge.
-- [ ] **Restrict Who Can Dismiss Reviews:** Limit review dismissal privileges to repository administrators.
-- [ ] **Do Not Allow Force Pushes:** Explicitly block `git push --force` on `main` to preserve an immutable commit history.
-- [ ] **Do Not Allow Deletions:** Prevent the `main` branch from being accidentally deleted.
+| Rule | Status |
+| :--- | :--- |
+| Block deleting `main` | ✅ on |
+| Block force pushes | ✅ on |
+| Require the CI checks **`Lint & format`** and **`Unit tests`** to pass | ✅ on (job names in `.github/workflows/ci.yml`; do not rename them without updating the ruleset) |
+| Who can skip these rules | People with the **Maintain**, **Write** or **Admin** role. Maintainers commit straight to `main`; outside contributors always go through a pull request with green checks. |
+
+**Worth turning on as the team grows** (not on today):
+
+- [ ] **Require a pull request before merging**, with at least **1 approving review**, and dismiss stale approvals when new commits are pushed.
+- [ ] **Require branches to be up to date** before merging ("strict" status checks).
+- [ ] **Narrow the bypass list** to Admin only, once more people have Write access.
 
 ---
 

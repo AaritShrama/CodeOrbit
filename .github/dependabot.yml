@@ -1,5 +1,6 @@
-# Dependabot Configuration for CodeOrbit
-# Automated updates for GitHub Actions CI/CD workflows
+# Dependabot: weekly pull requests for GitHub Actions, monthly for the npm dev tools.
+# No custom labels: Dependabot then adds its own "dependencies" label (and creates
+# it if missing). Custom labels that do not exist in the repo are silently skipped.
 version: 2
 updates:
   - package-ecosystem: 'github-actions'
@@ -10,9 +11,6 @@ updates:
       prefix: 'chore(ci)'
       include: 'scope'
     open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'security'
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -21,8 +19,6 @@ updates:
     commit-message:
       prefix: 'chore(deps)'
     open-pull-requests-limit: 3
-    labels:
-      - 'dependencies'
     groups:
       dev-tools:
         patterns:

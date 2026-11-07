@@ -37,7 +37,9 @@ Before submitting, please ensure your PR satisfies:
 - [ ] I have read and followed the [Contributing Guidelines](https://github.com/LetsCook-Organization/CodeOrbit/blob/main/CONTRIBUTING.md).
 - [ ] I have performed a self-review of my own code.
 - [ ] I have preserved all existing unrelated code, docstrings, and comments.
-- [ ] Any user-facing HTML injection is sanitized with `escapeHTML()` to prevent XSS.
+- [ ] Saved or typed text put into HTML goes through `escapeHTML()`, and links through `safeUrl()`, to prevent XSS.
+- [ ] Words on screen are plain (no jargon), and stored values are shown through the label helpers (`statusLabel`, `projectStatusLabel`, `typeLabel`, `skillLabel`), not changed.
+- [ ] If I added, removed or renamed a file the app loads, I updated `APP_FILES` in `sw.js` (and `CACHE_VERSION` for a removal or rename).
 - [ ] I have updated corresponding documentation if my changes modify existing features or settings.
 - [ ] `npm run check` passes locally, or I have confirmed the CI check on this PR is green.
 - [ ] If this PR changes something users can see or do, I added a line under **Unreleased** in [`CHANGELOG.md`](https://github.com/LetsCook-Organization/CodeOrbit/blob/main/CHANGELOG.md).

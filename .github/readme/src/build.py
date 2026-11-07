@@ -178,7 +178,7 @@ def divider():
 # ---------------------------------------------------------------- HOW IT WORKS
 def how():
     W, H = 1280, 610
-    p = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="How CodeOrbit works. 1: You add skills, study sessions, projects and goals. 2: CodeOrbit turns them into streaks, a score, charts and badges. 3: Everything is saved in your own browser. No server, no account. Clearing browser data deletes it, so export a backup in Settings.">
+    p = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="How CodeOrbit works. 1: You add skills, study sessions, projects and goals. 2: CodeOrbit turns them into a 0 to 100 progress score, charts and badges. 3: Everything is saved in your own browser. No server, no account. Clearing browser data deletes it, so download a backup in Settings.">
 <style>
 @keyframes tw{{0%,100%{{opacity:.15}}50%{{opacity:.9}}}}
 @keyframes flow{{to{{stroke-dashoffset:-24}}}}
@@ -202,7 +202,7 @@ def how():
     col_w = (W - 144) / 3
     steps = [
         ('01', 'YOU', ['Add skills, log study', 'sessions, projects', 'and goals.']),
-        ('02', 'CODEORBIT', ['Turns them into streaks,', 'a 0–100 score, charts', 'and badges.']),
+        ('02', 'CODEORBIT', ['Turns them into a 0–100', 'progress score, charts', 'and badges.']),
         ('03', 'YOUR BROWSER', ['Saves everything on your', 'own computer. No server,', 'no account, no analytics.']),
     ]
     top = 210
@@ -234,7 +234,7 @@ def how():
     p.append(f'<path d="M{X} {sy + 6} L{X + 9} {sy - 10} L{X + 18} {sy + 6} Z" fill="{RED}"/>')
     wt, ww = text('Clearing your browser data deletes it.', 'bold', 18, X + 32, sy + 4, 0, WHITE)
     p.append(wt)
-    wt2, _ = text('Back up anytime: Settings → Export JSON Backup.', 'medium', 18, X + 32 + ww + 10, sy + 4, 0, GREY)
+    wt2, _ = text('Back up any time: Settings → Your data → Download backup.', 'medium', 18, X + 32 + ww + 10, sy + 4, 0, GREY)
     p.append(wt2)
     p.append('</g></svg>')
     open(f'{OUT}/how-it-works.svg', 'w').write('\n'.join(p))

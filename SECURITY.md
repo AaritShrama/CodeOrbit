@@ -1,6 +1,6 @@
 # Security Policy
 
-CodeOrbit is an open-source personal developer productivity platform developed and maintained under **LET'S COOK — THE FOUNDRY**. We take the security, data privacy, and integrity of our software seriously and appreciate the efforts of security researchers and open-source contributors who help us maintain a safe platform.
+CodeOrbit is a free, open-source study tracker for developers, made and maintained by **LET'S COOK — THE FOUNDRY**. It runs entirely in the browser: there is no server and no account, and data stays in the browser's `localStorage`. We take the security, data privacy, and integrity of our software seriously and appreciate the efforts of security researchers and open-source contributors who help us maintain a safe platform.
 
 This security policy outlines the procedures for responsibly disclosing security vulnerabilities, our response and remediation workflow, supported versions, and the scope of our security coverage.
 
@@ -21,7 +21,7 @@ CodeOrbit is pre-1.0 and has no long-term support branches: fixes land on `main`
 
 ## 2. Reporting a Vulnerability
 
-If you identify a security vulnerability or potential threat in CodeOrbit, **do not disclose it publicly** through public GitHub Issues, Discussions, pull requests, or social media channels. Public disclosure before a fix is prepared exposes users and self-hosters to unnecessary risk.
+If you identify a security vulnerability or potential threat in CodeOrbit, **do not disclose it publicly** through public GitHub Issues, pull requests, or social media channels. Public disclosure before a fix is prepared exposes users and self-hosters to unnecessary risk.
 
 ### Preferred Reporting Channels
 
@@ -80,11 +80,12 @@ We ask security researchers and community contributors to adhere to the principl
 
 ### In-Scope
 The following assets and components are in-scope for security evaluations:
-- The **CodeOrbit web application** source code (`index.html`, `assets/css/*`, `assets/js/*`).
+- The **CodeOrbit web application** source code (`index.html`, `assets/css/*`, `assets/js/*`), the service worker (`sw.js`) and the app manifest (`manifest.webmanifest`).
+- The two third-party scripts as CodeOrbit loads them (Chart.js and Lucide from jsDelivr, pinned with Subresource Integrity, see D-011), and how `sw.js` caches them.
 - Official repository configuration files and issue/PR templates (`.github/`).
 - GitHub Actions CI/CD workflows (`.github/workflows/*`).
 - The official live static deployment: `https://letscook-organization.github.io/CodeOrbit/`.
-- Data persistence and serialization mechanisms (browser `localStorage` schemas, JSON backup export and import validation).
+- How data is saved and restored (the `localStorage` data, and checking backup files on restore). A backup file is untrusted input: anything in it that can run code or reach the page as HTML or a link is in scope.
 
 ### Out-of-Scope
 The following categories are generally **not** considered security vulnerabilities and should not be reported via the security advisory channel:
@@ -93,7 +94,7 @@ The following categories are generally **not** considered security vulnerabiliti
 - Scenarios requiring physical, unrestricted access to an already unlocked user device.
 - Attacks relying on social engineering against maintainers or users.
 - Vulnerabilities solely present in end-of-life, unsupported web browsers.
-- Distributed Denial of Service (DDoS) against third-party hosting providers or CDNs (e.g., Render, jsDelivr, unpkg).
+- Distributed Denial of Service (DDoS) against third-party hosting providers or CDNs (GitHub Pages, jsDelivr).
 
 *(Note: We do not dismiss valid security reports merely because they involve a third-party dependency used by the application).*
 

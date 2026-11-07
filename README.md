@@ -66,12 +66,12 @@ It uses a small space theme: on Home, each skill you add is a planet in your orb
 
 | Page | What it is | Example |
 | :--- | :--- | :--- |
-| **Home** | This week at a glance and what is coming up | "6.5 of 12 hours studied" |
+| **Home** | This week at a glance and what is coming up | "6.5 of 10 hours studied" |
 | **Skills** | What you are learning | "Python, 60%" |
 | **Study sessions** | Each time you studied | "Studied React hooks, 1h 30m" |
 | **Projects** | Things you are building | "Portfolio website, 70% done" |
 | **Goals** | What you want to reach, with a due date | "Finish the Docker course by 30 Nov" |
-| **Progress** | Charts, your progress score and badges | "You studied 7 days in a row" |
+| **Progress** | Charts, your progress score and badges | "7 days in a row" |
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -81,74 +81,75 @@ It uses a small space theme: on Home, each skill you add is a planet in your orb
   <tr>
     <td width="50%" valign="top">
       <h3>🛸 See your week at a glance</h3>
-      Home shows the hours you studied in the last 7 days against your weekly goal, your skills as planets that grow with your progress, hours for each day, and what is coming up. Add 30 minutes with one tap. On Sundays, look back at your week.
+      Home shows the hours you studied in the last 7 days against your weekly goal, your skills as planets that grow with your progress, hours for each day, and what is coming up. Add 30 minutes with one tap. On Sundays and Mondays, look back at the week that just ended. Once you have a few study sessions, Home reminds you to download a backup if you never have, or not for 30 days.
     </td>
     <td width="50%" valign="top">
       <h3>🪐 Track your skills</h3>
-      Add skills in 9 categories (Web Development, AI, DevOps, Data Science…). Set a level from Beginner to Expert, and move progress up or down by 10% with one click.
+      Add skills in 9 categories (Web Development, AI, DevOps, Data Science…). Set a level from Beginner to Expert and a status (Not started, Learning, Practising, Finished), and move progress up or down by 10% with one click.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <h3>📝 Log study sessions</h3>
-      Write down what you studied, for how long, and how (coding, reading, practice problems, tutorials, research, project work). Your streak updates by itself.
+      Write down what you studied, for how long, and how (coding, reading, practice problems, project work, research, tutorial). Your "days in a row" count updates by itself.
     </td>
     <td width="50%" valign="top">
       <h3>🛰️ Manage projects</h3>
-      Keep each project's status (Planning, In Progress, On Hold, Completed), progress, technologies, GitHub link and live link in one place.
+      Keep each project's status (Planning, In progress, Paused, Finished), how far along it is, the tools you use, its GitHub link and live link in one place.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <h3>🎯 Set goals</h3>
-      Give goals a deadline and a priority (Critical, High, Medium, Low). CodeOrbit shows how many days are left and warns you when one is overdue.
+      Give goals a due date and a priority (Critical, High, Medium, Low). CodeOrbit shows how many days are left and marks a goal as late when the date has passed.
     </td>
     <td width="50%" valign="top">
       <h3>⭐ Earn badges</h3>
-      10 achievements unlock as you go: your first skill, a 3-day streak, 7-day streak, 100 hours of learning, and more.
+      10 badges to earn as you go: your first skill, 3 days in a row, 7 days in a row, 100 hours of study, and more.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <h3>📊 Understand your habits</h3>
-      5 charts (this week, last 30 days, skills by category, project status, type of study) plus short insights, like your most-studied skill.
+      5 charts (this week Monday to Sunday, the last 30 days, skills by category, projects by status, hours by type of study) plus short notes, like your most studied skill and your best day of the week.
     </td>
     <td width="50%" valign="top">
       <h3>⚙️ Make it yours</h3>
-      Daily and weekly study goals, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file. Install it on your phone; it works offline.
+      Daily and weekly study goals, and a sound when you earn a badge (on or off). Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file. Install it on your phone or computer; it works offline.
     </td>
   </tr>
 </table>
 
 ### The progress score (0–100), explained
 
-The **Progress** page shows one number that sums up your week. It is made of four simple parts:
+The **Progress** page shows one number for your last 7 days. It is made of four simple parts (the same names the app uses):
 
 | Part | Points | How you earn them |
 | :--- | ---: | :--- |
-| **Consistency** | 30 | How many of the last 7 days you studied |
-| **Study hours** | 30 | Hours this week compared with your weekly target |
+| **Studying often** | 30 | How many of the last 7 days you studied on |
+| **Weekly goal** | 30 | Hours in the last 7 days compared with your weekly goal |
 | **Projects** | 20 | Average progress of your projects |
 | **Skills** | 20 | Average progress of your skills |
 
-A brand-new account scores **0**. In the app, click **"How is this worked out?"** next to the score to see exactly how yours was calculated.
+With nothing saved yet, the score is **0**. If you have no projects (or no skills) yet, that part gives 10 of its 20 points once you have added study time, so people who do not track projects are not punished. In the app, click **"How is this worked out?"** next to the score to see exactly how yours was calculated.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
 ## 04 — How it works
 
 <p align="center">
-  <img src=".github/readme/how-it-works.svg" width="100%" alt="How CodeOrbit works. 1: You add skills, study sessions, projects and goals. 2: CodeOrbit turns them into streaks, a score, charts and badges. 3: Everything is saved in your own browser. No server, no account. Clearing browser data deletes it, so export a backup in Settings.">
+  <img src=".github/readme/how-it-works.svg" width="100%" alt="How CodeOrbit works. 1: You add skills, study sessions, projects and goals. 2: CodeOrbit turns them into a 0 to 100 progress score, charts and badges. 3: Everything is saved in your own browser. No server, no account. Clearing browser data deletes it, so download a backup in Settings.">
 </p>
 
 There is **no server and no database**. CodeOrbit is a single web page. Everything you type is saved in your browser's built-in storage (called `localStorage`), on your own computer.
 
 - ✅ **Private:** your data is never sent anywhere. There is no login and no analytics.
 - ✅ **Fast:** nothing to wait for; it all happens on your computer.
+- ✅ **Works offline:** once you have opened it, it opens without internet too, and you can install it like an app.
 - ⚠️ **One browser only:** data on your laptop does not appear on your phone.
 
 > [!WARNING]
-> If you clear your browser's data, your CodeOrbit data is deleted too. Make a backup from time to time: **Settings → Export JSON Backup**. You can load it again with **Import JSON Backup**.
+> If you clear your browser's data, your CodeOrbit data is deleted too. Make a backup from time to time: **Settings → Your data → Download backup** (Home reminds you). You can load it again with **Restore from backup**.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -157,8 +158,8 @@ There is **no server and no database**. CodeOrbit is a single web page. Everythi
 ### Option A: use it online (easiest)
 
 1. Open **[letscook-organization.github.io/CodeOrbit](https://letscook-organization.github.io/CodeOrbit/)**.
-2. It starts empty. That is on purpose: it is *your* universe.
-3. Want to look around first? Go to **Settings → Load Demo Universe** to fill it with example data. **Settings → Reset All Data** empties it again.
+2. It starts empty. That is on purpose: it is *your* data.
+3. Want to look around first? Press **Try it with sample data first** on the first screen (or later: **Settings → Your data → Load sample data**). **Settings → Your data → Delete all my data** empties it again.
 
 ### Option B: run it on your computer
 
@@ -184,22 +185,28 @@ Then open **http://localhost:3000**. (On macOS and Linux you may need `python3` 
 ```text
 CodeOrbit/
 ├── index.html            ← the only page. All 8 screens live here; one is shown at a time.
+│                           (6 in the top bar; Badges opens from Progress, Settings from your profile picture)
 ├── sw.js, manifest.webmanifest ← lets CodeOrbit be installed and work offline
 ├── assets/
 │   ├── css/              ← how it looks (colours, layout, animations, mobile)
+│   ├── fonts/            ← Inter and JetBrains Mono, served from here (no font website)
+│   ├── images/           ← Let's Cook mark and app icons
 │   └── js/
 │       ├── app.js        ← START HERE. Starts the app and connects everything.
 │       ├── storage.js    ← the memory. The ONLY file that reads and writes your data.
-│       ├── utils.js      ← small helpers: dates, streaks, the score, safe text
+│       ├── utils.js      ← small helpers: dates, days in a row, the score, safe text, labels
 │       ├── navigation.js ← switches between screens (#skills, #goals, …)
 │       ├── components.js ← pop-ups, messages, the Ctrl+K search
 │       ├── icons.js      ← small line icons
 │       ├── recap.js      ← "Your week in review"
-│       ├── dashboard.js, skills.js, progress.js, projects.js,
-│       │   goals.js, achievements.js, analytics.js, settings.js
-│       │                 ← one file per screen
-│       └── charts.js     ← draws the charts (using Chart.js)
-├── tests/                ← automatic tests (60+ of them)
+│       ├── charts.js     ← draws the charts (using Chart.js)
+│       └── one file per screen. Some file names are older than the screen names:
+│             dashboard.js    = Home             projects.js  = Projects
+│             skills.js       = Skills           goals.js     = Goals
+│             progress.js     = Study sessions   analytics.js = Progress
+│             achievements.js = Badges           settings.js  = Settings
+├── tests/                ← automatic tests (about 90 of them)
+├── scripts/test.mjs      ← runs the tests in 4 timezones
 ├── docs/                 ← deeper documentation (see below)
 └── CHANGELOG.md          ← what changed in each version
 ```
@@ -232,7 +239,9 @@ If you understand this loop, you understand the app.
 | **HTML, CSS, JavaScript** | The whole app, using built-in JavaScript modules |
 | **[Chart.js](https://www.chartjs.org/) 4.4.7** | The charts |
 | **[Lucide](https://lucide.dev/) 1.70.0** | The icons |
+| **[Inter](https://rsms.me/inter/) and [JetBrains Mono](https://www.jetbrains.com/lp/mono/)** | The fonts (free, SIL Open Font License), served from this repository |
 | **localStorage** | Saving your data in your browser |
+| **A service worker** (`sw.js`) | Opening without internet, and installing as an app |
 | **GitHub Pages** | Hosting the live site |
 | **ESLint, Prettier, Node's test runner** | Checking code quality (for contributors only; the app does not need them) |
 
@@ -246,11 +255,10 @@ An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **
 
 | # | What to do | Area |
 | :--- | :--- | :--- |
-| [#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8) | Deadlines show the wrong day depending on your timezone | bug · dates |
-| [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10) | Importing a 0-minute session turns it into 30 minutes | bug · data |
+| [#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8) | "Days left" on goals and projects can be one day off, depending on your timezone and the time of day | bug · dates |
+| [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10) | Restoring a backup turns a 0-minute session into 30 minutes | bug · data |
 | [#11](https://github.com/LetsCook-Organization/CodeOrbit/issues/11) | Add tests for the date and duration helpers | tests |
 | [#12](https://github.com/LetsCook-Organization/CodeOrbit/issues/12) | Add real screenshots of the app to this README | docs |
-| [#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13) | Show "Add your first skill" and "Load demo data" on an empty dashboard | feature |
 
 ### 🟡 Medium: a day or two, touches several files
 
@@ -260,7 +268,6 @@ An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **
 | [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15) | Test every screen using only a keyboard and a screen reader, and report what breaks | accessibility |
 | [#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16) | Add browser tests that click through the app automatically | tests |
 | [#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17) | Upgrade old saved data safely when the data format changes | data |
-| [#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18) | Remind people to back up their data | feature |
 | [#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19) | Export a progress report as Markdown and CSV | feature |
 
 ### 🔴 Hard: needs a plan agreed in the comments first
@@ -270,7 +277,7 @@ An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **
 | [#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20) | Import your real coding activity from GitHub | feature |
 
 > [!TIP]
-> This list was written for **v0.1.0**. The always-up-to-date list is on the **[Issues page](https://github.com/LetsCook-Organization/CodeOrbit/issues)**. Filter by [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22) or [`help wanted`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22help+wanted%22).
+> Already done: the first-visit screen ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)) and backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)). The always-up-to-date list is on the **[Issues page](https://github.com/LetsCook-Organization/CodeOrbit/issues)**. Filter by [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22) or [`help wanted`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22help+wanted%22).
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -318,8 +325,9 @@ Every change, from anyone, is checked automatically before it can go live:
 | :--- | :--- |
 | **ESLint** | Code mistakes, like a variable that is used but never defined |
 | **Prettier** | Messy formatting, so all code looks the same |
-| **60+ unit tests** | Wrong answers in dates, streaks, the score, saving and importing |
+| **About 90 unit tests** | Wrong answers in dates, days in a row, the score, the backup reminder, saving and restoring, safe text and links |
 | **…in 4 timezones** | India, UTC, US West and UTC+14. Date bugs hide in one timezone and show in another: before these tests, the weekly chart put every session one day early for users in India. |
+| **A check of `sw.js`** | Every file the app needs is in the offline list |
 
 The live site updates **only when all checks pass**, and the `main` branch is protected, so nobody can merge a pull request with a red ❌.
 
@@ -327,11 +335,13 @@ The live site updates **only when all checks pass**, and the `main` branch is pr
 
 ## 10 — Roadmap
 
-**✅ Done in v0.1.0:** dashboard, skills, study sessions, projects, goals, 10 achievements, 5 charts, the 0–100 score, search, backup and restore, automatic checks and tests.
+**✅ Done in v0.1.0:** Home, skills, study sessions, projects, goals, 10 badges, 5 charts, the 0–100 progress score, search, backup and restore, automatic checks and tests.
 
-**🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), a friendlier first visit ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
+**✅ Done since (coming in the next version, see [CHANGELOG](CHANGELOG.md)):** a calmer new design, a first-visit screen ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), one-tap "+30 min", "Your week in review", backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), working offline and installing as an app.
 
-**🌌 Later:** backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), Markdown/CSV reports ([#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19)), importing real activity from GitHub ([#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20)), a focus timer, working offline as an app.
+**🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
+
+**🌌 Later:** Markdown/CSV reports ([#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19)), importing real activity from GitHub ([#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20)), a focus timer.
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
@@ -352,13 +362,13 @@ No. There is no server. Your data stays in your own browser and is never sent to
 <details>
 <summary><b>I cleared my browser and my data is gone. Can I get it back?</b></summary>
 <br>
-Only if you exported a backup (<b>Settings → Export JSON Backup</b>). Then use <b>Import JSON Backup</b> to load it. Without a backup, the data is gone, because it only ever existed in that browser.
+Only if you downloaded a backup (<b>Settings → Your data → Download backup</b>). Then use <b>Restore from backup</b> to load it. Without a backup, the data is gone, because it only ever existed in that browser.
 </details>
 
 <details>
 <summary><b>Can I use it on my phone?</b></summary>
 <br>
-Yes, the layout works on phones. But your phone and your laptop each keep their own separate data. To move it, export on one and import on the other.
+Yes, the layout works on phones, and you can install it on your home screen. But your phone and your laptop each keep their own separate data. To move it, download a backup on one and restore it on the other.
 </details>
 
 <details>

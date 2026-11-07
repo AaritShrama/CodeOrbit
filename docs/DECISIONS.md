@@ -12,6 +12,17 @@ Code shows *what* we built. This file records *why*, so future contributors don'
 
 Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 
+**Names that changed since older entries were written.** Entries are history, so they keep the names used at the time. Today's names:
+
+| Older entries say | Now |
+| :--- | :--- |
+| `loadDemoUniverse()`, `getDefaultUniverse()`, "Load Demo Universe" | `loadSampleData()`, `getSampleUniverse()`, Settings → Your data → *Load sample data* (or *Try it with sample data first* on the first visit) |
+| "Reset All Data", "Export / Import JSON Backup" | *Delete all my data*, *Download backup* / *Restore from backup* |
+| `calculateProductivityScore`, "productivity score" | `calculateProgressScore`, "progress score" |
+| `keepCurrentTheme()`, `applyTheme()` | `keepDeviceSettings()`; `applyTheme` was removed with the light theme (D-025) |
+| Sidebar, dashboard, Mission Logs, Analytics, Achievements | Top bar, Home, Study sessions, Progress, Badges (D-020, D-022) |
+| `--cyan-accent`, `--orbital-orange` and other old colour names | `--text-primary`, `--accent-text`, … (D-026) |
+
 ---
 
 ## Part A: Decisions made during changes
@@ -85,7 +96,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Alternatives rejected:** Storing UTC timestamps: needs a data migration and still has to be converted to local days for display.
 
 ### D-008: Save preferences once
-- **Date:** 2026-11-07 · **Status:** Accepted
+- **Date:** 2026-11-07 · **Status:** Superseded by D-025 (the theme and `applyTheme` are gone; preferences are still saved with one `saveSettings` call)
 - **Context:** Saving the preferences form wrote all settings, then `applyTheme(theme)` wrote the theme again: two data-change loops per click.
 - **Decision:** Call `applyTheme(theme, false)` after `saveSettings`, since the theme is already in the saved settings.
 - **Why:** Rule: one user action = one save. Measured: 2 → 1 `data-changed` event.
@@ -248,7 +259,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 
 ### D-018: Never echo raw input into HTML; drop malformed dates on import
 - **Date:** 2026-11-07 · **Status:** Accepted · Amends B-007
-- **Context:** An open-source readiness audit tested a deliberately malicious backup file (an HTML/JS payload in every field) in Chrome across all 8 pages. **6 payloads executed**: `formatDate()` returned an invalid date string unchanged and its result is inserted with `innerHTML` (activity dates, goal deadlines, skill and project target dates, achievement unlock times), and Analytics printed the top skill name unescaped. A dashboard project status was also unescaped. All other fields were already escaped, and `javascript:` links were already blocked. Risk: anyone importing a backup shared by someone else. The live site shares an origin (`letscook-organization.github.io`) with every other Pages site of the org, so script running there could read their `localStorage` too.
+- **Context:** An open-source readiness audit tested a deliberately malicious backup file (an HTML/JS payload in every field) in Chrome across all 8 pages. **6 payloads executed**: `formatDate()` returned an invalid date string unchanged and its result is inserted with `innerHTML` (activity dates, goal deadlines, skill and project target dates, achievement unlock times), and Analytics printed the top skill name unescaped. A dashboard project status was also unescaped. All other fields were already escaped, and `javascript:` links were already blocked *(correction, 2026-11-08: they were not. The test file used the wrong field names, `github`/`demo` instead of `githubUrl`/`liveDemoUrl`, so project links were never tested; a `javascript:` link from a backup file was rendered and would run when clicked. Fixed with `safeUrl()`, see D-026)*. Risk: anyone importing a backup shared by someone else. The live site shares an origin (`letscook-organization.github.io`) with every other Pages site of the org, so script running there could read their `localStorage` too.
 - **Decision:**
   1. `formatDate()` (and so `formatRelativeTime()`) returns `'N/A'` or `'Invalid date'`, **never its input**.
   2. Escape the remaining user-controlled values (top skill name, project status, date-group label).
@@ -269,10 +280,10 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Date:** 2026-11-07 · **Status:** Accepted · Supersedes the old "cosmic" look (purple/cyan gradients, glass cards, sidebar)
 - **Context:** The founder asked for a new frontend that combines three themes (space, the Let's Cook brand, Swiss design), matches the README, and is **minimal, not messy**. The old dashboard showed six blocks at once (hero, four KPI cards, a score gauge, an orbit visualiser with two charts, recent logs, active projects, milestones). A mockup was reviewed and approved before any code changed.
 - **Decision:**
-  1. **One look everywhere.** Black/white/greys and **one** crimson (`#B8002F` for fills with white text, `#FF4D6A` for crimson *text* on black so it passes contrast). Inter for text with very heavy, tight numbers; JetBrains Mono for small uppercase labels. Flat 1px-line cards, no gradients or glows. Old colour variable names (`--cyan-accent`, `--orbital-orange`, …) are kept but point at the new palette, so every page changed at once without rewriting every template.
-  2. **Top bar instead of a sidebar:** Home · Skills · Study sessions · Projects · Goals · Progress, then search, light/dark and the profile picture (which opens Settings). Badges open from the Progress page.
+  1. **One look everywhere.** Black/white/greys and **one** crimson (`#B8002F` for fills with white text, `#FF4D6A` for crimson *text* on black so it passes contrast). Inter for text with very heavy, tight numbers; JetBrains Mono for small uppercase labels. Flat 1px-line cards, no gradients or glows. Old colour variable names (`--cyan-accent`, `--orbital-orange`, …) are kept but point at the new palette, so every page changed at once without rewriting every template *(renamed to honest names in D-026)*.
+  2. **Top bar instead of a sidebar:** Home · Skills · Study sessions · Projects · Goals · Progress, then search, light/dark and the profile picture (which opens Settings). Badges open from the Progress page. *(The light/dark switch was removed in D-025.)*
   3. **Home answers one question: "how is my week going, and what is next?"** Greeting, hours in the last 7 days against the weekly goal, one *Add study time* button, an orbit where each planet is a skill (bigger = further along, crimson = finished), hours for each of the last 7 days, and the next goal and last session. Everything else moved to its page: the progress score to **Progress**, project and goal lists to their pages.
-  4. **First visit** (no skills and no study time) shows a getting-started screen with *Add your first skill* and *Try it with sample data first* instead of empty widgets.
+  4. **First visit** (no skills and no study time; since issue #13: nothing saved at all) shows a getting-started screen with *Add your first skill* and *Try it with sample data first* instead of empty widgets.
   5. **Space lives in the visuals** (orbit, planets, a quiet starfield), not in the words; see D-022.
   6. **Motion** is slow and decorative only (orbits turn, stars twinkle). Everything stops under `prefers-reduced-motion`, and no information is shown only through motion.
   7. **Route names stay** (`#dashboard`, `#progress`, `#analytics`, …) so links and bookmarks keep working; only titles changed.
@@ -280,7 +291,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:**
   - The progress score and badges are no longer on the first screen; people who were motivated by them need one extra click. If that hurts, a single "6 of 10 badges" line on Home is the smallest way back.
   - The orbit shows at most 12 skills and planets have no visible labels (names are in a tooltip and in the screen-reader label).
-  - Old variable names (`--cyan-accent` now means "strong text colour") are misleading for new contributors until they are renamed in a follow-up.
+  - Old variable names (`--cyan-accent` now means "strong text colour") are misleading for new contributors until they are renamed in a follow-up. *(Done in D-026.)*
   - Issues that describe the old dashboard (KPI cards, sidebar) need their wording updated.
 - **Alternatives rejected:** Keeping the old layout and only recolouring it: still six blocks on Home. A framework rewrite (React etc.): would invalidate the open issues and the "no build step" rule (B-001) for no user benefit.
 
@@ -298,7 +309,7 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Decision:**
   - Rule: **every label must make sense to someone opening the app for the first time.** No space jargon, no Latin, no unexplained abbreviations (`1h 15m`, not `1.25h`).
   - Page names: Home, Skills, Study sessions, Projects, Goals, Progress, Badges, Settings. Score levels: Just beginning, Getting started, Good, Very good, Excellent. Badges renamed after what they reward ("7 days in a row").
-  - **Stored values do not change.** Statuses like `Completed`, `Practicing`, `On Hold`, badge ids and categories, and the storage key are kept; small label functions (`statusLabel`, `projectStatusLabel`, `typeLabel`, `categoryLabel`) translate them for display only.
+  - **Stored values do not change.** Statuses like `Completed`, `Practicing`, `On Hold`, badge ids and categories, and the storage key are kept; small label functions (`statusLabel`, `projectStatusLabel`, `typeLabel`, `categoryLabel`) translate them for display only. *(Since D-026 the first three, plus `skillLabel`, live in `utils.js` and every page, search and the charts use them; `categoryLabel` for badge groups stays in `achievements.js`.)*
   - Emoji replaced with a small inline line-icon set (`assets/js/icons.js`).
 - **Why:** Many users are students reading in a second language. Renaming stored values would break everyone's saved data and backups and require a migration for no visible gain.
 - **Trade-off accepted:** Code and storage still say `missions`, `activities`, `Completed`, so contributors see two vocabularies; the label helpers are the bridge and must be used in new templates.
@@ -331,6 +342,26 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** Some people read better on a light background (bright rooms, astigmatism). They lose that option. If users ask for it, it can be restored from git history (`63b20f9` has the last complete version), ideally driven by the system setting (`prefers-color-scheme`) rather than a manual switch.
 - **Alternatives rejected:** Keeping it but hiding the switch: unmaintained code that still has to be tested.
 
+### D-026: Full consistency review: one sound rule, safe links, shared labels, honest names
+- **Date:** 2026-11-08 · **Status:** Accepted · Amends D-018, D-020, D-022, B-003, B-009
+- **Context:** The founder asked for a line-by-line review so that code, on-screen text, docs and issues all say the same thing. It also records the Home features added after D-025 (one-tap +30 min, the backup reminder, "Your week in review"), which had no entry yet. The review found real bugs, not only wording:
+  - **Settings → Sounds did nothing.** `soundEnabled` was saved but never read, and the app played a chime on every success message and a click on every dialog, while the setting said "Play a short sound when you earn a badge".
+  - **`javascript:` links from a backup file were rendered** on project cards (see the correction in D-018), and item ids from a backup were put into HTML attributes unescaped.
+  - The weekly goal defaulted to **12 hours** on Home, Settings and the recap but **10** in the score and for new users. The recap saved goals like 10.5 that the Settings field (step 1) then refused to save. The duration field (minimum 5, step 5) refused sessions of 1–4 or 7 minutes, which restores and the +30 shortcut can create.
+  - Restore error messages showed parser text ("Missing essential CodeOrbit collections…"). Search showed raw stored values ("In Progress", "General Exploration", `2026-11-20`). Badge counts could exceed 10 after restoring a backup with unknown badge ids. Projects had no "Paused" filter and skills no "Not started" filter. Editing a session whose skill was deleted silently cleared its skill. New projects started with "TypeScript, Node.js" already filled in.
+  - Dead code: notification-panel CSS, unused colour tokens and classes, hidden icons in every number strip, `minutesToHours`, `unlockAchievement`, `reducedMotion`, two unused images.
+- **Decision:**
+  1. **Sounds:** the badge chime is the only sound. `app.js` copies `settings.soundEnabled` into `sounds.enabled` at start-up and after every save.
+  2. **Links:** `safeUrl()` in `utils.js` lets only `http://` and `https://` through, on the cards and in the project form. Ids in attributes are escaped. The browser security check now uses the real field names.
+  3. **Labels:** `statusLabel`, `projectStatusLabel`, `typeLabel` and a new `skillLabel` ("General Exploration" → "General") move to `utils.js`, with tests, and are used by every page, search, the charts and the recap.
+  4. **Defaults:** `DEFAULT_DAILY_HOURS = 2` and `DEFAULT_WEEKLY_HOURS = 10` in `utils.js`, used everywhere. Weekly goal fields accept halves; the duration field accepts any whole number of minutes from 1.
+  5. **Home features (recorded here):** *+30 min* adds 30 minutes today on the skill studied most recently, with Undo for 10 seconds. The **backup reminder** shows with 3+ sessions, not sample data, and no backup in 30 days; *Not now* waits 7 days; downloading or restoring a backup counts. Sample data is marked `sampleData`, and the mark is **removed as soon as you add or change a skill, session, project or goal**, because from then on the data is yours. **Week in review** covers Monday–Sunday and is offered on Sundays and Mondays until opened. Replacing all data (sample, restore, delete all) unlocks badges **quietly**.
+  6. **Honest names:** colour tokens renamed (`--cyan-accent` → `--text-primary`, `--orbital-orange` → `--accent-text`, …), CSS classes and element ids renamed (`badge-cyan` → `badge-muted`, `sidebar-avatar-img` → `topbar-avatar`, `productivity-card` → `score-card`, …), `calculateProductivityScore` → `calculateProgressScore`, `loadDemoUniverse` → `loadSampleData`, backup file `codeorbit-backup-DATE.json`. Stored keys and values do **not** change (D-022).
+  7. Remove the dead code listed above. Dependabot uses its default `dependencies` label (the custom `security` and `dependencies` labels did not exist).
+- **Why:** A setting that does nothing, or a doc that names a button that does not exist, costs trust in everything else. Each bug above was reproduced first (in the browser or a unit test) and has a test now: 88 unit tests in 4 timezones, plus the browser checks for offline use, XSS (0 payloads run, 0 unsafe links) and the Home features.
+- **Trade-off accepted:** Renaming ids and classes breaks any personal user style or script that targeted the old names (none known). Old backups named `codeorbit-universe-*.json` still restore; only new downloads get the new name. Sample data used for real stops being "sample" after one edit, so a person who only tries it out by adding one session will see a backup reminder.
+- **Alternatives rejected:** Keeping the old names with comments: every new contributor would have to learn that "cyan" means white. Making all success messages chime again and relabelling the setting: the founder asked for a calm app; one sound is enough.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)
@@ -351,8 +382,8 @@ These choices were made before this log existed. **The original reasons were not
   - A `version` field exists (`DATA_VERSION = 1`), but there is **no migration code** yet. A future schema change must add one.
 
 ### B-003: Pages communicate only through `storage` + a `codeorbit:data-changed` event
-- **Status:** Still in force; the re-render rules around it were tightened in D-005 and D-006
-- **Likely why:** Page modules stay independent (none imports another). Any write anywhere refreshes whatever is on screen.
+- **Status:** Still in force; the re-render rules around it were tightened in D-005 and D-006. Amended: Home now imports other pages' dialog openers (`openSkillModal`, `openActivityModal`, `downloadBackup`, `openRecap`) and Progress reads the badge list, but data still flows only through `storage` and the event (see `FLOW.md` §9).
+- **Likely why:** Page modules stay independent (none imported another when this was written). Any write anywhere refreshes whatever is on screen.
 - **Trade-offs:** The event says only "something changed", so listeners re-render whole pages. Dispatch is synchronous, so a save inside a listener (achievement unlocks) triggers a nested round of re-renders (see `FLOW.md` §6).
 
 ### B-004: Hash-based routing (`#skills`, `#goals`, …)
@@ -379,6 +410,7 @@ These choices were made before this log existed. **The original reasons were not
 - **Trade-offs:** Real users start with someone else's data and must find "Reset" in Settings; achievements unlock from fake activity on first load. **Open issue: start empty and offer a "Load demo" button.**
 
 ### B-009: UI sounds generated with the Web Audio API
+- **Status:** Amended by D-026: only the badge chime is left, and Settings → Sounds now really turns it off (the setting used to be saved but never read).
 - **Likely why:** No audio files to ship or license; tones are synthesised in code and can be turned off in Settings.
 - **Trade-off:** Browsers block audio until the first user interaction, so the earliest sounds may be silent.
 
