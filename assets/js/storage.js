@@ -66,7 +66,8 @@ function getDefaultUniverse() {
       dailyTargetHours: 2,
       weeklyTargetHours: 12,
       soundEnabled: true,
-      reducedMotion: false
+      reducedMotion: false,
+      sampleData: true // no backup reminder for sample data
     },
     skills: [
       {
@@ -652,6 +653,8 @@ class StorageManager {
           ? { ...defaults.settings, ...parsed.settings }
           : defaults.settings;
       this.keepCurrentTheme(parsed);
+      // You just restored from a file, so a backup exists.
+      parsed.settings.lastBackupAt = new Date().toISOString();
       parsed.skills = Array.isArray(parsed.skills) ? parsed.skills : [];
       parsed.activities = Array.isArray(parsed.activities) ? parsed.activities : [];
       parsed.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
@@ -715,8 +718,14 @@ class StorageManager {
    * flip a light-mode user back to dark on the next page load (D-023).
    */
   keepCurrentTheme(universe) {
-    const theme = this.getSettings().theme === 'light' ? 'light' : 'dark';
+    const current = this.getSettings();
+    const theme = current.theme === 'light' ? 'light' : 'dark';
     universe.settings = { ...(universe.settings || {}), theme };
+    // Backup reminder state is also about this device, not the data.
+    for (const key of ['lastBackupAt', 'backupSnoozeUntil']) {
+      if (current[key]) universe.settings[key] = current[key];
+      else delete universe.settings[key];
+    }
     return universe;
   }
 }

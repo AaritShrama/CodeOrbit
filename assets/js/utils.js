@@ -203,6 +203,26 @@ export function streakMessage(currentStreak, studiedToday) {
 }
 
 /**
+ * Whether Home should remind the user to download a backup.
+ * Data lives only in this browser, so clearing it or switching devices loses
+ * everything. Remind when there is real data worth losing (3+ sessions, not the
+ * sample data) and no backup in the last 30 days, unless snoozed.
+ * @param {{ lastBackupAt?: string, backupSnoozeUntil?: string, sampleData?: boolean }} settings
+ * @param {number} sessionCount
+ * @param {Date} [now]
+ * @returns {null | { daysSince: number | null }} null = no reminder; daysSince null = never backed up
+ */
+export function backupReminder(settings = {}, sessionCount = 0, now = new Date()) {
+  if (settings.sampleData || sessionCount < 3) return null;
+  const snooze = Date.parse(settings.backupSnoozeUntil || '');
+  if (!Number.isNaN(snooze) && snooze > now.getTime()) return null;
+  const last = Date.parse(settings.lastBackupAt || '');
+  if (Number.isNaN(last)) return { daysSince: null };
+  const daysSince = Math.floor((now.getTime() - last) / 86400000);
+  return daysSince >= 30 ? { daysSince } : null;
+}
+
+/**
  * Formats minutes into hours with one decimal place.
  * @param {number} minutes - Minutes
  * @returns {number} Hours

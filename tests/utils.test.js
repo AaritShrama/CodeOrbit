@@ -16,7 +16,8 @@ import {
   peakWeekday,
   calculateStreak,
   calculateProductivityScore,
-  streakMessage
+  streakMessage,
+  backupReminder
 } from '../assets/js/utils.js';
 import { freezeTime, TZ } from './helpers/clock.js';
 
@@ -287,5 +288,32 @@ describe('streakMessage', () => {
   test('no run yet: an invitation, not a warning', () => {
     assert.equal(streakMessage(0, false).atRisk, false);
     assert.equal(streakMessage(0, true).atRisk, false);
+  });
+});
+
+describe('backupReminder', () => {
+  const now = new Date('2026-11-07T12:00:00Z');
+  const daysAgo = n => new Date(now.getTime() - n * 86400000).toISOString();
+
+  test('reminds when there is real data and never a backup', () => {
+    assert.deepEqual(backupReminder({}, 3, now), { daysSince: null });
+  });
+
+  test('stays quiet for little data or sample data', () => {
+    assert.equal(backupReminder({}, 2, now), null);
+    assert.equal(backupReminder({ sampleData: true }, 50, now), null);
+  });
+
+  test('stays quiet for 30 days after a backup, then reminds', () => {
+    assert.equal(backupReminder({ lastBackupAt: daysAgo(29) }, 10, now), null);
+    assert.deepEqual(backupReminder({ lastBackupAt: daysAgo(31) }, 10, now), { daysSince: 31 });
+  });
+
+  test('"Not now" snoozes until the snooze date', () => {
+    const tomorrow = new Date(now.getTime() + 86400000).toISOString();
+    assert.equal(backupReminder({ backupSnoozeUntil: tomorrow }, 10, now), null);
+    assert.deepEqual(backupReminder({ backupSnoozeUntil: daysAgo(1) }, 10, now), {
+      daysSince: null
+    });
   });
 });

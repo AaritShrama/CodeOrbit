@@ -86,7 +86,7 @@ function setupSettingsEventListeners() {
   // Export JSON
   const exportBtn = document.getElementById('export-data-btn');
   if (exportBtn) {
-    exportBtn.addEventListener('click', handleExportJSON);
+    exportBtn.addEventListener('click', downloadBackup);
   }
 
   // Import JSON File input
@@ -273,6 +273,12 @@ export function getAvatarSvg(avatarKey) {
     default: // 'astronaut'
       return `<svg viewBox="0 0 40 40" width="100%" height="100%" fill="none"><rect width="40" height="40" rx="20" style="fill: var(--avatar-bg)"/><circle cx="20" cy="20" r="13" fill="#F5F5F4"/><rect x="13" y="15" width="14" height="9" rx="4" fill="#0A0A0B"/><path d="M15 17c1-1.5 4-2 7 0" stroke="#FF4D6A" stroke-width="1.5"/><circle cx="20" cy="31" r="2" fill="#FF4D6A"/></svg>`;
   }
+}
+
+/** Downloads a backup file and remembers when, for the reminder on Home. */
+export function downloadBackup() {
+  handleExportJSON();
+  storage.saveSettings({ lastBackupAt: new Date().toISOString(), backupSnoozeUntil: '' });
 }
 
 function handleExportJSON() {

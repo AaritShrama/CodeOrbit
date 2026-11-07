@@ -16,6 +16,7 @@ import {
   formatRelativeTime,
   calculateStreak,
   streakMessage,
+  backupReminder,
   getLastNDaysISO,
   getTodayISO,
   isWithinLastNDays
@@ -23,6 +24,7 @@ import {
 import { toast } from './components.js';
 import { openSkillModal } from './skills.js';
 import { openActivityModal } from './progress.js';
+import { downloadBackup } from './settings.js';
 
 const MAX_PLANETS = 12;
 const QUICK_MINUTES = 30;
@@ -37,6 +39,15 @@ export function initDashboard() {
     ?.addEventListener('click', () => openSkillModal());
   document.getElementById('home-quick-add')?.addEventListener('click', quickAdd);
   document.getElementById('home-quick-undo')?.addEventListener('click', undoQuickAdd);
+  document.getElementById('home-backup-download')?.addEventListener('click', () => {
+    downloadBackup();
+  });
+  document.getElementById('home-backup-snooze')?.addEventListener('click', () => {
+    // Ask again in a week
+    storage.saveSettings({
+      backupSnoozeUntil: new Date(Date.now() + 7 * 86400000).toISOString()
+    });
+  });
   document.getElementById('home-load-sample')?.addEventListener('click', () => {
     // Only shown when there is nothing saved yet, so there is nothing to overwrite.
     storage.loadDemoUniverse();
@@ -65,6 +76,7 @@ export function renderDashboard() {
   renderOrbit(skills);
   renderDays(activities);
   renderComingUp(goals, activities);
+  renderBackupReminder(settings, activities.length);
 }
 
 function setHidden(id, hidden) {
@@ -237,6 +249,18 @@ function undoQuickAdd() {
   clearTimeout(quickDoneTimer);
   setHidden('home-quick-done', true);
   toast.info('Undone', `The ${QUICK_MINUTES} minutes were removed.`);
+}
+
+function renderBackupReminder(settings, sessionCount) {
+  const reminder = backupReminder(settings, sessionCount);
+  setHidden('home-backup', !reminder);
+  if (!reminder) return;
+  setText(
+    'home-backup-text',
+    reminder.daysSince === null
+      ? 'You have never downloaded a backup.'
+      : `Your last backup was ${reminder.daysSince} days ago.`
+  );
 }
 
 /** Shows the chosen planet's skill under the orbit, in place of the caption. */

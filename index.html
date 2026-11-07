@@ -185,6 +185,15 @@
               <div class="home-next-list" id="home-next-list"></div>
             </section>
           </div>
+
+          <!-- Backup reminder: shown only when there is real data and no recent backup -->
+          <div class="home-backup" id="home-backup" role="region" aria-label="Backup reminder" hidden>
+            <p><strong>Your data is only in this browser.</strong> <span id="home-backup-text">You have never downloaded a backup.</span> Clearing your browser or changing phones would lose it.</p>
+            <div class="home-backup-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="home-backup-download">Download backup</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="home-backup-snooze">Not now</button>
+            </div>
+          </div>
         </div>
       </section>
 

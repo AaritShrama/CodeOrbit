@@ -243,7 +243,11 @@ describe('import and export', () => {
     const exported = storage.exportJSON();
     storage.resetAllData();
     assert.equal(storage.importJSON(exported).success, true);
-    assert.deepEqual(storage.getUniverse(), before);
+    const after = storage.getUniverse();
+    // Restoring records that a backup exists (for the reminder on Home); nothing else changes.
+    assert.ok(after.settings.lastBackupAt);
+    delete after.settings.lastBackupAt;
+    assert.deepEqual(after, before);
   });
 });
 
@@ -327,5 +331,20 @@ describe('change events say when the whole data set was replaced', () => {
       reasons(() => storage.saveSettings({ weeklyTargetHours: 9 })),
       ['edit']
     );
+  });
+});
+
+describe('backup reminder state', () => {
+  beforeEach(freshVisit);
+
+  test('restoring a backup counts as having a backup', () => {
+    const backup = JSON.stringify({ skills: [], activities: [], projects: [] });
+    storage.importJSON(backup);
+    assert.ok(Date.parse(storage.getSettings().lastBackupAt) > 0);
+  });
+
+  test('sample data is marked so it gets no backup reminder', () => {
+    storage.loadDemoUniverse();
+    assert.equal(storage.getSettings().sampleData, true);
   });
 });

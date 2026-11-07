@@ -367,6 +367,40 @@
   color: var(--accent-text);
 }
 
+/* Backup reminder (bottom of Home) */
+.home-backup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-top: var(--space-2xl);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.home-backup[hidden] {
+  display: none;
+}
+
+.home-backup strong {
+  color: var(--text-primary);
+}
+
+.home-backup p {
+  flex: 1 1 360px;
+}
+
+.home-backup-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
 /* ==========================================================================
    STAT STRIP (used on Study sessions, Projects, Goals, Progress)
    Swiss: numbers are the hero, hairlines instead of boxes.
