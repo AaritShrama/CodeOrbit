@@ -211,7 +211,7 @@ export function renderProgress() {
       return `
       <div class="timeline-date-group">
         <div class="timeline-date-header">
-          <span class="timeline-date-badge">🗓 ${label}</span>
+          <span class="timeline-date-badge">🗓 ${escapeHTML(label)}</span>
           <span class="timeline-date-summary">${groupItems.length} session${groupItems.length === 1 ? '' : 's'} &bull; ${formatDuration(groupMins)}</span>
         </div>
         <div class="timeline-stream">

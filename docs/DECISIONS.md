@@ -246,6 +246,18 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - The hero banner shows `v0.1.0`; rebuild it when the version changes.
 - **Alternatives rejected:** Plain Markdown with no images: lighter, but does not carry the project's identity. Raster (PNG/GIF) banners: no crisp scaling and a GIF cannot respect reduced-motion settings.
 
+### D-018: Never echo raw input into HTML; drop malformed dates on import
+- **Date:** 2026-11-07 · **Status:** Accepted · Amends B-007
+- **Context:** An open-source readiness audit tested a deliberately malicious backup file (an HTML/JS payload in every field) in Chrome across all 8 pages. **6 payloads executed**: `formatDate()` returned an invalid date string unchanged and its result is inserted with `innerHTML` (activity dates, goal deadlines, skill and project target dates, achievement unlock times), and Analytics printed the top skill name unescaped. A dashboard project status was also unescaped. All other fields were already escaped, and `javascript:` links were already blocked. Risk: anyone importing a backup shared by someone else. The live site shares an origin (`letscook-organization.github.io`) with every other Pages site of the org, so script running there could read their `localStorage` too.
+- **Decision:**
+  1. `formatDate()` (and so `formatRelativeTime()`) returns `'N/A'` or `'Invalid date'`, **never its input**.
+  2. Escape the remaining user-controlled values (top skill name, project status, date-group label).
+  3. `importJSON` keeps only well-formed dates (`YYYY-MM-DD`, optionally with time): bad optional dates become empty, sessions and achievements without a valid date are dropped.
+  4. Regression tests for both; the browser check re-run: **0 payloads executed**, both with poisoned stored data and through the real Settings → Import flow.
+- **Why:** Two layers: even if one escaping call is forgotten in a future template, malformed data should not get into storage from an import, and vice versa.
+- **Trade-off accepted:** A backup containing sessions with missing or malformed dates loses those sessions on import (the app itself never creates such sessions). The rule in B-007 still depends on every new template escaping user text; the security tests only cover the fields that exist today.
+- **Disclosure:** fixed the same day it was found, before any public report; noted in the CHANGELOG under *Security*.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

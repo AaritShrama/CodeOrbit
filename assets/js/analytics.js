@@ -6,6 +6,7 @@
 import { storage } from './storage.js';
 import { calculateStreak, isWithinLastNDays } from './utils.js';
 import { chartManager } from './charts.js';
+import { escapeHTML } from './utils.js';
 
 export function initAnalytics() {
   // Nothing to wire up yet. The router calls renderAnalytics() when the page is shown.
@@ -117,7 +118,7 @@ function generateHabitInsights(activities, skills, goals) {
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
       <div class="card card-elevated" style="padding: 16px;">
         <div style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Top Focus Skill</div>
-        <div style="font-size: var(--text-base); font-weight: 700; color: var(--cyan-accent);">${topSkill}</div>
+        <div style="font-size: var(--text-base); font-weight: 700; color: var(--cyan-accent);">${escapeHTML(topSkill)}</div>
         <div style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 4px;">${Math.round((maxMins / 60) * 10) / 10} hours logged across sessions.</div>
       </div>
 

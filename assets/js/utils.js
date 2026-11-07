@@ -95,13 +95,15 @@ export function getTodayISO() {
  * Example: '2026-11-07' -> 'Nov 7, 2026'
  * @param {string} dateStr - Date string
  * @param {boolean} includeWeekday - Include weekday name
- * @returns {string} Formatted date
+ * @returns {string} Formatted date, 'N/A' when empty, or 'Invalid date' (never the raw input)
  */
 export function formatDate(dateStr, includeWeekday = false) {
-  if (!dateStr) return 'N/A';
+  if (!dateStr || typeof dateStr !== 'string') return 'N/A';
   try {
     const d = new Date(dateStr + (dateStr.length === 10 ? 'T00:00:00' : ''));
-    if (isNaN(d.getTime())) return dateStr;
+    // Never return the input itself: callers insert the result into innerHTML,
+    // so an invalid "date" from an imported file must not reach the page as HTML.
+    if (isNaN(d.getTime())) return 'Invalid date';
 
     const options = {
       month: 'short',
@@ -111,7 +113,7 @@ export function formatDate(dateStr, includeWeekday = false) {
     if (includeWeekday) options.weekday = 'short';
     return d.toLocaleDateString('en-US', options);
   } catch {
-    return dateStr;
+    return 'Invalid date';
   }
 }
 

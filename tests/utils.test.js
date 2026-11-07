@@ -6,6 +6,8 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   escapeHTML,
+  formatDate,
+  formatRelativeTime,
   toLocalISO,
   getTodayISO,
   getRelativeISO,
@@ -32,6 +34,23 @@ describe('escapeHTML', () => {
 
   test('returns an empty string for anything that is not a string', () => {
     for (const value of [null, undefined, 42, {}, []]) assert.equal(escapeHTML(value), '');
+  });
+});
+
+// Security regression: formatDate used to return an invalid input unchanged, and
+// its result is inserted into innerHTML. A malicious imported "date" ran as code.
+describe('formatDate / formatRelativeTime never echo invalid input', () => {
+  const evil = '<img src=x onerror=alert(1)>';
+  test('invalid dates become a fixed label, never the input', () => {
+    assert.equal(formatDate(evil), 'Invalid date');
+    assert.equal(formatRelativeTime(evil), 'Invalid date');
+    assert.equal(formatDate('not a date'), 'Invalid date');
+  });
+  test('empty or non-string input is N/A', () => {
+    for (const v of ['', null, undefined, 42, {}]) assert.equal(formatDate(v), 'N/A');
+  });
+  test('valid dates still format normally', () => {
+    assert.equal(formatDate('2026-11-07'), 'Nov 7, 2026');
   });
 });
 

@@ -200,6 +200,42 @@ describe('import and export', () => {
     assert.deepEqual(u.achievements, []);
   });
 
+  // Security regression: a shared backup file could hide HTML in date fields.
+  test('malformed dates in an imported file are dropped, not stored', () => {
+    const evil = '<img src=x onerror=alert(1)>';
+    storage.importJSON(
+      minimal({
+        profile: { name: 'Me', joinedDate: evil },
+        skills: [{ id: 's1', name: 'Go', targetDate: evil }],
+        projects: [{ id: 'p1', name: 'X', startDate: evil, targetDate: '2026-12-01' }],
+        goals: [{ id: 'g1', title: 'G', deadline: evil }],
+        activities: [
+          { id: 'a1', title: 'bad', date: evil, duration: 30 },
+          { id: 'a2', title: 'ok', date: '2026-11-07', duration: 30 }
+        ],
+        achievements: [
+          { id: 'first_skill', unlockedAt: evil },
+          { id: 'first_mission', unlockedAt: '2026-11-07T06:00:00.000Z' }
+        ]
+      })
+    );
+    const u = storage.getUniverse();
+    assert.ok(!JSON.stringify(u).includes('<img'), 'no HTML left anywhere');
+    assert.match(u.profile.joinedDate, /^\d{4}-\d{2}-\d{2}$/);
+    assert.equal(u.skills[0].targetDate, '');
+    assert.equal(u.projects[0].startDate, '');
+    assert.equal(u.projects[0].targetDate, '2026-12-01', 'valid dates are kept');
+    assert.equal(u.goals[0].deadline, '');
+    assert.deepEqual(
+      u.activities.map(a => a.id),
+      ['a2']
+    );
+    assert.deepEqual(
+      u.achievements.map(a => a.id),
+      ['first_mission']
+    );
+  });
+
   test('export then import gives back the same data', () => {
     storage.saveSkill({ name: 'TypeScript', progress: 30 });
     storage.saveActivity({ title: 'Study', duration: 45, date: '2026-11-07' });

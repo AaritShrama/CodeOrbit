@@ -456,7 +456,7 @@ function renderActiveProjects(projects) {
       <div class="mission-preview-card">
         <div class="mission-header-row">
           <span class="mission-title">${escapeHTML(p.name)}</span>
-          <span class="badge badge-cyan" style="font-size: 0.625rem;">${p.status}</span>
+          <span class="badge badge-cyan" style="font-size: 0.625rem;">${escapeHTML(p.status)}</span>
         </div>
         <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
           ${escapeHTML(p.description || '')}

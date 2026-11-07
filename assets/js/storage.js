@@ -7,6 +7,8 @@ import { generateId, getTodayISO, getRelativeISO } from './utils.js';
 
 const STORAGE_KEY = 'codeorbit_universe_v1';
 const CORRUPT_BACKUP_KEY = 'codeorbit_universe_v1_corrupt_backup';
+// YYYY-MM-DD, optionally followed by a time (e.g. 2026-11-07 or 2026-11-07T06:00:00.000Z)
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}(T[\d:.]+(Z|[+-]\d{2}:?\d{2})?)?$/;
 const DATA_VERSION = 1;
 
 /**
@@ -648,6 +650,27 @@ class StorageManager {
       parsed.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
       parsed.goals = Array.isArray(parsed.goals) ? parsed.goals : [];
       parsed.achievements = Array.isArray(parsed.achievements) ? parsed.achievements : [];
+
+      // Dates must look like dates. Anything else (e.g. HTML hidden in a shared
+      // backup file) is dropped, so it can never reach the page.
+      const cleanDate = value =>
+        typeof value === 'string' && ISO_DATE.test(value) && !isNaN(new Date(value).getTime())
+          ? value
+          : '';
+      parsed.profile.joinedDate =
+        cleanDate(parsed.profile.joinedDate) || defaults.profile.joinedDate;
+      parsed.skills.forEach(s => {
+        if ('targetDate' in s) s.targetDate = cleanDate(s.targetDate);
+      });
+      parsed.projects.forEach(p => {
+        if ('startDate' in p) p.startDate = cleanDate(p.startDate);
+        if ('targetDate' in p) p.targetDate = cleanDate(p.targetDate);
+      });
+      parsed.goals.forEach(g => {
+        if ('deadline' in g) g.deadline = cleanDate(g.deadline);
+      });
+      parsed.activities = parsed.activities.filter(a => cleanDate(a.date));
+      parsed.achievements = parsed.achievements.filter(a => cleanDate(a.unlockedAt));
 
       // Normalize numbers
       parsed.skills.forEach(s => {
