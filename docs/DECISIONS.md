@@ -227,6 +227,25 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** Maintainers must answer claims and review PRs quickly or contributors leave; 14-day reassignment means some work is abandoned midway. The `good first issue` pool will run out fast and needs refilling.
 - **Alternatives rejected:** Reserving issues for Let's Cook members first: easier onboarding for the community, but signals the project is not really open.
 
+### D-017: README rewritten in plain language, with Let's Cook branding and generated, animated graphics
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** The README mixed marketing language ("telemetry", "flightpaths", "data sovereignty") with a long technical tree, did not explain the issues or how to start contributing, and did not carry the Let's Cook identity.
+- **Decision:**
+  1. **Plain language first:** short sentences, every space-themed name translated ("Mission Logs = your study sessions"), numbered sections 00–12 in a Swiss layout, FAQ in collapsible blocks.
+  2. Sections for the problem, the solution, features, how it works, trying it, how the code is organised, **all open issues by difficulty**, a step-by-step first contribution, how quality is checked, roadmap and FAQ.
+  3. **Brand:** Let's Cook black / white / crimson `#B8002F`, the official logo in light- and dark-mode versions (`<picture>`), and the motto *Codere, Aedificare, Vincere*.
+  4. **Graphics are generated** by `.github/readme/src/build.py` into SVGs: text converted to shapes (Inter, JetBrains Mono) so they look identical everywhere; **only looping motion** (orbits, twinkling stars, a travelling dot, flowing arrows); **no fade-in of text**; motion turned off for `prefers-reduced-motion`.
+  5. Assets live in `.github/readme/`, which is not published to the live site.
+- **Why:**
+  - Many readers are students reading in a second language; simple English helps every one of them and costs experts nothing.
+  - A first version faded text in. In a full-page capture, text below the fold stayed **invisible**, because animations had not started. Any viewer that shows only the first frame (some previews, apps, screenshots) would show empty cards, so fade-ins were removed.
+  - Every claim was checked against the code: e.g. "no analytics" instead of "no tracking", because the app loads fonts and libraries from Google Fonts and jsDelivr.
+- **Trade-off accepted:**
+  - The issue table in the README is a snapshot of v0.1.0 and will go stale; it links to the live issue list and says so.
+  - Graphics with text-as-shapes are larger (≈100–150 KB each) and cannot be edited by hand; changes go through `build.py`.
+  - The hero banner shows `v0.1.0`; rebuild it when the version changes.
+- **Alternatives rejected:** Plain Markdown with no images: lighter, but does not carry the project's identity. Raster (PNG/GIF) banners: no crisp scaling and a GIF cannot respect reduced-motion settings.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

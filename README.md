@@ -1,357 +1,411 @@
 <a id="readme-top"></a>
 
-<div align="center">
+<p align="center">
+  <a href="https://letscook-organization.github.io/CodeOrbit/">
+    <img src=".github/readme/hero.svg" width="100%" alt="CodeOrbit by Let's Cook. Track what you learn in coding: skills, study time, projects and goals, in one place. Free, private, no sign-up.">
+  </a>
+</p>
 
-  <img src="assets/images/logo.svg" alt="CodeOrbit Logo" width="120" height="120">
+<p align="center">
+  <a href="https://letscook-organization.github.io/CodeOrbit/"><img src="https://img.shields.io/badge/Open_the_app-Live-B8002F?style=for-the-badge&labelColor=0A0A0B" alt="Open the live app"></a>
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/LetsCook-Organization/CodeOrbit/ci.yml?branch=main&style=for-the-badge&label=checks&labelColor=0A0A0B" alt="Checks: lint, format and tests"></a>
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/releases"><img src="https://img.shields.io/github/v/release/LetsCook-Organization/CodeOrbit?style=for-the-badge&label=version&color=F5F5F4&labelColor=0A0A0B" alt="Latest version"></a>
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22"><img src="https://img.shields.io/github/issues/LetsCook-Organization/CodeOrbit/good%20first%20issue?style=for-the-badge&label=good%20first%20issues&color=B8002F&labelColor=0A0A0B" alt="Good first issues"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-F5F5F4?style=for-the-badge&labelColor=0A0A0B" alt="MIT license"></a>
+</p>
 
-  # CodeOrbit
-  ### Your Universe of Developer Growth
+<p align="center">
+  <a href="https://letscook-organization.github.io/CodeOrbit/"><b>Open the app</b></a>
+  &nbsp;·&nbsp;
+  <a href="#01--the-problem"><b>What is this?</b></a>
+  &nbsp;·&nbsp;
+  <a href="#07--open-issues-start-here"><b>Pick an issue</b></a>
+  &nbsp;·&nbsp;
+  <a href="#08--your-first-contribution-step-by-step"><b>Contribute</b></a>
+  &nbsp;·&nbsp;
+  <a href="#11--questions"><b>FAQ</b></a>
+</p>
 
-  <p align="center">
-    A personal developer productivity and learning management platform designed to organize technical skills, maintain focused learning logs, manage development projects, and monitor milestones through an interactive cosmic dashboard.
-  </p>
+<img src=".github/readme/divider.svg" width="100%" alt="">
 
-  <p align="center">
-    <a href="#-explore-codeorbit"><strong>Explore Live Demo »</strong></a>
-    <br><br>
-    <a href="#-about-codeorbit">About</a> •
-    <a href="#-core-features">Features</a> •
-    <a href="#%EF%B8%8F-built-with">Tech Stack</a> •
-    <a href="#-getting-started">Getting Started</a> •
-    <a href="#-project-structure">Structure</a> •
-    <a href="#-contributing-to-codeorbit">Contributing</a> •
-    <a href="#-license">License</a>
-  </p>
+## 00 — In one minute
 
-  <!-- Shields.io Badges Row -->
-  <p align="center">
-    <a href="https://github.com/LetsCook-Organization/CodeOrbit"><img src="https://img.shields.io/badge/GitHub-LetsCook--Organization%2FCodeOrbit-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository"></a>
-    <a href="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/ci.yml"><img src="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/ci.yml/badge.svg" alt="CI: lint, format and deploy"></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge" alt="MIT License"></a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript ES6+"></a>
-    <img src="https://img.shields.io/badge/Open_Source-LET'S_COOK_—_THE_FOUNDRY-7C3AED?style=for-the-badge" alt="LET'S COOK — THE FOUNDRY">
-  </p>
+| Question | Short answer |
+| :--- | :--- |
+| **What is it?** | A free website that keeps track of your coding journey: what you are learning, how much you study, what you are building and what you want to achieve. |
+| **Who is it for?** | Students and anyone learning to code on their own. |
+| **What does it cost?** | Nothing. No sign-up, no account, nothing to install. |
+| **Where is my data?** | Only in your own browser, on your own computer. We never see it. |
+| **How finished is it?** | **Version 0.1.0.** It works, but it is young. There are open issues if you want to help. |
+| **Who makes it?** | [Let's Cook](#12--about-lets-cook), an open-source tech community. |
 
-</div>
+<img src=".github/readme/divider.svg" width="100%" alt="">
 
----
+## 01 — The problem
 
-## 🚀 Explore CodeOrbit
+When you learn to code, your progress ends up **everywhere**:
 
-Experience CodeOrbit's developer command center and explore your personal developer universe in real time:
+- notes in one app, tutorials in your bookmarks,
+- projects on GitHub, goals only in your head,
+- and no record of how much you actually studied.
 
-<div align="center">
+So you cannot easily answer simple questions like:
 
-[![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://letscook-organization.github.io/CodeOrbit/)
+> *How many hours did I study this week?*<br>
+> *Am I actually getting better at Python?*<br>
+> *Which of my projects is stuck?*<br>
+> *Did I miss the deadline I set myself?*
 
-*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main` once lint, format and unit-test checks pass.*
+When you cannot **see** your progress, it feels like you are not making any. That is when most people lose motivation and quit.
 
-</div>
+## 02 — The solution
 
----
+**CodeOrbit is one page where you write down what you learn, and it turns that into numbers and pictures you understand at a glance.**
 
-## 📸 Application Preview
+It uses a small space theme. Your skills are planets orbiting around you, and they grow as you get better. Here is what the space words mean:
 
-The CodeOrbit Command Center brings a space-inspired aesthetic into modern developer workflow tracking. *Illustrative layout, not a screenshot; open the live app for the real thing.*
+| In CodeOrbit | It simply means | Example |
+| :--- | :--- | :--- |
+| 🛸 **Command Center** | Your home screen | Everything at a glance |
+| 🪐 **Skill Universe** | Your list of skills | "Python, 60%" |
+| 📝 **Mission Logs** | Your study sessions | "Studied React hooks, 90 minutes" |
+| 🛰️ **Space Missions** | Your projects | "Portfolio website, 70% done" |
+| 🎯 **Milestones** | Your goals, with a deadline | "Finish the Docker course by 30 Nov" |
+| ⭐ **Achievements** | Badges you earn | "Studied 3 days in a row 🔥" |
 
-```text
-+----------------------------------------------------------------------------------------------------+
-|  [LOGO] CodeOrbit         [ Search Universe (Ctrl+K) ]               [Day 5 Streak 🔥]  [Theme] [Avatar]|
-+----------------------------------------------------------------------------------------------------+
-| SIDEBAR      | HERO COMMAND CENTER                                                                 |
-|              | "Welcome to Your Developer Universe, Pilot"                                        |
-| 🛸 Command   | [ Orbit Streak: 5 Days ] [ Velocity: 84/100 ] [ Target: 2.5/3.0h Today ]           |
-| 🪐 Skills    +-------------------------------------------------------------------------------------+
-| 📝 Logs      | TELEMETRY KPI CARDS                                                                 |
-| 🛰 Projects  | [ Skills: 12 Active ] [ Learning: 42.5 hrs ] [ Projects: 4 Flights ] [ Streak: 5d ]  |
-| 🎯 Goals     +--------------------------------------------------+----------------------------------+
-| ⭐ Badges    | ORBITAL SKILL UNIVERSE (Interactive Canvas / SVG)| VELOCITY TRAJECTORY & METRICS    |
-| 📊 Analytics |          (Core: React)                           | Weekly Learning Distribution     |
-| ⚙️ Settings  |         /       |       \                        | [Mon: 2h] [Tue: 3.5h] [Wed: 1h]  |
-|              |      (Node)  (Python)  (TypeScript)              | Developer Velocity Index: 84/100 |
-|              | [Pause / Resume]  [Constellation Grid View]      | [View Calculation Breakdown]     |
-|              +--------------------------------------------------+----------------------------------+
-|              | ACTIVE FLIGHTPATHS (Projects)                    | UPCOMING HORIZONS (Milestones)   |
-|              | • CloudSync API [=======--- 70%] [In Progress]   | • Complete Docker Cert [3 Days]  |
-|              | • Starlink Engine [===-------- 30%] [Planning]   | • Launch Portfolio v2  [Overdue] |
-+----------------------------------------------------------------------------------------------------+
-```
+<img src=".github/readme/divider.svg" width="100%" alt="">
 
-> [!TIP]
-> Visit the [Live Application](https://letscook-organization.github.io/CodeOrbit/) to interact with the animated orbital canvas, dynamic telemetry gauges, and cosmic dark theme in real time. For contributors preparing visual materials, see [docs/screenshots/README.md](docs/screenshots/README.md) for full image capture specifications.
-
----
-
-## 🌌 About CodeOrbit
-
-**CodeOrbit** is an open-source personal developer productivity and learning management platform designed to help students, self-taught engineers, and experienced developers organize their technical learning journey.
-
-### The Problem
-Modern developers frequently navigate an overwhelming amount of information across disparate tools. Learning trajectories, project repos, coding sprint logs, and technical milestones end up scattered across browser bookmarks, loose notes, and unmaintained spreadsheets. Without a centralized system, maintaining momentum, tracking consistency, and measuring skill acquisition becomes challenging.
-
-### The Solution
-CodeOrbit provides a focused, unified workspace for developer growth. By transforming competencies into an interactive **Skill Universe**, study sessions into **Mission Logs**, engineering builds into **Space Missions**, and targets into **Milestone Horizons**, CodeOrbit turns professional development into an engaging, structured, and measurable journey.
-
-Everything runs **100% client-side** using browser `localStorage` — prioritizing privacy, zero network latency, and complete user data sovereignty with zero required account logins or paid cloud subscriptions.
-
----
-
-## ✨ Core Features
-
-These features work in the current release (**v0.1.0**). CodeOrbit is early-stage: expect rough edges, and see the [Roadmap](#%EF%B8%8F-project-roadmap) for what is still missing.
+## 03 — What you can do
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🪐 Command Center</h3>
-      <p>The centralized mission hub presenting an immediate overview of developer momentum, featuring a celestial greeting, live local date, active streak tracking, 4 dynamic telemetry KPI cards, and an interactive Developer Velocity Index (0–100) with mathematical scoring breakdowns.</p>
+      <h3>🛸 See everything at once</h3>
+      The home screen shows your study streak, total hours, active projects, upcoming goals, a weekly chart, and your skills as planets that grow with your progress.
     </td>
     <td width="50%" valign="top">
-      <h3>🌌 Orbital Skill Universe</h3>
-      <p>An interactive multi-ring planetary visualization where orbiting bodies scale and position themselves based on proficiency. Includes real-time tooltips, orbital animation controls (play/pause), and an accessible Constellation Grid toggle.</p>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h3>📚 Skill Taxonomy & Tracking</h3>
-      <p>Manage competencies across 7 categories (Programming Languages, Web Dev, AI/ML, Data Science, Databases, DevOps, Computer Science). Track proficiency tiers (Beginner to Expert) with fast inline <code>+10%</code> / <code>-10%</code> step controls, search, and sorting.</p>
-    </td>
-    <td width="50%" valign="top">
-      <h3>📝 Mission Logs (Learning Sprints)</h3>
-      <p>Log focused learning sessions across Coding, Reading, Practice Problems, Project Development, Research, and Tutorials. Features an animated SVG daily goal progress ring, session duration math, and chronological timeline history.</p>
+      <h3>🪐 Track your skills</h3>
+      Add skills in 9 categories (Web Development, AI, DevOps, Data Science…). Set a level from Beginner to Expert, and move progress up or down by 10% with one click.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>🛰️ Space Missions (Projects)</h3>
-      <p>Portfolio tracker monitoring engineering flightpaths from Planning to Completion. Features custom technology stack tags, progress indicators (0–100%), and direct sanitized links to GitHub repositories and live deployments.</p>
+      <h3>📝 Log study sessions</h3>
+      Write down what you studied, for how long, and how (coding, reading, practice problems, tutorials, research, project work). Your streak updates by itself.
     </td>
     <td width="50%" valign="top">
-      <h3>🎯 Milestones (Goal Horizons)</h3>
-      <p>Set technical objectives with designated deadlines and priority classifications (Critical, High, Medium, Low). Automatically calculates completion rates, active horizons, and highlights overdue goals.</p>
+      <h3>🛰️ Manage projects</h3>
+      Keep each project's status (Planning, In Progress, On Hold, Completed), progress, technologies, GitHub link and live link in one place.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>📊 Universe Analytics</h3>
-      <p>Five Chart.js visualizers including weekly learning volume (Mon–Sun), 30-day velocity trajectories, skill distributions, project pipeline breakdowns, and activity type allocations, accompanied by automated developer habit insights.</p>
+      <h3>🎯 Set goals</h3>
+      Give goals a deadline and a priority (Critical, High, Medium, Low). CodeOrbit shows how many days are left and warns you when one is overdue.
     </td>
     <td width="50%" valign="top">
-      <h3>⭐ Achievements & Sovereignty</h3>
-      <p>10 reactive achievement badges triggered strictly by genuine user milestones with synthesized Web Audio chimes. Includes JSON backup export, schema-validated import, demo data loading, and theme switching (Cosmic Dark / Orbital Light).</p>
+      <h3>⭐ Earn badges</h3>
+      10 achievements unlock as you go: your first skill, a 3-day streak, 7-day streak, 100 hours of learning, and more.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📊 Understand your habits</h3>
+      5 charts (this week, last 30 days, skills by category, project status, type of study) plus short insights, like your most-studied skill.
+    </td>
+    <td width="50%" valign="top">
+      <h3>⚙️ Make it yours</h3>
+      Dark or light theme, daily and weekly study targets, sounds on or off. Search everything with <kbd>Ctrl</kbd> + <kbd>K</kbd>. Back up and restore your data as a file.
     </td>
   </tr>
 </table>
 
----
+### The productivity score (0–100), explained
 
-## 🛠️ Built With
+The home screen shows one number that sums up your week. It is made of four simple parts:
 
-CodeOrbit is deliberately built with clean, standards-compliant web technologies without heavy frontend frameworks or bundlers, ensuring instant load times and high accessibility:
+| Part | Points | How you earn them |
+| :--- | ---: | :--- |
+| **Consistency** | 30 | How many of the last 7 days you studied |
+| **Study hours** | 30 | Hours this week compared with your weekly target |
+| **Projects** | 20 | Average progress of your projects |
+| **Skills** | 20 | Average progress of your skills |
 
-| Technology | Badge | Purpose |
-| :--- | :--- | :--- |
-| **HTML5** | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) | Semantic structure, accessible dialogs, and clean application shell |
-| **CSS3** | ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) | Custom design system tokens, glassmorphism, responsive grid, and orbital animations |
-| **JavaScript** | ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | Modular architecture using native ES Modules (`import`/`export`) |
-| **Chart.js** | ![Chart.js](https://img.shields.io/badge/Chart.js-4.4.7-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | Responsive canvas charts configured with custom cosmic gradients |
-| **Lucide Icons** | ![Lucide](https://img.shields.io/badge/Lucide-Icons-F56565?style=flat-square&logo=feather&logoColor=white) | Modern, consistent SVG iconography |
-| **LocalStorage** | ![LocalStorage](https://img.shields.io/badge/Storage-Browser_LocalStorage-22C55E?style=flat-square) | Fast, atomic, client-side data persistence with zero network latency |
-| **GitHub Pages** | ![GitHub Pages](https://img.shields.io/badge/Hosting-GitHub_Pages-222222?style=flat-square&logo=githubpages&logoColor=white) | Static hosting with HTTPS, deployed by GitHub Actions on every push to `main` |
-| **ESLint + Prettier** | ![ESLint](https://img.shields.io/badge/Checks-ESLint_%2B_Prettier-4B32C3?style=flat-square&logo=eslint&logoColor=white) | Development only: catch bugs and keep formatting consistent; run on every PR and push |
+A brand-new account scores **0**. In the app, click **"How is this computed?"** next to the score to see exactly how yours was calculated.
 
----
+<img src=".github/readme/divider.svg" width="100%" alt="">
 
-## ⚡ Getting Started
+## 04 — How it works
 
-You do **not** need `npm install`, Node.js, Webpack, or any build setup to run CodeOrbit. (Node.js is only used by contributors who want to run the lint/format checks locally; see [CONTRIBUTING.md](CONTRIBUTING.md#5-testing-your-changes).)
+<p align="center">
+  <img src=".github/readme/how-it-works.svg" width="100%" alt="How CodeOrbit works. 1: You add skills, study sessions, projects and goals. 2: CodeOrbit turns them into streaks, a score, charts and badges. 3: Everything is saved in your own browser. No server, no account. Clearing browser data deletes it, so export a backup in Settings.">
+</p>
 
-### Prerequisites
-- A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, or Apple Safari).
-- A text editor or IDE (such as [VS Code](https://code.visualstudio.com/)).
-- [Git](https://git-scm.com/) installed on your computer.
+There is **no server and no database**. CodeOrbit is a single web page. Everything you type is saved in your browser's built-in storage (called `localStorage`), on your own computer.
 
-### Installation
+- ✅ **Private:** your data is never sent anywhere. There is no login and no analytics.
+- ✅ **Fast:** nothing to wait for; it all happens on your computer.
+- ⚠️ **One browser only:** data on your laptop does not appear on your phone.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/LetsCook-Organization/CodeOrbit.git
-   cd CodeOrbit
-   ```
+> [!WARNING]
+> If you clear your browser's data, your CodeOrbit data is deleted too. Make a backup from time to time: **Settings → Export JSON Backup**. You can load it again with **Import JSON Backup**.
 
-2. **Serve the application:**  
-   Because CodeOrbit uses native JavaScript ES Modules, browsers require files to be served via HTTP/HTTPS rather than the direct `file://` protocol. Choose any of the following:
+<img src=".github/readme/divider.svg" width="100%" alt="">
 
-   - **VS Code Live Server (Recommended):**  
-     Install the "Live Server" extension, right-click `index.html`, and select **"Open with Live Server"**.
-   - **Python (Built into Windows, macOS, Linux):**  
-     ```bash
-     python -m http.server 3000
-     ```
-   - **Node.js (Optional):**  
-     ```bash
-     npx serve .
-     ```
+## 05 — Try it
 
-3. **Open in your browser:**  
-   Navigate to `http://localhost:3000` (or the port indicated in your terminal) to explore your developer universe.
+### Option A: use it online (easiest)
 
----
+1. Open **[letscook-organization.github.io/CodeOrbit](https://letscook-organization.github.io/CodeOrbit/)**.
+2. It starts empty. That is on purpose: it is *your* universe.
+3. Want to look around first? Go to **Settings → Load Demo Universe** to fill it with example data. **Settings → Reset All Data** empties it again.
 
-## 📁 Project Structure
+### Option B: run it on your computer
+
+You need [Git](https://git-scm.com/) and a browser. No `npm install`, no build step.
+
+```bash
+git clone https://github.com/LetsCook-Organization/CodeOrbit.git
+cd CodeOrbit
+python -m http.server 3000
+```
+
+Then open **http://localhost:3000**. (On macOS and Linux you may need `python3` instead of `python`.)
+
+> [!NOTE]
+> Double-clicking `index.html` will **not** work. The code is split into JavaScript modules, and browsers only load modules from a web server. Any small server works: the Python line above, `npx serve .`, or the **Live Server** extension in VS Code (right-click `index.html` → *Open with Live Server*).
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 06 — How the code is organised
+
+**No framework.** Just plain HTML, CSS and JavaScript, so you can read every line without learning React or a build tool first.
 
 ```text
 CodeOrbit/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.yml          # Structured GitHub bug report issue form
-│   │   └── feature_request.yml     # Structured GitHub feature request issue form
-│   ├── workflows/
-│   │   └── ci.yml                  # Lint, format and unit tests on every PR/push; deploys main to GitHub Pages
-│   ├── dependabot.yml              # Keeps GitHub Actions and dev tools up to date
-│   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
+├── index.html            ← the only page. All 8 screens live here; one is shown at a time.
 ├── assets/
-│   ├── css/
-│   │   ├── style.css               # Design tokens, variables, base layout & resets
-│   │   ├── components.css          # Reusable buttons, cards, modals, dropdowns
-│   │   ├── dashboard.css           # Command Center hero, telemetry cards, velocity ring
-│   │   ├── orbital.css             # Dynamic planetary SVG/CSS orbital animation engine
-│   │   └── responsive.css          # Breakpoints (Desktop, Laptop, Tablet, Mobile)
-│   ├── images/
-│   │   ├── favicon.svg             # SVG favicon
-│   │   └── logo.svg                # Brand vector mark
+│   ├── css/              ← how it looks (colours, layout, animations, mobile)
 │   └── js/
-│       ├── app.js                  # Application orchestrator & canvas starfield
-│       ├── storage.js              # Centralized LocalStorage manager (the only module that touches storage)
-│       ├── utils.js                # XSS sanitization, math scoring, Web Audio chimes
-│       ├── navigation.js           # Hash-based routing (#dashboard, #skills, etc.)
-│       ├── components.js           # Modal dialog system, toasts, Command Palette (Ctrl+K)
-│       ├── dashboard.js            # Command Center KPI calculations & orbital renderers
-│       ├── skills.js               # Skill Universe CRUD, filters, quick-step adjusters
-│       ├── progress.js             # Mission Logs sprint tracking & daily goal gauge
-│       ├── projects.js             # Space Missions project manager & tech stack tags
-│       ├── goals.js                # Milestones target horizons & overdue detection
-│       ├── achievements.js         # Real-time condition evaluation & achievement unlocks
-│       ├── analytics.js            # Analytical calculations & automated habit insights
-│       ├── settings.js             # Profile management, theme toggle, JSON backup/restore
-│       └── charts.js               # Chart.js configurations & lifecycle management
-├── scripts/
-│   └── test.mjs                    # Runs the unit tests in 4 timezones
-├── tests/
-│   ├── helpers/                    # Browser stand-ins and a clock-freezing helper for tests
-│   ├── achievements.test.js        # Achievement rules unlock exactly at their thresholds
-│   ├── storage.test.js             # First visit, corrupt data, saving, import/export
-│   └── utils.test.js               # Local dates, streaks, productivity score, escaping
-├── docs/
-│   ├── screenshots/
-│   │   └── README.md               # Screenshot capture instructions and specifications
-│   ├── ARCHITECTURE.md             # System design & data schema reference
-│   ├── DECISIONS.md                # Decision log: what we chose, why, and the trade-offs
-│   ├── FLOW.md                     # Code execution flow: entry point, call order, data loop
-│   └── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
-├── .git-blame-ignore-revs          # Formatting-only commits hidden from git blame
-├── .prettierrc.json                # Prettier formatting rules
-├── CHANGELOG.md                    # Release history (what changed in each version)
-├── CODE_OF_CONDUCT.md              # Contributor Covenant 2.1 code of conduct
-├── CONTRIBUTING.md                 # Contributor onboarding & workflow guide
-├── eslint.config.js                # ESLint rules (bug-catching, not style)
-├── index.html                      # Semantic single-page application entry point
-├── LICENSE                         # MIT License
-├── package.json                    # Dev tools only (lint/format scripts); the app needs no install
-├── README.md                       # Main project documentation
-└── SECURITY.md                     # Security policy & vulnerability reporting
+│       ├── app.js        ← START HERE. Starts the app and connects everything.
+│       ├── storage.js    ← the memory. The ONLY file that reads and writes your data.
+│       ├── utils.js      ← small helpers: dates, streaks, the score, safe text
+│       ├── navigation.js ← switches between screens (#skills, #goals, …)
+│       ├── components.js ← pop-ups, notifications, the Ctrl+K search
+│       ├── dashboard.js, skills.js, progress.js, projects.js,
+│       │   goals.js, achievements.js, analytics.js, settings.js
+│       │                 ← one file per screen
+│       └── charts.js     ← draws the charts (using Chart.js)
+├── tests/                ← automatic tests (52 of them)
+├── docs/                 ← deeper documentation (see below)
+└── CHANGELOG.md          ← what changed in each version
 ```
 
----
+### The one idea to understand
 
-## 🤝 Contributing to CodeOrbit
-
-CodeOrbit is an open-source project proudly developed and maintained under **LET'S COOK — THE FOUNDRY**. We actively welcome contributions from developers, designers, and students of all skill levels!
-
-Whether you are fixing a typo in documentation, polishing responsive styles, or proposing a new feature, your help is appreciated.
-
-### How to Get Involved
-
-1. **Browse Existing Issues:** Check the [GitHub Issues](https://github.com/LetsCook-Organization/CodeOrbit/issues) tab. Look for issues labeled `good first issue` or `help wanted`.
-2. **Issue Assignment:** To avoid duplicate efforts, please comment on an issue and wait to be assigned before beginning work. If you have an idea for a new feature or found a bug, open an issue first.
-3. **Follow the Workflow:** Read our comprehensive guide in [CONTRIBUTING.md](CONTRIBUTING.md) for step-by-step instructions on forking, creating topic branches, following Conventional Commits (`feat:`, `fix:`, `docs:`), and testing locally.
-4. **Submit a Pull Request:** Complete the provided [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md) and describe your verification steps clearly.
-
-<div align="center">
-
-[![Start Contributing](https://img.shields.io/badge/🤝_Start_Contributing-Read_Guide-7C3AED?style=for-the-badge)](CONTRIBUTING.md)
-
-</div>
-
----
-
-## 🛰️ Project Roadmap
-
-**Current version: v0.1.0** ([changelog](CHANGELOG.md)). Pre-1.0 means the app works, but the data format and features may still change.
-
-### ✅ Shipped in v0.1.0
-- [x] Command Center dashboard with streak tracking and Developer Velocity Index (0–100)
-- [x] Skill Universe with 7 categories, proficiency tiers, and quick-step progression
-- [x] Mission Logs, Space Missions (projects) and Milestones (goals)
-- [x] 10 achievements, 5 analytics charts, automated habit insights
-- [x] Command Palette (`Ctrl+K` / `Cmd+K`), dark/light themes, JSON export/import
-
-### 🔧 Next: v0.2.0 (contributors welcome)
-- [ ] **More tests**: unit tests cover `utils.js`, `storage.js` and the achievement rules; the page modules and UI flows have none yet
-- [ ] **Data migrations**: `storage.js` stores a `version` number but has no code to upgrade old data yet
-- [ ] **First-run onboarding**: guide new users from the empty dashboard to their first skill, or to the demo data
-- [ ] **Real screenshots** in this README (replace the illustrative layout above)
-- [ ] **Accessibility pass**: keyboard-only navigation, focus order, colour contrast, screen-reader labels
-
-### 🌌 Later
-- [ ] **Import real activity from GitHub** (commits, PRs, active days) so streaks and hours reflect actual work
-- [ ] **Backup reminders / sync**: data currently lives in one browser and is lost if site data is cleared
-- [ ] Pomodoro focus timer in the dashboard
-- [ ] Export skill matrices and progress reports (Markdown & CSV)
-- [ ] Custom colours for project technology tags
-- [ ] Progressive Web App (offline support)
-
-Every unticked item above has an [open issue](https://github.com/LetsCook-Organization/CodeOrbit/issues) with the files to change and a clear "done" checklist. New here? Start with a [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22).
-
----
-
-## 🌱 Open Source
-
-CodeOrbit is developed as an open educational resource under **LET'S COOK — THE FOUNDRY**. The project serves as an active platform for learners and engineers to:
-
-- Practice practical **Git and GitHub collaboration workflows**.
-- Understand modular **vanilla JavaScript architecture** without framework abstractions.
-- Learn accessible **UI/UX design principles** and responsive CSS layout techniques.
-- Gain experience contributing to real-world, maintained open-source software.
-
-We believe the best way to grow as a developer is by building, experimenting, and contributing in public.
-
----
-
-## 📄 License
-
-CodeOrbit is open-source software distributed under the terms of the **[MIT License](LICENSE)**.
+Almost everything in the app follows the same loop:
 
 ```text
-Copyright (c) 2026 LET'S COOK — THE FOUNDRY
+You click "Save"  →  the screen's file checks the form  →  storage.js saves it
+        ↑                                                         │
+        └──── the screen redraws itself  ←  "data changed!" signal ┘
 ```
 
-See the [LICENSE](LICENSE) file for complete terms and permissions.
+If you understand this loop, you understand the app.
 
----
+### Want to go deeper?
 
-<div align="center">
+| Read this | To learn |
+| :--- | :--- |
+| [`docs/FLOW.md`](docs/FLOW.md) | Exactly what runs first, and which function calls which |
+| [`docs/DECISIONS.md`](docs/DECISIONS.md) | **Why** things are built this way, and what we gave up for it |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | The data format and overall design |
+| [`CHANGELOG.md`](CHANGELOG.md) | What changed in each version |
 
-  Built with curiosity, code, and community.<br>
-  <strong>CodeOrbit</strong> • <strong>LET'S COOK — THE FOUNDRY</strong>
-  <br><br>
-  <a href="https://letscook-organization.github.io/CodeOrbit/">Live Demo</a> ·
-  <a href="https://github.com/LetsCook-Organization/CodeOrbit">GitHub</a> ·
+### Built with
+
+| | Used for |
+| :--- | :--- |
+| **HTML, CSS, JavaScript** | The whole app, using built-in JavaScript modules |
+| **[Chart.js](https://www.chartjs.org/) 4.4.7** | The charts |
+| **[Lucide](https://lucide.dev/) 1.70.0** | The icons |
+| **localStorage** | Saving your data in your browser |
+| **GitHub Pages** | Hosting the live site |
+| **ESLint, Prettier, Node's test runner** | Checking code quality (for contributors only; the app does not need them) |
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 07 — Open issues: start here
+
+An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **what is wrong, which files to change, and when it counts as done**, so you never have to guess.
+
+### 🟢 Good first issues: small, a few hours, perfect for your first contribution
+
+| # | What to do | Area |
+| :--- | :--- | :--- |
+| [#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8) | Deadlines show the wrong day depending on your timezone | bug · dates |
+| [#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9) | "Peak Velocity Day" is one day off for users west of UTC | bug · dates |
+| [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10) | Importing a 0-minute session turns it into 30 minutes | bug · data |
+| [#11](https://github.com/LetsCook-Organization/CodeOrbit/issues/11) | Add tests for the date and duration helpers | tests |
+| [#12](https://github.com/LetsCook-Organization/CodeOrbit/issues/12) | Add real screenshots of the app to this README | docs |
+| [#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13) | Show "Add your first skill" and "Load demo data" on an empty dashboard | feature |
+
+### 🟡 Medium: a day or two, touches several files
+
+| # | What to do | Area |
+| :--- | :--- | :--- |
+| [#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14) | Keep keyboard focus inside pop-ups, and return it when they close | accessibility |
+| [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15) | Test every screen using only a keyboard and a screen reader, and report what breaks | accessibility |
+| [#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16) | Add browser tests that click through the app automatically | tests |
+| [#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17) | Upgrade old saved data safely when the data format changes | data |
+| [#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18) | Remind people to back up their data | feature |
+| [#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19) | Export a progress report as Markdown and CSV | feature |
+
+### 🔴 Hard: needs a plan agreed in the comments first
+
+| # | What to do | Area |
+| :--- | :--- | :--- |
+| [#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20) | Import your real coding activity from GitHub | feature |
+
+> [!TIP]
+> This list was written for **v0.1.0**. The always-up-to-date list is on the **[Issues page](https://github.com/LetsCook-Organization/CodeOrbit/issues)**. Filter by [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22) or [`help wanted`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22help+wanted%22).
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 08 — Your first contribution, step by step
+
+Never contributed to open source before? This is a good place to start.
+
+1. **Pick an issue** from the list above and **comment** *"I'd like to work on this."* Wait until a maintainer assigns it to you.
+2. **Fork** the repository (the *Fork* button, top-right on GitHub). This makes your own copy.
+3. **Download your copy and make a branch:**
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/CodeOrbit.git
+   cd CodeOrbit
+   git checkout -b fix/issue-8-deadlines
+   ```
+4. **Make your change.** Run the app (see [Try it](#05--try-it)) and check it works in the browser.
+5. **Run the checks** *(optional, needs [Node.js](https://nodejs.org/) 20.4+; they also run automatically on GitHub)*:
+   ```bash
+   npm install
+   npm run check
+   ```
+6. **Save and upload your work:**
+   ```bash
+   git add .
+   git commit -m "fix: show the right day for deadlines in every timezone"
+   git push origin fix/issue-8-deadlines
+   ```
+7. **Open a Pull Request** on GitHub and fill in the short checklist. Write `Fixes #8` so the issue closes automatically when it is merged.
+
+**A few simple rules**
+
+- **One `good first issue` per person.** They are for newcomers; after your first, move on to `help wanted` ones.
+- If you get stuck or cannot continue, **say so in the issue.** No problem at all. Issues with no activity for 14 days may be given to someone else.
+- **Be kind.** Everyone here is learning. See our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+The full guide is in **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 09 — How we keep it working
+
+Every change, from anyone, is checked automatically before it can go live:
+
+| Check | What it catches |
+| :--- | :--- |
+| **ESLint** | Code mistakes, like a variable that is used but never defined |
+| **Prettier** | Messy formatting, so all code looks the same |
+| **52 unit tests** | Wrong answers in dates, streaks, the score, saving and importing |
+| **…in 4 timezones** | India, UTC, US West and UTC+14. Date bugs hide in one timezone and show in another: before these tests, the weekly chart put every session one day early for users in India. |
+
+The live site updates **only when all checks pass**, and the `main` branch is protected, so nobody can merge a pull request with a red ❌.
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 10 — Roadmap
+
+**✅ Done in v0.1.0:** dashboard, skills, study sessions, projects, goals, 10 achievements, 5 charts, the 0–100 score, search, dark/light theme, backup and restore, automatic checks and tests.
+
+**🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), a friendlier first visit ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
+
+**🌌 Later:** backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), Markdown/CSV reports ([#19](https://github.com/LetsCook-Organization/CodeOrbit/issues/19)), importing real activity from GitHub ([#20](https://github.com/LetsCook-Organization/CodeOrbit/issues/20)), a focus timer, working offline as an app.
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 11 — Questions
+
+<details>
+<summary><b>Is it really free?</b></summary>
+<br>
+Yes. CodeOrbit is open source under the MIT license. There is no paid version.
+</details>
+
+<details>
+<summary><b>Can you see my data?</b></summary>
+<br>
+No. There is no server. Your data stays in your own browser and is never sent to us or anyone else.
+</details>
+
+<details>
+<summary><b>I cleared my browser and my data is gone. Can I get it back?</b></summary>
+<br>
+Only if you exported a backup (<b>Settings → Export JSON Backup</b>). Then use <b>Import JSON Backup</b> to load it. Without a backup, the data is gone, because it only ever existed in that browser.
+</details>
+
+<details>
+<summary><b>Can I use it on my phone?</b></summary>
+<br>
+Yes, the layout works on phones. But your phone and your laptop each keep their own separate data. To move it, export on one and import on the other.
+</details>
+
+<details>
+<summary><b>Why is it version 0.1.0 and not 1.0?</b></summary>
+<br>
+Because it is still early. Below 1.0, features and the way data is saved may still change. Read the reasoning in <a href="docs/DECISIONS.md">DECISIONS.md</a> (entry D-013).
+</details>
+
+<details>
+<summary><b>I found a bug or have an idea.</b></summary>
+<br>
+Open an <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues/new/choose">issue</a> and pick the bug report or feature request form. For a <b>security</b> problem, please do <b>not</b> open a public issue; follow <a href="SECURITY.md">SECURITY.md</a> instead.
+</details>
+
+<details>
+<summary><b>I have never used Git. Can I still help?</b></summary>
+<br>
+Yes. Start with issue <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues/12">#12</a> (screenshots) or <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues/15">#15</a> (testing with a keyboard), which need very little code. Follow the steps in <a href="#08--your-first-contribution-step-by-step">section 08</a>, and ask in the issue if anything is unclear.
+</details>
+
+<img src=".github/readme/divider.svg" width="100%" alt="">
+
+## 12 — About Let's Cook
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme/letscook-logo-dark.png">
+    <img src=".github/readme/letscook-logo-light.png" width="300" alt="Let's Cook logo. Codere, Aedificare, Vincere.">
+  </picture>
+</p>
+
+**Let's Cook — The Foundry** is a national tech community. CodeOrbit is one of its open-source projects: built in public so that learners can practise real teamwork with Git, GitHub, code review and shipping.
+
+Our motto is Latin: ***Codere, Aedificare, Vincere.*** It means ***Code. Build. Win.***
+
+## License
+
+CodeOrbit is free and open source under the **[MIT License](LICENSE)**. You can use, copy and change it, as long as you keep the license notice.
+
+<br>
+
+<p align="center">
+  <img src=".github/readme/footer.svg" width="100%" alt="Built by Let's Cook, The Foundry. Codere, Aedificare, Vincere: Code. Build. Win.">
+</p>
+
+<p align="center">
+  <a href="https://letscook-organization.github.io/CodeOrbit/">Live app</a> ·
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues">Issues</a> ·
   <a href="CONTRIBUTING.md">Contributing</a> ·
-  <a href="LICENSE">License</a>
-  <br><br>
+  <a href="CHANGELOG.md">Changelog</a> ·
   <a href="#readme-top">Back to top ↑</a>
-
-</div>
+</p>
