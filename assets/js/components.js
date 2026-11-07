@@ -246,12 +246,15 @@ export function renderPaletteResults(query) {
 
   // Search Skills
   (data.skills || []).forEach(s => {
-    if (!q || s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q) || (s.description && s.description.toLowerCase().includes(q))) {
+    const nameMatch = s.name && s.name.toLowerCase().includes(q);
+    const catMatch = s.category && s.category.toLowerCase().includes(q);
+    const descMatch = s.description && s.description.toLowerCase().includes(q);
+    if (!q || nameMatch || catMatch || descMatch) {
       results.push({
         type: 'Skill',
         icon: '🪐',
         title: s.name,
-        subtitle: `${s.category} • ${s.proficiency} (${s.progress}%)`,
+        subtitle: `${s.category || 'General'} • ${s.proficiency || 'Beginner'} (${s.progress || 0}%)`,
         action: () => {
           window.location.hash = '#skills';
           closeCommandPalette();
@@ -262,12 +265,15 @@ export function renderPaletteResults(query) {
 
   // Search Projects
   (data.projects || []).forEach(p => {
-    if (!q || p.name.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q)) || (p.technologies && p.technologies.some(t => t.toLowerCase().includes(q)))) {
+    const nameMatch = p.name && p.name.toLowerCase().includes(q);
+    const descMatch = p.description && p.description.toLowerCase().includes(q);
+    const techMatch = p.technologies && p.technologies.some(t => t && t.toLowerCase().includes(q));
+    if (!q || nameMatch || descMatch || techMatch) {
       results.push({
         type: 'Project',
         icon: '🚀',
         title: p.name,
-        subtitle: `${p.status} • ${p.technologies ? p.technologies.slice(0, 3).join(', ') : ''}`,
+        subtitle: `${p.status || 'Active'} • ${p.technologies ? p.technologies.slice(0, 3).join(', ') : ''}`,
         action: () => {
           window.location.hash = '#projects';
           closeCommandPalette();
@@ -278,12 +284,15 @@ export function renderPaletteResults(query) {
 
   // Search Activities / Logs
   (data.activities || []).forEach(a => {
-    if (!q || a.title.toLowerCase().includes(q) || a.skill.toLowerCase().includes(q) || (a.notes && a.notes.toLowerCase().includes(q))) {
+    const titleMatch = a.title && a.title.toLowerCase().includes(q);
+    const skillMatch = a.skill && a.skill.toLowerCase().includes(q);
+    const notesMatch = a.notes && a.notes.toLowerCase().includes(q);
+    if (!q || titleMatch || skillMatch || notesMatch) {
       results.push({
         type: 'Mission Log',
         icon: '📝',
         title: a.title,
-        subtitle: `${a.skill} • ${a.duration}m • ${a.date}`,
+        subtitle: `${a.skill || 'General'} • ${a.duration || 0}m • ${a.date || ''}`,
         action: () => {
           window.location.hash = '#progress';
           closeCommandPalette();
@@ -294,12 +303,14 @@ export function renderPaletteResults(query) {
 
   // Search Goals
   (data.goals || []).forEach(g => {
-    if (!q || g.title.toLowerCase().includes(q) || g.category.toLowerCase().includes(q)) {
+    const titleMatch = g.title && g.title.toLowerCase().includes(q);
+    const catMatch = g.category && g.category.toLowerCase().includes(q);
+    if (!q || titleMatch || catMatch) {
       results.push({
         type: 'Milestone',
         icon: '🎯',
         title: g.title,
-        subtitle: `Priority: ${g.priority} • Due: ${g.deadline}`,
+        subtitle: `Priority: ${g.priority || 'Normal'} • Due: ${g.deadline || 'None'}`,
         action: () => {
           window.location.hash = '#goals';
           closeCommandPalette();

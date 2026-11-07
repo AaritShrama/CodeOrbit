@@ -12,7 +12,7 @@ import { initSkills, renderSkills, openSkillModal } from './skills.js';
 import { initProgress, renderProgress, openActivityModal } from './progress.js';
 import { initProjects, renderProjects, openProjectModal } from './projects.js';
 import { initGoals, renderGoals, openGoalModal } from './goals.js';
-import { initAchievements, renderAchievements } from './achievements.js';
+import { initAchievements, renderAchievements, evaluateAchievements } from './achievements.js';
 import { initAnalytics, renderAnalytics } from './analytics.js';
 import { initSettings, renderSettings, applyTheme } from './settings.js';
 import { escapeHTML, formatDate, formatRelativeTime, getTodayISO } from './utils.js';
@@ -60,6 +60,9 @@ function initApp() {
 
     // 8. Global State Change Listener (Event Bus)
     window.addEventListener('codeorbit:data-changed', () => {
+      // Evaluate achievement unlocks
+      evaluateAchievements();
+
       // Re-render currently active view
       const current = navigation.currentRoute;
       if (current === 'dashboard') renderDashboard();

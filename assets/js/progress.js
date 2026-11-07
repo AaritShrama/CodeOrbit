@@ -118,7 +118,7 @@ export function renderProgress() {
     .filter(a => a.date && a.date.slice(0, 10) === today)
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const todayHours = Math.round((todayMins / 60) * 10) / 10;
-  const dailyTargetHours = Number(settings.dailyTargetHours) || 2;
+  const dailyTargetHours = Math.max(0.5, Number(settings.dailyTargetHours) || 2);
   const dailyPct = Math.min(100, Math.round((todayHours / dailyTargetHours) * 100));
 
   setEl('daily-target-display', `${todayHours} / ${dailyTargetHours}h`);
@@ -137,8 +137,8 @@ export function renderProgress() {
 
   if (searchQuery) {
     filtered = filtered.filter(a =>
-      a.title.toLowerCase().includes(searchQuery) ||
-      a.skill.toLowerCase().includes(searchQuery) ||
+      (a.title || '').toLowerCase().includes(searchQuery) ||
+      (a.skill || '').toLowerCase().includes(searchQuery) ||
       (a.notes && a.notes.toLowerCase().includes(searchQuery))
     );
   }

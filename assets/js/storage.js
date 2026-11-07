@@ -392,8 +392,7 @@ class StorageManager {
     }
 
     data.skills = skills;
-    this.saveUniverse(data);
-    return true;
+    return this.saveUniverse(data);
   }
 
   deleteSkill(id) {
@@ -432,8 +431,7 @@ class StorageManager {
     }
 
     data.activities = activities;
-    this.saveUniverse(data);
-    return true;
+    return this.saveUniverse(data);
   }
 
   deleteActivity(id) {
@@ -476,8 +474,7 @@ class StorageManager {
     }
 
     data.projects = projects;
-    this.saveUniverse(data);
-    return true;
+    return this.saveUniverse(data);
   }
 
   deleteProject(id) {
@@ -516,8 +513,7 @@ class StorageManager {
     }
 
     data.goals = goals;
-    this.saveUniverse(data);
-    return true;
+    return this.saveUniverse(data);
   }
 
   deleteGoal(id) {
@@ -568,7 +564,31 @@ class StorageManager {
         throw new Error('Missing essential CodeOrbit collections (skills, activities, projects).');
       }
 
+      const defaults = getDefaultUniverse();
       parsed.version = DATA_VERSION;
+      parsed.profile = (typeof parsed.profile === 'object' && parsed.profile) ? { ...defaults.profile, ...parsed.profile } : defaults.profile;
+      parsed.settings = (typeof parsed.settings === 'object' && parsed.settings) ? { ...defaults.settings, ...parsed.settings } : defaults.settings;
+      parsed.skills = Array.isArray(parsed.skills) ? parsed.skills : [];
+      parsed.activities = Array.isArray(parsed.activities) ? parsed.activities : [];
+      parsed.projects = Array.isArray(parsed.projects) ? parsed.projects : [];
+      parsed.goals = Array.isArray(parsed.goals) ? parsed.goals : [];
+      parsed.achievements = Array.isArray(parsed.achievements) ? parsed.achievements : [];
+
+      // Normalize numbers
+      parsed.skills.forEach(s => {
+        s.progress = Math.min(100, Math.max(0, parseInt(s.progress, 10) || 0));
+      });
+      parsed.projects.forEach(p => {
+        p.progress = Math.min(100, Math.max(0, parseInt(p.progress, 10) || 0));
+        p.technologies = Array.isArray(p.technologies) ? p.technologies : [];
+      });
+      parsed.goals.forEach(g => {
+        g.progress = Math.min(100, Math.max(0, parseInt(g.progress, 10) || 0));
+      });
+      parsed.activities.forEach(a => {
+        a.duration = Math.max(1, parseInt(a.duration, 10) || 30);
+      });
+
       this.saveUniverse(parsed);
       return { success: true };
     } catch (e) {

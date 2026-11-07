@@ -148,7 +148,7 @@ export function renderDashboard() {
   if (kpi2Val) kpi2Val.textContent = totalHours;
   if (kpi2Sub) kpi2Sub.textContent = `${weeklyHours}h this week`;
   if (kpi2Meter) {
-    const targetHours = Number(settings.weeklyGoalHours) || 15;
+    const targetHours = Math.max(1, Number(settings.weeklyTargetHours) || 12);
     const pct = Math.min(100, Math.round((weeklyHours / targetHours) * 100));
     kpi2Meter.style.width = `${pct}%`;
   }
@@ -430,10 +430,11 @@ function renderActiveProjects(projects) {
 
   container.innerHTML = active.map(p => {
     let deadlineStr = '';
-    if (p.deadline) {
-      const daysLeft = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+    const targetDateVal = p.targetDate || p.deadline;
+    if (targetDateVal) {
+      const daysLeft = Math.ceil((new Date(targetDateVal) - new Date()) / (1000 * 60 * 60 * 24));
       const countdown = daysLeft < 0 ? 'Overdue' : daysLeft === 0 ? 'Due today' : `${daysLeft}d left`;
-      deadlineStr = `<span style="font-size: 0.6875rem; color: var(--text-muted);">${formatDate(p.deadline)} (${countdown})</span>`;
+      deadlineStr = `<span style="font-size: 0.6875rem; color: var(--text-muted);">${formatDate(targetDateVal)} (${countdown})</span>`;
     }
 
     return `

@@ -108,9 +108,9 @@ export function renderProjects() {
   // Filters
   if (searchQuery) {
     projects = projects.filter(p =>
-      p.name.toLowerCase().includes(searchQuery) ||
+      (p.name || '').toLowerCase().includes(searchQuery) ||
       (p.description && p.description.toLowerCase().includes(searchQuery)) ||
-      (p.technologies && p.technologies.some(t => t.toLowerCase().includes(searchQuery)))
+      (p.technologies && p.technologies.some(t => (t || '').toLowerCase().includes(searchQuery)))
     );
   }
 
@@ -357,10 +357,13 @@ function handleProjectFormSubmit(e) {
     return;
   }
 
+  const finalStatus = progress === 100 ? 'Completed' : status;
+  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+
   const projectData = {
     name,
-    status,
-    progress,
+    status: finalStatus,
+    progress: finalProgress,
     technologies: [...modalTechTags],
     githubUrl,
     liveDemoUrl,

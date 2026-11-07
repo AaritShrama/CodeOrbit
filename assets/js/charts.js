@@ -247,7 +247,7 @@ class ChartManager {
         labels: labels.length ? labels : ['No Skills Yet'],
         datasets: [{
           data: counts.length ? counts : [1],
-          backgroundColor: counts.length ? palette.slice(0, labels.length) : ['#25314A'],
+          backgroundColor: counts.length ? labels.map((_, i) => palette[i % palette.length]) : ['#25314A'],
           borderWidth: 2,
           borderColor: theme.tooltipBg
         }]

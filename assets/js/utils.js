@@ -84,13 +84,15 @@ export function formatDate(dateStr, includeWeekday = false) {
  */
 export function formatRelativeTime(dateStr) {
   if (!dateStr) return '';
+  const cleanDate = typeof dateStr === 'string' ? dateStr.slice(0, 10) : '';
   const today = getTodayISO();
-  if (dateStr === today) return 'Today';
+  if (cleanDate === today) return 'Today';
 
-  const d = new Date(dateStr + 'T00:00:00');
+  const d = new Date(cleanDate + 'T00:00:00');
   const now = new Date(today + 'T00:00:00');
   const diffDays = Math.round((now - d) / (1000 * 60 * 60 * 24));
 
+  if (isNaN(diffDays)) return formatDate(dateStr);
   if (diffDays === 1) return 'Yesterday';
   if (diffDays > 1 && diffDays < 7) return `${diffDays} days ago`;
   if (diffDays >= 7 && diffDays < 14) return '1 week ago';
@@ -213,7 +215,7 @@ export function calculateStreak(activities = []) {
  * @returns {{ score: number, level: string, breakdown: Object }}
  */
 export function calculateProductivityScore({ activities = [], skills = [], projects = [], settings = {} }) {
-  const weeklyTargetHours = Number(settings.weeklyTargetHours) || 10;
+  const weeklyTargetHours = Math.max(1, Number(settings.weeklyTargetHours) || 10);
 
   // 1. Consistency: How many of the last 7 days had logged activity? (Max 30)
   const last7Days = [];

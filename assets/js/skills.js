@@ -87,9 +87,9 @@ export function renderSkills() {
   // 1. Search Filter
   if (searchQuery) {
     skills = skills.filter(s =>
-      s.name.toLowerCase().includes(searchQuery) ||
-      s.category.toLowerCase().includes(searchQuery) ||
-      (s.description && s.description.toLowerCase().includes(searchQuery))
+      (s.name || '').toLowerCase().includes(searchQuery) ||
+      (s.category || '').toLowerCase().includes(searchQuery) ||
+      (s.description || '').toLowerCase().includes(searchQuery)
     );
   }
 
@@ -249,6 +249,8 @@ function getStatusBadgeClass(status) {
   }
 }
 
+let activeMenuDismissListener = null;
+
 function stepSkillProgress(skillId, delta) {
   const skill = storage.getSkillById(skillId);
   if (!skill) return;
@@ -257,6 +259,8 @@ function stepSkillProgress(skillId, delta) {
   skill.progress = newProgress;
   if (newProgress === 100) {
     skill.status = 'Completed';
+  } else if (skill.status === 'Completed' && newProgress < 100) {
+    skill.status = 'Practicing';
   } else if (newProgress > 0 && skill.status === 'Not Started') {
     skill.status = 'Learning';
   }
@@ -266,6 +270,11 @@ function stepSkillProgress(skillId, delta) {
 }
 
 function showSkillContextMenu(skillId, anchorEl) {
+  if (activeMenuDismissListener) {
+    document.removeEventListener('click', activeMenuDismissListener);
+    activeMenuDismissListener = null;
+  }
+
   const existingMenu = document.querySelector('.skill-pop-menu');
   if (existingMenu) existingMenu.remove();
 
@@ -292,11 +301,19 @@ function showSkillContextMenu(skillId, anchorEl) {
 
   menu.querySelector('#menu-edit-skill').addEventListener('click', () => {
     menu.remove();
+    if (activeMenuDismissListener) {
+      document.removeEventListener('click', activeMenuDismissListener);
+      activeMenuDismissListener = null;
+    }
     openSkillModal(skillId);
   });
 
   menu.querySelector('#menu-delete-skill').addEventListener('click', () => {
     menu.remove();
+    if (activeMenuDismissListener) {
+      document.removeEventListener('click', activeMenuDismissListener);
+      activeMenuDismissListener = null;
+    }
     const s = storage.getSkillById(skillId);
     showConfirmDialog({
       title: 'Delete Orbiting Skill',
@@ -309,13 +326,14 @@ function showSkillContextMenu(skillId, anchorEl) {
     });
   });
 
-  const dismissListener = (e) => {
+  activeMenuDismissListener = (e) => {
     if (!menu.contains(e.target) && e.target !== anchorEl) {
       menu.remove();
-      document.removeEventListener('click', dismissListener);
+      document.removeEventListener('click', activeMenuDismissListener);
+      activeMenuDismissListener = null;
     }
   };
-  setTimeout(() => document.addEventListener('click', dismissListener), 10);
+  setTimeout(() => document.addEventListener('click', activeMenuDismissListener), 10);
 }
 
 export function openSkillModal(skillId = null) {
@@ -367,12 +385,15 @@ function handleSkillFormSubmit(e) {
     return;
   }
 
+  const finalStatus = progress === 100 ? 'Completed' : status;
+  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+
   const skillData = {
     name,
     category,
     proficiency,
-    status,
-    progress,
+    status: finalStatus,
+    progress: finalProgress,
     targetDate,
     description
   };

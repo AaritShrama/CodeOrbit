@@ -137,22 +137,32 @@ export function initAchievements() {
   });
 }
 
+let isEvaluating = false;
+
 /**
  * Checks all conditions and unlocks newly satisfied achievements.
  */
 export function evaluateAchievements() {
-  const data = storage.getUniverse();
-  const unlocked = data.achievements || [];
+  if (isEvaluating) return;
+  isEvaluating = true;
+  try {
+    const data = storage.getUniverse();
+    const unlocked = data.achievements || [];
 
-  ACHIEVEMENT_DEFINITIONS.forEach(def => {
-    const isAlreadyUnlocked = unlocked.some(a => a.id === def.id);
-    if (!isAlreadyUnlocked && def.check(data)) {
-      const newlyUnlocked = storage.unlockAchievement(def.id);
-      if (newlyUnlocked) {
-        toast.achievement('Achievement Unlocked!', `${def.icon} ${def.title}: ${def.description}`);
+    ACHIEVEMENT_DEFINITIONS.forEach(def => {
+      const isAlreadyUnlocked = unlocked.some(a => a.id === def.id);
+      if (!isAlreadyUnlocked && def.check(data)) {
+        const newlyUnlocked = storage.unlockAchievement(def.id);
+        if (newlyUnlocked) {
+          toast.achievement('Achievement Unlocked!', `${def.icon} ${def.title}: ${def.description}`);
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    console.error('Achievement evaluation error:', err);
+  } finally {
+    isEvaluating = false;
+  }
 }
 
 export function renderAchievements() {

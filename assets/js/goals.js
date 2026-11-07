@@ -96,7 +96,7 @@ export function renderGoals() {
 
   if (searchQuery) {
     filtered = filtered.filter(g =>
-      g.title.toLowerCase().includes(searchQuery) ||
+      (g.title || '').toLowerCase().includes(searchQuery) ||
       (g.description && g.description.toLowerCase().includes(searchQuery)) ||
       (g.category && g.category.toLowerCase().includes(searchQuery))
     );
@@ -343,13 +343,16 @@ function handleGoalFormSubmit(e) {
     return;
   }
 
+  const finalStatus = progress === 100 ? 'Completed' : status;
+  const finalProgress = (finalStatus === 'Completed' && progress < 100) ? 100 : progress;
+
   const goalData = {
     title,
     category,
     priority,
-    status: progress === 100 ? 'Completed' : status,
+    status: finalStatus,
     deadline,
-    progress,
+    progress: finalProgress,
     description
   };
   if (id) goalData.id = id;
