@@ -3,7 +3,7 @@
  * Chart.js set-up and lifecycle for the Progress page.
  */
 
-import { toLocalISO } from './utils.js';
+import { toLocalISO, projectStatusLabel, typeLabel } from './utils.js';
 
 class ChartManager {
   constructor() {
@@ -11,7 +11,7 @@ class ChartManager {
   }
 
   /** Chart colours: dark background, greys, one crimson (D-020). */
-  getThemeColors() {
+  getColors() {
     return {
       textColor: '#8F8F95',
       gridColor: 'rgba(44, 44, 49, 0.7)',
@@ -44,16 +44,14 @@ class ChartManager {
     }
   }
 
-  /**
-   * Weekly Learning Hours Chart (Dashboard & Analytics)
-   */
+  /** Hours on each day of THIS week, Monday to Sunday (Home shows the last 7 days instead). */
   renderWeeklyChart(canvasId, activities = []) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || typeof Chart === 'undefined') return;
 
     this.destroyChart(canvasId);
     const ctx = canvas.getContext('2d');
-    const theme = this.getThemeColors();
+    const theme = this.getColors();
 
     // Calculate hours for each day of the current week (Mon - Sun)
     const now = new Date();
@@ -131,16 +129,14 @@ class ChartManager {
     this.instances.set(canvasId, chart);
   }
 
-  /**
-   * 30-Day Monthly Trend Chart (Analytics)
-   */
+  /** Hours on each of the last 30 days. */
   renderMonthlyTrendChart(canvasId, activities = []) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || typeof Chart === 'undefined') return;
 
     this.destroyChart(canvasId);
     const ctx = canvas.getContext('2d');
-    const theme = this.getThemeColors();
+    const theme = this.getColors();
 
     const labels = [];
     const hours = [];
@@ -221,16 +217,14 @@ class ChartManager {
     this.instances.set(canvasId, chart);
   }
 
-  /**
-   * Skill Category Distribution Chart (Doughnut)
-   */
+  /** How many skills per category (doughnut). */
   renderSkillCategoryChart(canvasId, skills = []) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || typeof Chart === 'undefined') return;
 
     this.destroyChart(canvasId);
     const ctx = canvas.getContext('2d');
-    const theme = this.getThemeColors();
+    const theme = this.getColors();
 
     const categoryMap = {};
     skills.forEach(s => {
@@ -285,16 +279,14 @@ class ChartManager {
     this.instances.set(canvasId, chart);
   }
 
-  /**
-   * Project Status Distribution Chart (Doughnut / Pie)
-   */
+  /** How many projects per status (doughnut). */
   renderProjectStatusChart(canvasId, projects = []) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || typeof Chart === 'undefined') return;
 
     this.destroyChart(canvasId);
     const ctx = canvas.getContext('2d');
-    const theme = this.getThemeColors();
+    const theme = this.getColors();
 
     const statusCounts = {
       Planning: 0,
@@ -309,8 +301,7 @@ class ChartManager {
       }
     });
 
-    const shownAs = { 'In Progress': 'In progress', 'On Hold': 'Paused', Completed: 'Finished' };
-    const labels = Object.keys(statusCounts).map(k => shownAs[k] || k);
+    const labels = Object.keys(statusCounts).map(projectStatusLabel);
     const counts = Object.values(statusCounts);
 
     const colors = [theme.palette[2], theme.palette[1], theme.palette[4], theme.accent];
@@ -355,16 +346,14 @@ class ChartManager {
     this.instances.set(canvasId, chart);
   }
 
-  /**
-   * Activity Type Breakdown Chart (Horizontal Bar)
-   */
+  /** Hours per type of study (horizontal bars). */
   renderActivityTypeChart(canvasId, activities = []) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || typeof Chart === 'undefined') return;
 
     this.destroyChart(canvasId);
     const ctx = canvas.getContext('2d');
-    const theme = this.getThemeColors();
+    const theme = this.getColors();
 
     const typeHoursMap = {};
     activities.forEach(a => {
@@ -379,15 +368,7 @@ class ChartManager {
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels.length
-          ? labels.map(
-              l =>
-                ({
-                  'Practice Problems': 'Practice problems',
-                  'Project Development': 'Project work'
-                })[l] || l
-            )
-          : ['No study time yet'],
+        labels: labels.length ? labels.map(typeLabel) : ['No study time yet'],
         datasets: [
           {
             label: 'Hours',
@@ -411,7 +392,7 @@ class ChartManager {
             borderColor: theme.tooltipBorder,
             borderWidth: 1,
             callbacks: {
-              label: item => `${item.raw} hrs`
+              label: item => `${item.raw} hours`
             }
           }
         },

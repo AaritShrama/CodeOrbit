@@ -1,7 +1,16 @@
 /**
- * CODEORBIT — UTILITIES MODULE
- * Helper functions for sanitization, date formatting, calculations, and audio synthesis.
+ * CODEORBIT — SHARED HELPERS
+ * Escaping, dates (always LOCAL calendar days), the words people see for stored
+ * values, the progress score, and the badge sound. Pure functions, unit-tested
+ * in tests/utils.test.js.
  */
+
+/** Goals used when settings have none (a new user starts with these too). */
+export const DEFAULT_DAILY_HOURS = 2;
+export const DEFAULT_WEEKLY_HOURS = 10;
+
+/** Stored skill name for study time not tied to one of your skills. */
+export const GENERAL_SKILL = 'General Exploration';
 
 /**
  * Escapes unsafe characters from strings to prevent XSS.
@@ -16,6 +25,53 @@ export function escapeHTML(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/**
+ * A link that is safe to put in href: only http:// and https:// pass.
+ * escapeHTML() alone is not enough for links: "javascript:..." contains nothing
+ * to escape but runs code when clicked (e.g. from a shared backup file).
+ * @param {string} url
+ * @returns {string} the trimmed url, or '' when it is not http(s)
+ */
+export function safeUrl(url) {
+  if (typeof url !== 'string') return '';
+  const u = url.trim();
+  return /^https?:\/\/[^\s]+$/i.test(u) ? u : '';
+}
+
+/* --------------------------------------------------------------------------
+   Words people see for stored values. Saved data keeps the original values
+   (old backups must keep working); only the label changes. See D-022.
+   -------------------------------------------------------------------------- */
+
+/** Skill status: 'Not Started' | 'Learning' | 'Practicing' | 'Completed' */
+export function statusLabel(status) {
+  if (status === 'Completed') return 'Finished';
+  if (status === 'Practicing') return 'Practising';
+  if (status === 'Not Started') return 'Not started';
+  return status || 'Learning';
+}
+
+/** Project status: 'Planning' | 'In Progress' | 'On Hold' | 'Completed' */
+export function projectStatusLabel(status) {
+  if (status === 'Completed') return 'Finished';
+  if (status === 'On Hold') return 'Paused';
+  if (status === 'In Progress') return 'In progress';
+  return status || 'Planning';
+}
+
+/** Study session type, e.g. 'Practice Problems' */
+export function typeLabel(type) {
+  if (type === 'Practice Problems') return 'Practice problems';
+  if (type === 'Project Development') return 'Project work';
+  return type || 'Other';
+}
+
+/** The skill a study session belongs to ('General Exploration' reads as 'General'). */
+export function skillLabel(name) {
+  if (!name || name === GENERAL_SKILL) return 'General';
+  return name;
 }
 
 /**
@@ -94,7 +150,7 @@ export function getTodayISO() {
  * The weekday with the highest total focused minutes, e.g. 'Saturday'.
  * Plain YYYY-MM-DD dates are parsed as LOCAL midnight: `new Date('2026-11-07')`
  * alone is UTC midnight, which is still the previous day west of UTC and
- * shifts every weekday count by one (the same trap toLocalISO documents below).
+ * shifts every weekday count by one (the same trap toLocalISO documents above).
  * @param {Array<{date?: string, duration?: number}>} activities
  * @returns {string} The peak weekday name, or 'Weekday' when no session has minutes.
  */
@@ -291,17 +347,8 @@ export function weeklyRecap(activities = [], now = new Date()) {
 }
 
 /**
- * Formats minutes into hours with one decimal place.
- * @param {number} minutes - Minutes
- * @returns {number} Hours
- */
-export function minutesToHours(minutes) {
-  const m = Number(minutes) || 0;
-  return Math.round((m / 60) * 10) / 10;
-}
-
-/**
- * Calculates learning streak (current consecutive active days and longest streak).
+ * Days in a row: the current run of days with study time, and the longest ever.
+ * The current run still counts when today has nothing yet but yesterday does.
  * @param {Array} activities - List of activity records with .date field
  * @returns {{ currentStreak: number, longestStreak: number }}
  */
@@ -377,32 +424,32 @@ export function calculateStreak(activities = []) {
 }
 
 /**
- * Computes an explainable developer Productivity Score from 0 to 100.
- * Components:
- * - Consistency (Past 7 days activity): 0 to 30 pts
- * - Learning Hours vs Weekly Target: 0 to 30 pts
- * - Project Progress (average % of projects): 0 to 20 pts
- * - Skill Development (average % of skills): 0 to 20 pts
+ * The progress score, 0 to 100, shown on the Progress page. Four parts
+ * (the names people see are in brackets; the breakdown keys stay the same):
+ * - consistency (Studying often): days with study time in the last 7, up to 30
+ * - learningHours (Weekly goal): hours in the last 7 days vs the weekly goal, up to 30
+ * - projects (Projects): average % of your projects, up to 20
+ * - skills (Skills): average % of your skills, up to 20
  *
  * @param {Object} data - { activities, skills, projects, settings }
  * @returns {{ score: number, level: string, breakdown: Object }}
  */
-export function calculateProductivityScore({
+export function calculateProgressScore({
   activities = [],
   skills = [],
   projects = [],
   settings = {}
 }) {
-  const weeklyTargetHours = Math.max(1, Number(settings.weeklyTargetHours) || 10);
+  const weeklyTargetHours = Math.max(1, Number(settings.weeklyTargetHours) || DEFAULT_WEEKLY_HOURS);
 
-  // 1. Consistency: How many of the last 7 days had logged activity? (Max 30)
+  // 1. Studying often: how many of the last 7 days had study time? (max 30)
   const last7Days = getLastNDaysISO(7);
   const activeDaysLast7 = last7Days.filter(day =>
     activities.some(a => a.date && a.date.slice(0, 10) === day)
   ).length;
   const consistencyScore = Math.round((activeDaysLast7 / 7) * 30);
 
-  // 2. Learning Hours this week vs Target (Max 30)
+  // 2. Weekly goal: hours in the last 7 days vs the goal (max 30)
   const weeklyMinutes = activities
     .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
@@ -411,10 +458,10 @@ export function calculateProductivityScore({
 
   // Projects and skills give a neutral 10/20 when the user has none, so people who
   // don't track projects aren't punished. That baseline is only earned once the user
-  // has logged at least one session: an empty universe scores 0, not 20. (D-015)
+  // has added at least one study session: with nothing saved the score is 0, not 20. (D-015)
   const neutralBaseline = activities.length > 0 ? 10 : 0;
 
-  // 3. Project Progress (Max 20)
+  // 3. Projects (max 20)
   let projectScore;
   if (projects.length > 0) {
     const avgProjectProg =
@@ -424,7 +471,7 @@ export function calculateProductivityScore({
     projectScore = neutralBaseline;
   }
 
-  // 4. Skill Development (Max 20)
+  // 4. Skills (max 20)
   let skillScore;
   if (skills.length > 0) {
     const avgSkillProg =
@@ -463,8 +510,10 @@ export function calculateProductivityScore({
 }
 
 /**
- * Web Audio Synthesizer for subtle cosmic UI sound feedback.
- * Completely client-side, zero external files, respects user audio setting.
+ * The one sound CodeOrbit makes: a short chime when you earn a badge.
+ * Made with the Web Audio API (no sound files). Off when Settings → Sounds is
+ * off: app.js copies settings.soundEnabled into `enabled` at startup and after
+ * every change.
  */
 class SoundEffects {
   constructor() {
@@ -508,19 +557,7 @@ class SoundEffects {
     }
   }
 
-  // Soft click
-  click() {
-    this.playTone(600, 'sine', 0.05);
-  }
-
-  // Success chime
-  success() {
-    this.playTone(523.25, 'sine', 0.15, 0); // C5
-    this.playTone(659.25, 'sine', 0.15, 0.08); // E5
-    this.playTone(783.99, 'sine', 0.3, 0.16); // G5
-  }
-
-  // Achievement unlock chime
+  // Badge earned
   achievement() {
     this.playTone(440, 'triangle', 0.2, 0); // A4
     this.playTone(554.37, 'triangle', 0.2, 0.1); // C#5

@@ -7,7 +7,7 @@
  */
 
 import { storage } from './storage.js';
-import { weeklyRecap, formatDuration } from './utils.js';
+import { weeklyRecap, formatDuration, skillLabel, DEFAULT_WEEKLY_HOURS } from './utils.js';
 import { openModal, closeModal, toast } from './components.js';
 
 export function initRecap() {
@@ -53,11 +53,11 @@ export function openRecap() {
   );
   set(
     'recap-skill',
-    r.topSkill ? `${r.topSkill.name}, ${formatDuration(r.topSkill.minutes)}` : '—'
+    r.topSkill ? `${skillLabel(r.topSkill.name)}, ${formatDuration(r.topSkill.minutes)}` : '—'
   );
   set('recap-sessions', String(r.sessions));
   const goal = document.getElementById('recap-goal');
-  if (goal) goal.value = String(Number(settings.weeklyTargetHours) || 12);
+  if (goal) goal.value = String(Number(settings.weeklyTargetHours) || DEFAULT_WEEKLY_HOURS);
 
   openModal('recap-modal');
   // Seen: stop offering it on Home for this week.

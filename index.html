@@ -22,8 +22,8 @@
   <link rel="stylesheet" href="assets/css/orbital.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 
-  <!-- Third-party CDN Dependencies (Allowed: Chart.js & Lucide) -->
-  <!-- Third-party scripts are pinned to exact versions with Subresource Integrity hashes.
+  <!-- The only two outside scripts: Chart.js (charts) and Lucide (icons).
+       They are pinned to exact versions with Subresource Integrity hashes.
        To upgrade, follow "Updating CDN libraries" in docs/DECISIONS.md (D-011). -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.js"
           integrity="sha384-zYPBGXwO4633CABX/5Spf6emCKUJCfoOkhOMYyxMsatqQZPnDblmmOewfjsIVWCM"
@@ -36,7 +36,7 @@
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   <!-- Quiet starfield behind everything (decorative) -->
-  <canvas id="cosmic-stars-canvas" aria-hidden="true"></canvas>
+  <canvas id="stars-canvas" aria-hidden="true"></canvas>
 
   <div class="app-container">
 
@@ -64,8 +64,8 @@
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
           </button>
           <a href="#settings" class="avatar-link" title="Profile and settings">
-            <span class="sr-only">Profile and settings, <span id="sidebar-user-name">Developer</span></span>
-            <span id="sidebar-avatar-img" class="user-avatar-img" aria-hidden="true"></span>
+            <span class="sr-only">Profile and settings, <span id="topbar-user-name">Developer</span></span>
+            <span id="topbar-avatar" class="user-avatar-img" aria-hidden="true"></span>
           </a>
         </div>
       </div>
@@ -84,7 +84,7 @@
            ================================================================ -->
       <section class="view-page active" id="view-dashboard" aria-label="Home">
 
-        <!-- First visit: no skills and no study time yet -->
+        <!-- First visit: nothing saved yet (dashboard.js isFirstVisit) -->
         <div class="home-empty" id="home-empty" hidden>
           <div class="home-empty-visual">
             <div class="home-orbit is-empty" aria-hidden="true">
@@ -127,7 +127,7 @@
                 <span class="home-week-label">Studied in the last 7 days</span>
                 <div class="home-week-figure">
                   <span class="home-week-hours" id="home-week-hours">0</span>
-                  <span class="home-week-target" id="home-week-target">of 12 hours</span>
+                  <span class="home-week-target" id="home-week-target">of 10 hours</span>
                 </div>
                 <div class="home-week-bar" id="home-week-bar" role="progressbar" aria-label="Weekly study goal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                   <div class="home-week-bar-fill" id="home-week-bar-fill"></div>
@@ -225,6 +225,7 @@
 
               <div class="pill-group" id="skill-status-pills">
                 <button class="pill-btn active" data-status="All">All</button>
+                <button class="pill-btn" data-status="Not Started">Not started</button>
                 <button class="pill-btn" data-status="Learning">Learning</button>
                 <button class="pill-btn" data-status="Practicing">Practising</button>
                 <button class="pill-btn" data-status="Completed">Finished</button>
@@ -251,34 +252,34 @@
         </section>
 
         <!-- ================================================================
-             PAGE 3: STUDY SESSIONS
+             PAGE 3: STUDY SESSIONS (route #progress)
              ================================================================ -->
         <section class="view-page" id="view-progress">
-          <!-- Metrics Overview Cards -->
+          <!-- Totals -->
           <div class="kpi-grid" style="margin-bottom: var(--space-lg); grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));">
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Hours in total</span><i data-lucide="clock" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Hours in total</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="metric-total-hours">0h</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Last 7 days</span><i data-lucide="calendar" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Last 7 days</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="metric-weekly-hours">0h</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Last 30 days</span><i data-lucide="trending-up" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Last 30 days</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="metric-monthly-hours">0h</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Sessions</span><i data-lucide="list-checks" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Sessions</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="metric-total-sessions">0</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Average session</span><i data-lucide="zap" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Average session</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="metric-avg-session">0m</span></div>
             </div>
           </div>
 
-          <!-- Daily Learning Target Ring Card -->
+          <!-- Today's study goal (ring) -->
           <div class="card card-elevated" style="margin-bottom: var(--space-lg); display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: var(--space-lg);">
               <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0;">
@@ -292,11 +293,11 @@
               </div>
               <div>
                 <h3 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Today's study goal</h3>
-                <p style="font-size: var(--text-xs); color: var(--text-secondary);">Studied today: <span id="daily-target-display" style="color: var(--cyan-accent); font-weight: 700;">0 / 2h</span></p>
+                <p style="font-size: var(--text-xs); color: var(--text-secondary);">Studied today: <span id="daily-target-display" style="color: var(--text-primary); font-weight: 700;">0 / 2h</span></p>
               </div>
             </div>
 
-            <button class="btn btn-primary" id="launch-session-btn">
+            <button class="btn btn-primary" id="add-session-btn">
               <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
               <span>Add study time</span>
             </button>
@@ -315,7 +316,7 @@
                 <option value="Coding">Coding</option>
                 <option value="Reading">Reading</option>
                 <option value="Practice Problems">Practice problems</option>
-                <option value="Project Development">Working on a project</option>
+                <option value="Project Development">Project work</option>
                 <option value="Research">Research</option>
                 <option value="Tutorial">Tutorial</option>
                 <option value="Other">Other</option>
@@ -336,15 +337,15 @@
             </div>
           </div>
 
-          <!-- Timeline List Container -->
-          <div id="mission-logs-timeline"></div>
+          <!-- Sessions, grouped by day (progress.js) -->
+          <div id="sessions-list"></div>
         </section>
 
         <!-- ================================================================
              PAGE 4: PROJECTS
              ================================================================ -->
         <section class="view-page" id="view-projects">
-          <!-- Stats Summary Banner -->
+          <!-- Counts -->
           <div class="kpi-grid" style="margin-bottom: var(--space-lg);">
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Projects</span></div>
@@ -352,7 +353,7 @@
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">In progress</span></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="proj-stat-inprogress" style="color: var(--cyan-accent);">0</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="proj-stat-inprogress">0</span></div>
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Planning</span></div>
@@ -360,7 +361,7 @@
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Finished</span></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="proj-stat-completed" style="color: var(--success);">0</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="proj-stat-completed">0</span></div>
             </div>
           </div>
 
@@ -374,8 +375,9 @@
 
               <div class="pill-group" id="project-status-pills">
                 <button class="pill-btn active" data-status="All">All</button>
-                <button class="pill-btn" data-status="In Progress">In Progress</button>
                 <button class="pill-btn" data-status="Planning">Planning</button>
+                <button class="pill-btn" data-status="In Progress">In progress</button>
+                <button class="pill-btn" data-status="On Hold">Paused</button>
                 <button class="pill-btn" data-status="Completed">Finished</button>
               </div>
             </div>
@@ -403,7 +405,7 @@
              PAGE 5: GOALS
              ================================================================ -->
         <section class="view-page" id="view-goals">
-          <!-- Goal KPIs -->
+          <!-- Counts -->
           <div class="kpi-grid" style="margin-bottom: var(--space-lg);">
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Finished (%)</span></div>
@@ -411,15 +413,15 @@
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Finished</span></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-completed" style="color: var(--success);">0</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-completed">0</span></div>
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">In progress</span></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-active" style="color: var(--cyan-accent);">0</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-active">0</span></div>
             </div>
             <div class="kpi-card">
               <div class="kpi-header"><span class="kpi-title">Late</span></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-overdue" style="color: var(--danger);">0</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="goal-stat-overdue">0</span></div>
             </div>
           </div>
 
@@ -460,25 +462,25 @@
         </section>
 
         <!-- ================================================================
-             PAGE 7: BADGES (opened from the Progress page)
+             PAGE 7: BADGES (route #achievements, opened from the Progress page)
              ================================================================ -->
         <section class="view-page" id="view-achievements">
-          <!-- Header Banner -->
+          <!-- How many earned -->
           <div class="card card-elevated" style="margin-bottom: var(--space-lg); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
             <p style="font-size: var(--text-sm); color: var(--text-secondary); max-width: 420px;">For example, you get one for studying 7 days in a row. Badges you have not earned yet show how close you are.</p>
             <div style="display: flex; align-items: center; gap: var(--space-lg);">
               <div>
                 <span style="font-size: var(--text-xs); color: var(--text-muted); display: block;">Earned</span>
-                <span style="font-size: var(--text-xl); font-family: var(--font-mono); font-weight: 700; color: var(--orbital-orange);" id="achieve-stat-unlocked">0 / 10</span>
+                <span style="font-size: var(--text-xl); font-family: var(--font-mono); font-weight: 700; color: var(--accent-text);" id="achieve-stat-unlocked">0 / 10</span>
               </div>
               <div>
                 <span style="font-size: var(--text-xs); color: var(--text-muted); display: block;">Done</span>
-                <span style="font-size: var(--text-xl); font-family: var(--font-mono); font-weight: 700; color: var(--cyan-accent);" id="achieve-stat-pct">0%</span>
+                <span style="font-size: var(--text-xl); font-family: var(--font-mono); font-weight: 700; color: var(--text-primary);" id="achieve-stat-pct">0%</span>
               </div>
             </div>
           </div>
 
-          <!-- Category Filter Bar -->
+          <!-- Badge groups -->
           <div class="filter-bar">
             <div class="pill-group" id="achievement-category-pills">
               <button class="pill-btn active" data-category="All">All</button>
@@ -490,28 +492,28 @@
             </div>
           </div>
 
-          <!-- Achievements Grid -->
+          <!-- Badges grid -->
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg);" id="achievements-grid"></div>
         </section>
 
         <!-- ================================================================
-             PAGE 6: PROGRESS
+             PAGE 6: PROGRESS (route #analytics)
              ================================================================ -->
         <section class="view-page" id="view-analytics">
           <!-- Progress score (moved here from Home to keep Home minimal) -->
-          <div class="productivity-card">
+          <div class="score-card">
             <div class="score-figure">
               <span class="score-number" id="score-number-display">0</span>
               <span class="score-scale">/ 100</span>
             </div>
-            <div class="productivity-info">
-              <div class="productivity-badge-row">
+            <div class="score-info">
+              <div class="score-badge-row">
                 <span class="label-mono">Your progress score</span>
-                <span class="badge badge-cyan" id="score-level-badge">Just beginning</span>
+                <span class="badge badge-muted" id="score-level-badge">Just beginning</span>
               </div>
-              <h2 class="productivity-title">How you are doing overall</h2>
-              <p class="productivity-desc">One number for the last 7 days: how often you studied, how close you came to your weekly goal, and how far along your projects and skills are.</p>
-              <div class="productivity-factors">
+              <h2 class="score-title">How you are doing overall</h2>
+              <p class="score-desc">One number for the last 7 days: how often you studied, how close you came to your weekly goal, and how far along your projects and skills are.</p>
+              <div class="score-factors">
                 <div class="factor-pill">Studying often <span>30</span></div>
                 <div class="factor-pill">Weekly goal <span>30</span></div>
                 <div class="factor-pill">Projects <span>20</span></div>
@@ -533,42 +535,42 @@
             </div>
           </div>
 
-          <!-- Key Statistics Strip -->
+          <!-- Totals -->
           <div class="kpi-grid" style="margin-bottom: var(--space-lg);">
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Hours in total</span><i data-lucide="clock" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Hours in total</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="analytics-total-hours">0h</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Last 7 days</span><i data-lucide="zap" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Last 7 days</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="analytics-weekly-hours">0h</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Skills finished</span><i data-lucide="orbit" class="kpi-icon"></i></div>
+              <div class="kpi-header"><span class="kpi-title">Skills finished</span></div>
               <div class="kpi-value-row"><span class="kpi-main-val" id="analytics-skill-rate">0%</span></div>
             </div>
             <div class="kpi-card">
-              <div class="kpi-header"><span class="kpi-title">Days in a row</span><i data-lucide="flame" class="kpi-icon"></i></div>
-              <div class="kpi-value-row"><span class="kpi-main-val" id="analytics-streak">0 Days</span></div>
+              <div class="kpi-header"><span class="kpi-title">Days in a row</span></div>
+              <div class="kpi-value-row"><span class="kpi-main-val" id="analytics-streak">0</span></div>
             </div>
           </div>
 
-          <!-- Automated Habit Insights -->
+          <!-- "What we noticed" -->
           <div class="card" style="margin-bottom: var(--space-lg);">
             <div class="card-header">
               <h3 class="card-title">
-                <i data-lucide="sparkles" style="width: 18px; height: 18px; color: var(--cyan-accent);"></i>
+                <i data-lucide="sparkles" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
                 <span>What we noticed</span>
               </h3>
             </div>
             <div id="analytics-insights-container"></div>
           </div>
 
-          <!-- Charts Row 1: Weekly & 30-Day Monthly Trend -->
+          <!-- Charts: this week, last 30 days -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: var(--space-lg); margin-bottom: var(--space-lg);">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Hours by day of the week</h3>
+                <h3 class="card-title">This week, Monday to Sunday</h3>
               </div>
               <div style="height: 260px; position: relative;">
                 <canvas id="analytics-weekly-chart"></canvas>
@@ -585,7 +587,7 @@
             </div>
           </div>
 
-          <!-- Charts Row 2: Categories, Project Status, Activity Types -->
+          <!-- Charts: skills by category, projects by status, hours by type -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--space-lg);">
             <div class="card">
               <div class="card-header">
@@ -620,7 +622,7 @@
              PAGE 8: SETTINGS (opened from the profile picture)
              ================================================================ -->
         <section class="view-page" id="view-settings">
-          <!-- Section Navigation Bar -->
+          <!-- Section buttons -->
           <div class="settings-nav-bar" id="settings-nav-bar">
             <button class="settings-nav-btn active" data-target="section-profile">
               <i data-lucide="user" style="width: 16px; height: 16px;"></i>
@@ -641,11 +643,11 @@
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: var(--space-xl);">
-            <!-- Developer Profile Settings -->
+            <!-- Profile -->
             <div class="card" id="section-profile">
               <div class="card-header">
                 <h3 class="card-title">
-                  <i data-lucide="user" style="width: 18px; height: 18px; color: var(--cyan-accent);"></i>
+                  <i data-lucide="user" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
                   <span>Profile</span>
                 </h3>
               </div>
@@ -666,11 +668,11 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label" for="settings-github-input">GitHub Username</label>
+                  <label class="form-label" for="settings-github-input">GitHub username</label>
                   <input type="text" class="form-input" id="settings-github-input" placeholder="e.g. alexrivera">
                 </div>
 
-                <!-- Avatar Selection Presets -->
+                <!-- Profile picture (keys are stored; titles are what people see) -->
                 <div class="form-group">
                   <label class="form-label">Profile picture</label>
                   <input type="hidden" id="settings-avatar-input" value="astronaut">
@@ -688,11 +690,11 @@
               </form>
             </div>
 
-            <!-- Appearance & Sprint Targets -->
+            <!-- Preferences: study goals and sounds -->
             <div class="card" id="section-preferences">
               <div class="card-header">
                 <h3 class="card-title">
-                  <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--secondary);"></i>
+                  <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--text-secondary);"></i>
                   <span>Preferences</span>
                 </h3>
               </div>
@@ -706,7 +708,7 @@
 
                 <div class="form-group">
                   <label class="form-label" for="settings-weekly-target">Weekly study goal (hours)</label>
-                  <input type="number" step="1" min="1" max="80" class="form-input" id="settings-weekly-target" value="12">
+                  <input type="number" step="0.5" min="1" max="80" class="form-input" id="settings-weekly-target" value="10">
                   <span class="form-hint">Shown on Home and used in your progress score.</span>
                 </div>
 
@@ -722,14 +724,14 @@
               </form>
             </div>
 
-            <!-- Data Management & LocalStorage Backups -->
+            <!-- Your data: backup, restore, sample data, delete -->
             <div class="card" id="section-data" style="grid-column: 1 / -1;">
               <div class="card-header">
                 <h3 class="card-title">
-                  <i data-lucide="database" style="width: 18px; height: 18px; color: var(--orbital-orange);"></i>
+                  <i data-lucide="database" style="width: 18px; height: 18px; color: var(--accent-text);"></i>
                   <span>Your data</span>
                 </h3>
-                <span class="badge badge-cyan">On this device only</span>
+                <span class="badge badge-muted">On this device only</span>
               </div>
               <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5; margin-bottom: var(--space-lg);">
                 Everything you add is saved in this browser on this device. Nothing is sent anywhere and there is no account. Download a backup now and then, so you can restore your data or move it to another device.
@@ -747,7 +749,7 @@
                   <span>Restore from backup</span>
                 </button>
 
-                <button type="button" class="btn btn-outline" id="load-demo-data-btn">
+                <button type="button" class="btn btn-outline" id="load-sample-data-btn">
                   <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
                   <span>Load sample data</span>
                 </button>
@@ -759,7 +761,7 @@
               </div>
             </div>
 
-            <!-- About Section Branding -->
+            <!-- About -->
             <div class="card card-elevated" id="section-about" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-md);">
               <div style="display: flex; align-items: center; gap: var(--space-md);">
                 <img src="assets/images/letscook-mark-dark.png" alt="Let's Cook" class="brand-logo-img" style="width: 64px; height: 40px;">
@@ -791,7 +793,7 @@
        MODAL DIALOGS
        ====================================================================== -->
 
-  <!-- 1. SKILL MODAL -->
+  <!-- 1. SKILL MODAL (skills.js) -->
   <div class="modal-backdrop" id="skill-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="skill-modal-title">
     <div class="modal-container">
       <div class="modal-header">
@@ -857,9 +859,9 @@
           <div class="form-group">
             <label class="form-label" for="skill-form-progress">
               <span>How far along you are</span>
-              <span class="range-val-badge" id="skill-form-progress-badge">50%</span>
+              <span class="range-val-badge" id="skill-form-progress-badge">10%</span>
             </label>
-            <input type="range" class="range-slider" id="skill-form-progress" min="0" max="100" value="50">
+            <input type="range" class="range-slider" id="skill-form-progress" min="0" max="100" value="10">
           </div>
 
           <div class="form-group">
@@ -869,13 +871,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Skill</button>
+          <button type="submit" class="btn btn-primary">Save skill</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- 2. MISSION LOG / ACTIVITY MODAL -->
+  <!-- 2. STUDY TIME MODAL (progress.js) -->
   <div class="modal-backdrop" id="activity-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="activity-modal-title">
     <div class="modal-container">
       <div class="modal-header">
@@ -906,7 +908,7 @@
                 <option value="Coding">Coding</option>
                 <option value="Reading">Reading</option>
                 <option value="Practice Problems">Practice problems</option>
-                <option value="Project Development">Working on a project</option>
+                <option value="Project Development">Project work</option>
                 <option value="Research">Research</option>
                 <option value="Tutorial">Tutorial</option>
                 <option value="Other">Other</option>
@@ -917,7 +919,7 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="activity-form-duration">How long (minutes) <span class="form-label-required">*</span></label>
-              <input type="number" min="5" max="720" step="5" class="form-input" id="activity-form-duration" value="60" required>
+              <input type="number" min="1" max="720" step="1" class="form-input" id="activity-form-duration" value="45" required>
             </div>
 
             <div class="form-group">
@@ -939,7 +941,7 @@
     </div>
   </div>
 
-  <!-- 3. SPACE MISSION / PROJECT MODAL -->
+  <!-- 3. PROJECT MODAL (projects.js) -->
   <div class="modal-backdrop" id="project-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
     <div class="modal-container modal-lg">
       <div class="modal-header">
@@ -1005,9 +1007,9 @@
           <div class="form-group">
             <label class="form-label" for="project-form-progress">
               <span>How far along you are</span>
-              <span class="range-val-badge" id="project-form-progress-badge">40%</span>
+              <span class="range-val-badge" id="project-form-progress-badge">10%</span>
             </label>
-            <input type="range" class="range-slider" id="project-form-progress" min="0" max="100" value="40">
+            <input type="range" class="range-slider" id="project-form-progress" min="0" max="100" value="10">
           </div>
 
           <div class="form-group">
@@ -1023,7 +1025,7 @@
     </div>
   </div>
 
-  <!-- 4. MILESTONE / GOAL MODAL -->
+  <!-- 4. GOAL MODAL (goals.js) -->
   <div class="modal-backdrop" id="goal-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="goal-modal-title">
     <div class="modal-container">
       <div class="modal-header">
@@ -1049,9 +1051,12 @@
                 <option value="Programming">Programming</option>
                 <option value="Web Development">Web Development</option>
                 <option value="Artificial Intelligence">Artificial Intelligence</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="Data Science">Data Science</option>
                 <option value="Database">Database</option>
                 <option value="DevOps">DevOps</option>
                 <option value="Computer Science">Computer Science</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
@@ -1102,7 +1107,7 @@
     </div>
   </div>
 
-  <!-- WEEK IN REVIEW (recap.js) -->
+  <!-- 5. WEEK IN REVIEW (recap.js) -->
   <div class="modal-backdrop" id="recap-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="recap-title">
     <div class="modal-container">
       <div class="modal-header">
@@ -1139,7 +1144,7 @@
     </div>
   </div>
 
-  <!-- 5. PRODUCTIVITY SCORE EXPLANATION MODAL -->
+  <!-- 6. "HOW YOUR PROGRESS SCORE WORKS" (analytics.js) -->
   <div class="modal-backdrop" id="score-breakdown-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="score-breakdown-title">
     <div class="modal-container modal-md">
       <div class="modal-header">
@@ -1158,7 +1163,7 @@
           <div class="card card-elevated" style="padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: var(--text-sm); margin-bottom: 4px;">
               <span>1. Studying often (up to 30)</span>
-              <span style="color: var(--cyan-accent); font-family: var(--font-mono);" id="breakdown-consistency-val">0 / 30 pts</span>
+              <span style="color: var(--text-primary); font-family: var(--font-mono);" id="breakdown-consistency-val">0 / 30</span>
             </div>
             <p style="font-size: var(--text-xs); color: var(--text-muted);">How many of the last 7 days you studied on.</p>
           </div>
@@ -1166,7 +1171,7 @@
           <div class="card card-elevated" style="padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: var(--text-sm); margin-bottom: 4px;">
               <span>2. Weekly goal (up to 30)</span>
-              <span style="color: var(--cyan-accent); font-family: var(--font-mono);" id="breakdown-hours-val">0 / 30 pts</span>
+              <span style="color: var(--text-primary); font-family: var(--font-mono);" id="breakdown-hours-val">0 / 30</span>
             </div>
             <p style="font-size: var(--text-xs); color: var(--text-muted);">Hours in the last 7 days compared with your weekly goal in Settings.</p>
           </div>
@@ -1174,7 +1179,7 @@
           <div class="card card-elevated" style="padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: var(--text-sm); margin-bottom: 4px;">
               <span>3. Projects (up to 20)</span>
-              <span style="color: var(--cyan-accent); font-family: var(--font-mono);" id="breakdown-projects-val">0 / 20 pts</span>
+              <span style="color: var(--text-primary); font-family: var(--font-mono);" id="breakdown-projects-val">0 / 20</span>
             </div>
             <p style="font-size: var(--text-xs); color: var(--text-muted);">How far along your projects are, on average.</p>
           </div>
@@ -1182,7 +1187,7 @@
           <div class="card card-elevated" style="padding: 12px;">
             <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: var(--text-sm); margin-bottom: 4px;">
               <span>4. Skills (up to 20)</span>
-              <span style="color: var(--cyan-accent); font-family: var(--font-mono);" id="breakdown-skills-val">0 / 20 pts</span>
+              <span style="color: var(--text-primary); font-family: var(--font-mono);" id="breakdown-skills-val">0 / 20</span>
             </div>
             <p style="font-size: var(--text-xs); color: var(--text-muted);">How far along your skills are, on average.</p>
           </div>
@@ -1190,7 +1195,7 @@
 
         <div style="padding: 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--text-primary); display: flex; justify-content: space-between; align-items: center;">
           <span style="font-weight: 700;">Total</span>
-          <span style="font-family: var(--font-mono); font-weight: 800; font-size: var(--text-sm); color: var(--cyan-accent);" id="breakdown-total-val">0 / 100</span>
+          <span style="font-family: var(--font-mono); font-weight: 800; font-size: var(--text-sm); color: var(--text-primary);" id="breakdown-total-val">0 / 100</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -1199,7 +1204,7 @@
     </div>
   </div>
 
-  <!-- 6. GLOBAL COMMAND PALETTE / SEARCH MODAL -->
+  <!-- 7. SEARCH (Ctrl+K; components.js). The "Are you sure?" dialog is built by components.js. -->
   <div class="modal-backdrop" id="command-palette-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Search">
     <div class="modal-container modal-md" style="margin-top: 10vh;">
       <div style="padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;">
@@ -1211,10 +1216,10 @@
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
+  <!-- Pop-up messages (toasts) -->
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <!-- Application Bootstrap -->
+  <!-- Start-up (app.js loads every other module) -->
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>

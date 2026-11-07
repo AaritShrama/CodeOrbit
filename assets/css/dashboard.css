@@ -4,7 +4,7 @@
    Everything else lives on its own page (docs/DECISIONS.md, D-020).
    ========================================================================== */
 
-/* ---------- Home: first-visit state (no skills, no sessions yet) ---------- */
+/* ---------- Home: first visit (nothing saved yet) ---------- */
 .home-empty {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -507,11 +507,6 @@ button.next-row .next-title {
   color: var(--text-muted);
 }
 
-.kpi-icon,
-.kpi-icon-wrap {
-  display: none;
-}
-
 .kpi-value-row {
   display: flex;
   align-items: baseline;
@@ -523,13 +518,8 @@ button.next-row .next-title {
   font-size: clamp(2.25rem, 4vw, 3rem);
   line-height: 1;
   letter-spacing: -0.04em;
-  color: var(--text-primary) !important; /* the old markup coloured some numbers inline */
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
-}
-
-.kpi-unit {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
 }
 
 /* Small icon box used in the study-session list */
@@ -551,7 +541,7 @@ button.next-row .next-title {
 /* ==========================================================================
    PROGRESS SCORE CARD (on the Progress page)
    ========================================================================== */
-.productivity-card {
+.score-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-2xl);
@@ -581,33 +571,33 @@ button.next-row .next-title {
   color: var(--text-muted);
 }
 
-.productivity-info {
+.score-info {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
-.productivity-badge-row {
+.score-badge-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-sm);
 }
 
-.productivity-title {
+.score-title {
   font-size: var(--text-2xl);
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
-.productivity-desc {
+.score-desc {
   max-width: 620px;
   font-size: var(--text-sm);
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
-.productivity-factors {
+.score-factors {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
@@ -668,7 +658,7 @@ button.next-row .next-title {
     order: -1;
   }
 
-  .productivity-card {
+  .score-card {
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }

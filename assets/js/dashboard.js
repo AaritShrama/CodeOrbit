@@ -4,8 +4,11 @@
  *   - greeting + hours studied in the last 7 days against the weekly goal
  *   - the orbit: one planet per skill (bigger = more progress, crimson = finished)
  *   - hours studied on each of the last 7 days
- *   - "Coming up": the nearest goal and the last study session
- * A first-time visitor (no skills, no study time) sees a short getting-started screen instead.
+ *   - "Coming up": the nearest goal, the last study session, and on Sundays and
+ *     Mondays "Your week in review" (recap.js)
+ *   - one-tap "+30 min" on the skill you studied last, with Undo
+ *   - a backup reminder when there is real data and no recent backup (utils.backupReminder)
+ * With nothing saved at all, a short getting-started screen shows instead.
  * The progress score that used to live here is on the Progress page (analytics.js).
  */
 
@@ -19,7 +22,8 @@ import {
   backupReminder,
   getLastNDaysISO,
   getTodayISO,
-  isWithinLastNDays
+  isWithinLastNDays,
+  DEFAULT_WEEKLY_HOURS
 } from './utils.js';
 import { toast } from './components.js';
 import { openSkillModal } from './skills.js';
@@ -51,7 +55,7 @@ export function initDashboard() {
   });
   document.getElementById('home-load-sample')?.addEventListener('click', () => {
     // Only shown when nothing is saved yet (see isFirstVisit), so nothing is overwritten.
-    storage.loadDemoUniverse();
+    storage.loadSampleData();
     toast.success(
       'Sample data loaded',
       'Have a look around. You can delete it any time in Settings.'
@@ -115,7 +119,7 @@ function renderWeek(activities, settings) {
     .filter(a => isWithinLastNDays(a.date, 7))
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const hours = Math.round((minutes / 60) * 10) / 10;
-  const target = Math.max(1, Number(settings.weeklyTargetHours) || 12);
+  const target = Math.max(1, Number(settings.weeklyTargetHours) || DEFAULT_WEEKLY_HOURS);
   const pct = Math.min(100, Math.round((hours / target) * 100));
 
   setText('home-week-hours', String(hours));

@@ -1,6 +1,6 @@
 /* ==========================================================================
    CODEORBIT — REUSABLE UI COMPONENTS
-   Buttons, Cards, Inputs, Modals, Toasts, Badges, Progress, Dropdowns
+   Buttons, cards, form fields, modals, toasts, badges, progress bars, menus
    ========================================================================== */
 
 /* ==========================================================================
@@ -34,17 +34,13 @@
   pointer-events: none;
 }
 
-.btn-primary,
-.btn-cyan,
-.btn-orange {
+.btn-primary {
   background: var(--primary);
   color: #ffffff;
   font-weight: 700;
 }
 
-.btn-primary:hover,
-.btn-cyan:hover,
-.btn-orange:hover {
+.btn-primary:hover {
   background: var(--primary-hover);
   color: #ffffff;
 }
@@ -121,11 +117,8 @@
   transition: border-color var(--transition-fast);
 }
 
-.card:hover,
-.card-glow-purple:hover,
-.card-glow-cyan:hover,
-.card-glow-orange:hover {
-  border-color: var(--glass-border-hover);
+.card:hover {
+  border-color: var(--border-hover);
 }
 
 .card-elevated {
@@ -148,12 +141,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-}
-
-.card-subtitle {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-  margin-top: 2px;
 }
 
 /* ==========================================================================
@@ -179,7 +166,7 @@
 }
 
 .form-label-required {
-  color: var(--orbital-orange);
+  color: var(--accent-text);
 }
 
 .form-input,
@@ -201,7 +188,7 @@
 .form-textarea:focus {
   border-color: var(--border-focus);
   outline: none;
-  box-shadow: 0 0 0 3px var(--cyan-subtle);
+  box-shadow: 0 0 0 3px var(--tint);
 }
 
 .form-input::placeholder,
@@ -217,7 +204,7 @@
 .form-select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238F8F95' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
@@ -240,23 +227,7 @@
   color: var(--text-muted);
 }
 
-.form-error {
-  font-size: var(--text-xs);
-  color: var(--danger);
-  display: none;
-}
-
-.form-error.visible {
-  display: block;
-}
-
-/* Range Slider */
-.range-slider-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
+/* Range slider */
 .range-slider {
   flex: 1;
   accent-color: var(--primary);
@@ -269,7 +240,7 @@
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: var(--text-sm);
-  color: var(--cyan-accent);
+  color: var(--text-primary);
   min-width: 45px;
   text-align: right;
 }
@@ -289,7 +260,7 @@
 
 .tag-container:focus-within {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--cyan-subtle);
+  box-shadow: 0 0 0 3px var(--tint);
 }
 
 .tag-badge {
@@ -298,7 +269,7 @@
   gap: 4px;
   background-color: var(--bg-card-elevated);
   border: 1px solid var(--border);
-  color: var(--cyan-accent);
+  color: var(--text-primary);
   font-size: var(--text-xs);
   font-family: var(--font-mono);
   padding: 2px 8px;
@@ -348,25 +319,16 @@
   border: 1px solid var(--primary);
 }
 
-.badge-secondary,
-.badge-cyan,
 .badge-muted {
   background: transparent;
   color: var(--text-secondary);
   border: 1px solid var(--border-strong);
 }
 
-.badge-orange,
-.badge-danger {
+.badge-accent {
   background: transparent;
   color: var(--accent-text);
   border: 1px solid var(--accent-text);
-}
-
-.badge-success {
-  background: transparent;
-  color: var(--success);
-  border: 1px solid var(--success);
 }
 
 .badge-warning {
@@ -395,7 +357,6 @@
   position: relative;
 }
 
-.progress-bar-fill.fill-orange,
 .progress-bar-fill.fill-primary {
   background: var(--primary);
 }
@@ -657,21 +618,20 @@
 }
 
 .toast-info {
-  border-left: 4px solid var(--cyan-accent);
+  border-left: 4px solid var(--text-primary);
 }
 .toast-info .toast-icon {
-  color: var(--cyan-accent);
+  color: var(--text-primary);
 }
 
-/* Special Achievement Unlock Toast */
+/* "You earned a badge" toast */
 .toast-achievement {
-  border: 1px solid var(--orbital-orange);
+  border: 1px solid var(--accent-text);
   background: var(--bg-card-elevated);
-  box-shadow: 0 0 25px var(--orange-glow);
 }
 
 .toast-achievement .toast-icon {
-  color: var(--orbital-orange);
+  color: var(--accent-text);
 }
 
 .toast-achievement .toast-title {
@@ -682,7 +642,7 @@
 }
 
 /* ==========================================================================
-   DROPDOWNS
+   MENUS (the "…" menu on skill cards)
    ========================================================================== */
 .dropdown-menu {
   position: absolute;
@@ -746,66 +706,6 @@
   margin: 4px 0;
 }
 
-/* Notifications Panel Specifics */
-.notifications-panel {
-  width: 320px;
-  max-height: 400px;
-  overflow-y: auto;
-  padding: 0;
-}
-
-.notif-header {
-  padding: var(--space-md);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.notif-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.notif-item {
-  display: flex;
-  gap: var(--space-sm);
-  padding: 12px;
-  border-bottom: 1px solid var(--border-light);
-  transition: background-color var(--transition-fast);
-}
-
-.notif-item:hover {
-  background-color: var(--bg-card-elevated);
-}
-
-.notif-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: var(--text-xs);
-}
-
-.notif-content {
-  flex: 1;
-}
-
-.notif-title {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.notif-time {
-  font-size: 0.6875rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
 /* ==========================================================================
    EMPTY STATES
    ========================================================================== */
@@ -816,20 +716,6 @@
   justify-content: center;
   text-align: center;
   padding: var(--space-2xl) var(--space-lg);
-}
-
-.empty-state-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-full);
-  background: var(--bg-card-elevated);
-  border: 1px dashed var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cyan-accent);
-  margin-bottom: var(--space-md);
-  box-shadow: 0 0 20px var(--cyan-subtle);
 }
 
 .empty-state-title {
@@ -915,7 +801,7 @@
 }
 
 /* ==========================================================================
-   MISSION LOGS TIMELINE STYLES
+   STUDY SESSIONS LIST (grouped by day)
    ========================================================================== */
 .timeline-date-group {
   margin-bottom: var(--space-xl);
@@ -938,7 +824,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--cyan-accent);
+  color: var(--text-primary);
   background: transparent;
   border: 1px solid var(--border-strong);
   padding: 4px 12px;
@@ -980,19 +866,18 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--cyan-accent);
+  background: var(--text-primary);
   border: 2px solid var(--bg-main);
-  box-shadow: 0 0 8px var(--cyan-glow);
   z-index: 2;
 }
 
 .activity-timeline-item:hover {
   transform: translateX(3px);
-  border-color: var(--glass-border-hover);
+  border-color: var(--border-hover);
 }
 
 /* ==========================================================================
-   MILESTONES (GOALS) PROGRESS RINGS & CARDS
+   GOAL CARDS: progress ring
    ========================================================================== */
 .goal-ring-wrap {
   position: relative;
@@ -1020,7 +905,7 @@
   stroke-width: 4;
   stroke-linecap: round;
   fill: none;
-  stroke: var(--orbital-orange);
+  stroke: var(--accent-text);
   transition: stroke-dashoffset 0.6s ease;
 }
 

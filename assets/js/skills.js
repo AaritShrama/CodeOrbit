@@ -1,10 +1,11 @@
 /**
- * CODEORBIT — SKILL UNIVERSE MODULE
- * Planetary competency tracker, search, filters, sorting, and full CRUD operations.
+ * CODEORBIT — SKILLS PAGE
+ * Skill cards with search, filters and sorting; +10% / −10% buttons; the
+ * add / edit skill dialog (also opened from Home).
  */
 
 import { storage } from './storage.js';
-import { escapeHTML, formatDate } from './utils.js';
+import { escapeHTML, formatDate, statusLabel } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
 
 let searchQuery = '';
@@ -108,8 +109,7 @@ export function renderSkills() {
 
   // 4. Sorting
   skills.sort((a, b) => {
-    if (activeSort === 'name-asc') return a.name.localeCompare(b.name);
-    if (activeSort === 'name-desc') return b.name.localeCompare(a.name);
+    if (activeSort === 'name-asc') return (a.name || '').localeCompare(b.name || '');
     if (activeSort === 'progress-desc') return (b.progress || 0) - (a.progress || 0);
     if (activeSort === 'progress-asc') return (a.progress || 0) - (b.progress || 0);
     if (activeSort === 'date-desc') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
@@ -210,9 +210,7 @@ function getStatusBadgeClass(status) {
     case 'Completed':
       return 'badge-primary';
     case 'Practicing':
-      return 'badge-orange';
-    case 'Learning':
-      return 'badge-cyan';
+      return 'badge-accent';
     default:
       return 'badge-muted';
   }
@@ -284,6 +282,7 @@ function showSkillContextMenu(skillId, anchorEl) {
       activeMenuDismissListener = null;
     }
     const s = storage.getSkillById(skillId);
+    if (!s) return;
     showConfirmDialog({
       title: 'Delete this skill?',
       message: `"${s.name}" will be deleted. This cannot be undone.`,
@@ -371,18 +370,4 @@ function handleSkillFormSubmit(e) {
   storage.saveSkill(skillData);
   closeModal('skill-modal');
   toast.success(id ? 'Saved' : 'Skill added', `${name}`);
-}
-
-/** Words people see for each stored status (stored values stay the same). */
-function statusLabel(status) {
-  switch (status) {
-    case 'Completed':
-      return 'Finished';
-    case 'Practicing':
-      return 'Practising';
-    case 'Not Started':
-      return 'Not started';
-    default:
-      return status || 'Learning';
-  }
 }

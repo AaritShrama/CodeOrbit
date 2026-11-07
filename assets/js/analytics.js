@@ -7,12 +7,13 @@
 import { storage } from './storage.js';
 import {
   calculateStreak,
-  calculateProductivityScore,
+  calculateProgressScore,
+  escapeHTML,
   isWithinLastNDays,
-  peakWeekday
+  peakWeekday,
+  skillLabel
 } from './utils.js';
 import { chartManager } from './charts.js';
-import { escapeHTML } from './utils.js';
 import { openModal } from './components.js';
 import { ACHIEVEMENT_DEFINITIONS } from './achievements.js';
 
@@ -38,26 +39,13 @@ export function renderAnalytics() {
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const weeklyHours = Math.round((weekMins / 60) * 10) / 10;
 
-  const monthMins = activities
-    .filter(a => isWithinLastNDays(a.date, 30))
-    .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
-  const monthlyHours = Math.round((monthMins / 60) * 10) / 10;
-
   const skillCompleted = skills.filter(s => s.status === 'Completed' || s.progress >= 100).length;
   const skillCompletionRate =
     skills.length > 0 ? Math.round((skillCompleted / skills.length) * 100) : 0;
 
-  const projectCompleted = projects.filter(p => p.status === 'Completed').length;
-  const projectCompletionRate =
-    projects.length > 0 ? Math.round((projectCompleted / projects.length) * 100) : 0;
-
-  const goalCompleted = goals.filter(g => g.status === 'Completed').length;
-  const goalCompletionRate =
-    goals.length > 0 ? Math.round((goalCompleted / goals.length) * 100) : 0;
-
   const streak = calculateStreak(activities);
 
-  // Set KPIs
+  // Numbers at the top
   const setEl = (id, text) => {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
@@ -65,14 +53,11 @@ export function renderAnalytics() {
 
   setEl('analytics-total-hours', `${totalHours}h`);
   setEl('analytics-weekly-hours', `${weeklyHours}h`);
-  setEl('analytics-monthly-hours', `${monthlyHours}h`);
   setEl('analytics-skill-rate', `${skillCompletionRate}%`);
-  setEl('analytics-project-rate', `${projectCompletionRate}%`);
-  setEl('analytics-goal-rate', `${goalCompletionRate}%`);
   setEl('analytics-streak', `${streak.currentStreak}`);
 
   // Progress score + its explanation dialog
-  const prod = calculateProductivityScore({
+  const prod = calculateProgressScore({
     activities,
     skills,
     projects,
@@ -82,8 +67,10 @@ export function renderAnalytics() {
   setEl('score-level-badge', prod.level);
   populateScoreModal(prod, setEl);
 
-  // Badges
-  const earned = (data.achievements || []).length;
+  // Badges (count only badges that exist: a backup could list unknown ids)
+  const earned = ACHIEVEMENT_DEFINITIONS.filter(def =>
+    (data.achievements || []).some(a => a.id === def.id)
+  ).length;
   setEl('progress-badges-count', `${earned} of ${ACHIEVEMENT_DEFINITIONS.length} earned`);
 
   // 2. Render Charts
@@ -93,7 +80,7 @@ export function renderAnalytics() {
   chartManager.renderProjectStatusChart('analytics-project-status-chart', projects);
   chartManager.renderActivityTypeChart('analytics-activity-type-chart', activities);
 
-  // 3. Automated Developer Habit Insights
+  // 3. "What we noticed"
   generateHabitInsights(activities, skills, goals);
 }
 
@@ -110,12 +97,12 @@ function generateHabitInsights(activities, skills, goals) {
     return;
   }
 
-  // Find top focused skill
+  // Most studied skill
   const skillMins = {};
   activities.forEach(a => {
     skillMins[a.skill] = (skillMins[a.skill] || 0) + (Number(a.duration) || 0);
   });
-  let topSkill = 'General';
+  let topSkill = '';
   let maxMins = 0;
   for (const [s, m] of Object.entries(skillMins)) {
     if (m > maxMins) {
@@ -124,17 +111,17 @@ function generateHabitInsights(activities, skills, goals) {
     }
   }
 
-  // Find most active day of week
+  // Day of the week with the most study time
   const peakDay = peakWeekday(activities);
 
-  // Pending goals count
+  // Goals not finished yet
   const pendingGoals = goals.filter(g => g.status === 'Active').length;
 
   container.innerHTML = `
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
       <div class="card card-elevated" style="padding: 16px;">
         <div class="label-mono" style="margin-bottom: 6px;">Most studied skill</div>
-        <div style="font-size: var(--text-lg); font-weight: 700;">${escapeHTML(topSkill)}</div>
+        <div style="font-size: var(--text-lg); font-weight: 700;">${escapeHTML(skillLabel(topSkill))}</div>
         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px;">${Math.round((maxMins / 60) * 10) / 10} hours in total.</div>
       </div>
 

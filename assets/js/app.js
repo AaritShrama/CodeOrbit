@@ -1,7 +1,8 @@
 /**
- * CODEORBIT — MAIN APPLICATION BOOTSTRAP MODULE
- * Wires state listeners, cosmic canvas starfield, global keyboard shortcuts, and view orchestration.
- * Organization: LET'S COOK — THE FOUNDRY
+ * CODEORBIT — START-UP
+ * Runs each start-up step on its own (one failing step cannot stop the rest),
+ * owns the single data-changed listener, the keyboard shortcuts, the starfield
+ * and offline support. Made by Let's Cook.
  */
 
 import { navigation } from './navigation.js';
@@ -11,6 +12,8 @@ import {
   renderPaletteResults,
   toast
 } from './components.js';
+import { sounds } from './utils.js';
+import { storage } from './storage.js';
 import { initDashboard, renderDashboard } from './dashboard.js';
 import { initSkills, renderSkills } from './skills.js';
 import { initProgress, renderProgress } from './progress.js';
@@ -40,23 +43,29 @@ function refreshIcons() {
   }
 }
 
+/** Settings → Sounds. Read again after every change, so the switch works at once. */
+function syncSoundSetting() {
+  sounds.enabled = storage.getSettings().soundEnabled !== false;
+}
+
 function initApp() {
   console.log('CodeOrbit is starting');
   const failures = [];
 
-  // 2. Background starfield (purely decorative)
-  runStep('starfield', initCosmicStarfield, failures);
+  // 1. Background starfield (purely decorative)
+  runStep('starfield', initStarfield, failures);
 
-  // 3. Modal dismiss handlers + keyboard shortcuts
-  runStep('modals', setupModalDismissHandlers, failures);
+  // 2. Dialogs (Esc / click outside to close), keyboard shortcuts, sound setting
+  runStep('dialogs', setupModalDismissHandlers, failures);
   runStep('shortcuts', setupGlobalShortcuts, failures);
+  runStep('sound setting', syncSoundSetting, failures);
 
-  // 3b. Offline support + install as an app (sw.js). Optional: failure only means no offline use.
+  // 3. Offline support + install as an app (sw.js). Optional: failure only means no offline use.
   runStep('offline support', registerServiceWorker, failures);
 
-  // 4. Register views with the router (cannot fail, but keep the pattern uniform)
+  // 4. Register pages with the router (cannot fail, but keep the pattern uniform)
   runStep(
-    'routes',
+    'pages',
     () => {
       navigation.registerView('dashboard', renderDashboard);
       navigation.registerView('skills', renderSkills);
@@ -77,20 +86,21 @@ function initApp() {
   runStep('study sessions page', initProgress, failures);
   runStep('projects page', initProjects, failures);
   runStep('goals page', initGoals, failures);
-  runStep('achievements page', initAchievements, failures);
-  runStep('analytics page', initAnalytics, failures);
+  runStep('badges page', initAchievements, failures);
+  runStep('progress page', initAnalytics, failures);
   runStep('settings page', initSettings, failures);
   runStep('week in review', initRecap, failures);
 
-  // 6. Unlock anything already earned (e.g. after an import) before the first render
-  runStep('achievement check', evaluateAchievements, failures);
+  // 6. Unlock badges already earned (e.g. data saved by an older version) before the first render
+  runStep('badge check', evaluateAchievements, failures);
 
   // 7. Router: renders the visible page (the ONLY startup render)
   runStep('navigation', () => navigation.init(), failures);
 
-  // 8. Global data-change listener (event bus)
+  // 8. The one data-change listener: every save in storage.js ends up here
   window.addEventListener('codeorbit:data-changed', e => {
-    // If this unlocks achievements it saves, which dispatches data-changed again;
+    syncSoundSetting();
+    // If this unlocks badges it saves, which dispatches data-changed again;
     // that nested round re-renders everything below, so stop here to avoid a double render.
     // Replacing the whole data set (sample data, restore, delete all) unlocks quietly.
     const silent = Boolean(e && e.detail && e.detail.reason === 'replace');
@@ -122,7 +132,7 @@ if (document.readyState === 'loading') {
    ========================================================================== */
 function setupGlobalShortcuts() {
   window.addEventListener('keydown', e => {
-    // Ctrl+K or Cmd+K or "/" to open Command Palette
+    // Ctrl+K, Cmd+K or "/" opens search
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
       openCommandPalette();
@@ -136,7 +146,7 @@ function setupGlobalShortcuts() {
     }
   });
 
-  // Search input typing in Command Palette
+  // Typing in search
   const paletteInput = document.getElementById('palette-search-input');
   if (paletteInput) {
     paletteInput.addEventListener('input', e => {
@@ -152,10 +162,10 @@ function setupGlobalShortcuts() {
 }
 
 /* ==========================================================================
-   PERFORMANT COSMIC STARFIELD CANVAS
+   STARFIELD (decorative; still when reduced motion is on)
    ========================================================================== */
-function initCosmicStarfield() {
-  const canvas = document.getElementById('cosmic-stars-canvas');
+function initStarfield() {
+  const canvas = document.getElementById('stars-canvas');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
@@ -167,7 +177,6 @@ function initCosmicStarfield() {
     height = canvas.height = window.innerHeight;
   });
 
-  // Check reduced motion
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const numStars = Math.min(80, Math.floor((width * height) / 16000));

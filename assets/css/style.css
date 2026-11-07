@@ -1,7 +1,7 @@
 /* ==========================================================================
-   CODEORBIT — DESIGN SYSTEM & BASE STYLES
-   Organization: LET'S COOK — THE FOUNDRY
-   Theme: Space x Let's Cook x Swiss (see docs/DECISIONS.md, D-020)
+   CODEORBIT — DESIGN TOKENS & BASE STYLES
+   Made by Let's Cook. Look: space x Let's Cook x Swiss (docs/DECISIONS.md, D-020),
+   dark only (D-025).
    Black and white with one crimson accent, a strict grid, big numbers,
    mono labels, slow decorative motion only.
    ========================================================================== */
@@ -26,57 +26,29 @@
 :root {
   color-scheme: dark;
 
-  /* Surfaces (dark, default) */
+  /* Surfaces */
   --bg-main: #0a0a0b;
   --bg-secondary: #0d0d0f;
-  --bg-sidebar: #0a0a0b;
   --bg-card: #0d0d0f;
   --bg-card-elevated: #121214;
   --bg-card-hover: #17171a;
-  --bg-glass: #0d0d0f;
-  --glass-surface: #0d0d0f;
-  --glass-surface-elevated: #121214;
-  --glass-border: #2c2c31;
-  --glass-border-hover: #4a4a52;
-  --circuit-line: transparent;
-  --circuit-node: transparent;
   --bg-input: #121214;
   --bg-topbar: rgba(10, 10, 11, 0.88);
   --overlay: rgba(0, 0, 0, 0.72);
   --avatar-bg: #121214;
+  --tint: rgba(245, 245, 244, 0.06); /* faint white wash, e.g. the focus ring */
 
   /* Brand: Let's Cook crimson. Fill colour carries white text only;
      on dark backgrounds crimson TEXT uses --accent-text so it stays readable. */
   --primary: #b8002f;
   --primary-hover: #9c0028;
-  --primary-glow: rgba(184, 0, 47, 0.28);
   --primary-subtle: rgba(184, 0, 47, 0.14);
   --accent-text: #ff4d6a;
 
-  /* Older accent names are kept so every page reads from the same palette. */
-  --secondary: #b9b9be;
-  --secondary-glow: transparent;
-  --secondary-subtle: rgba(245, 245, 244, 0.06);
-
-  --cyan-accent: #f5f5f4;
-  --cyan-glow: transparent;
-  --cyan-subtle: rgba(245, 245, 244, 0.06);
-
-  --orbital-orange: #ff4d6a;
-  --orange-glow: transparent;
-  --orange-subtle: rgba(255, 77, 106, 0.12);
-
   /* Status */
   --success: #6fd39b;
-  --success-glow: transparent;
-  --success-subtle: rgba(111, 211, 155, 0.12);
-
   --warning: #e8b04b;
-  --warning-glow: transparent;
-  --warning-subtle: rgba(232, 176, 75, 0.12);
-
   --danger: #ff4d6a;
-  --danger-glow: transparent;
   --danger-subtle: rgba(255, 77, 106, 0.12);
 
   /* Text */
@@ -88,6 +60,7 @@
   /* Lines */
   --border: #2c2c31;
   --border-strong: #3a3a40;
+  --border-hover: #4a4a52;
   --border-light: #1e1e22;
   --border-focus: #ff4d6a;
 
@@ -101,8 +74,6 @@
   --text-lg: 1.125rem; /* 18px */
   --text-xl: 1.25rem; /* 20px */
   --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 2rem; /* 32px */
-  --text-4xl: 2.5rem; /* 40px */
   --label-tracking: 0.16em;
 
   /* Spacing (8px steps) */
@@ -120,22 +91,14 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
-  --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Flat by design: no glows, almost no shadows */
-  --shadow-sm: none;
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  /* Flat by design: no glows; one shadow for things that float (modals, toasts) */
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-  --shadow-glow-purple: none;
-  --shadow-glow-cyan: none;
-  --shadow-glow-orange: none;
 
   /* Motion */
   --ease-swiss: cubic-bezier(0.7, 0, 0.3, 1);
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Layout */
   --topbar-height: 72px;
@@ -172,8 +135,8 @@ body {
   position: relative;
 }
 
-/* Starfield Canvas Background (Behind Content) */
-#cosmic-stars-canvas {
+/* Starfield behind the page (decorative, app.js initStarfield) */
+#stars-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -184,7 +147,7 @@ body {
 }
 
 a {
-  color: var(--cyan-accent);
+  color: var(--text-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }

@@ -2,7 +2,7 @@
   "name": "codeorbit",
   "version": "0.1.0",
   "private": true,
-  "description": "CodeOrbit \u2014 Your Universe of Developer Growth. Development tooling only: the app itself needs no install or build.",
+  "description": "CodeOrbit: a free study tracker for developers. These are development tools only: the app itself needs no install or build.",
   "license": "MIT",
   "type": "module",
   "engines": {

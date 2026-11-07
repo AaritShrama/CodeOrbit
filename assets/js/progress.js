@@ -1,6 +1,8 @@
 /**
- * CODEORBIT — MISSION LOGS (LEARNING PROGRESS) MODULE
- * Time tracking, daily target progress ring, session timeline, and activity CRUD.
+ * CODEORBIT — STUDY SESSIONS PAGE (route: #progress)
+ * Totals, today's goal ring, the list of sessions grouped by day with search
+ * and filters, and the add / edit study time dialog (also opened from Home).
+ * Sessions are stored as "activities".
  */
 
 import { activityIcon } from './icons.js';
@@ -12,7 +14,11 @@ import {
   formatRelativeTime,
   getTodayISO,
   getRelativeISO,
-  isWithinLastNDays
+  isWithinLastNDays,
+  typeLabel,
+  skillLabel,
+  GENERAL_SKILL,
+  DEFAULT_DAILY_HOURS
 } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
 
@@ -64,13 +70,13 @@ function setupProgressEventListeners() {
     });
   }
 
-  // Add Log Button
-  const addBtn = document.getElementById('launch-session-btn');
+  // Add study time
+  const addBtn = document.getElementById('add-session-btn');
   if (addBtn) {
     addBtn.addEventListener('click', () => openActivityModal());
   }
 
-  // Activity Form Submission
+  // Add / edit form
   const logForm = document.getElementById('activity-modal-form');
   if (logForm) {
     logForm.addEventListener('submit', handleActivityFormSubmit);
@@ -78,7 +84,7 @@ function setupProgressEventListeners() {
 }
 
 export function renderProgress() {
-  const container = document.getElementById('mission-logs-timeline');
+  const container = document.getElementById('sessions-list');
   if (!container) return;
 
   const data = storage.getUniverse();
@@ -86,10 +92,10 @@ export function renderProgress() {
   const skills = data.skills || [];
   const settings = data.settings || {};
 
-  // Populate skill filter dropdown
-  populateSkillFilterOptions(skills);
+  // Skill filter: your skills plus any other skill a session uses (e.g. General)
+  populateSkillFilterOptions(skills, activities);
 
-  // 1. Calculate Progress Metrics
+  // 1. Totals
   const totalMinutes = activities.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
   const totalSessions = activities.length;
@@ -114,13 +120,13 @@ export function renderProgress() {
   setEl('metric-avg-session', `${avgSessionMins}m`);
   setEl('metric-total-sessions', totalSessions);
 
-  // 2. Daily Goal Circular Progress
+  // 2. Today's study goal (ring)
   const today = getTodayISO();
   const todayMins = activities
     .filter(a => a.date && a.date.slice(0, 10) === today)
     .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
   const todayHours = Math.round((todayMins / 60) * 10) / 10;
-  const dailyTargetHours = Math.max(0.5, Number(settings.dailyTargetHours) || 2);
+  const dailyTargetHours = Math.max(0.5, Number(settings.dailyTargetHours) || DEFAULT_DAILY_HOURS);
   const dailyPct = Math.min(100, Math.round((todayHours / dailyTargetHours) * 100));
 
   setEl('daily-target-display', `${todayHours} / ${dailyTargetHours}h`);
@@ -134,7 +140,7 @@ export function renderProgress() {
     dailyRing.style.strokeDashoffset = `${offset}`;
   }
 
-  // 3. Filter & Sort Activities List
+  // 3. Search, filter and sort the list
   let filtered = [...activities];
 
   if (searchQuery) {
@@ -163,27 +169,28 @@ export function renderProgress() {
   });
 
   if (filtered.length === 0) {
+    const filtering = searchQuery || activeType !== 'All' || activeSkill !== 'All';
     container.innerHTML = `
       <div class="empty-state">
-        <h4 class="empty-state-title">No study time added yet</h4>
+        <h4 class="empty-state-title">${filtering ? 'Nothing found' : 'No study time added yet'}</h4>
         <p class="empty-state-desc">
           ${
-            searchQuery || activeType !== 'All' || activeSkill !== 'All'
+            filtering
               ? 'Nothing matches your search or filters. Try clearing them.'
               : 'Each time you study, add it here: what you did and for how long.'
           }
         </p>
-        <button class="btn btn-primary" id="empty-launch-btn">
+        <button class="btn btn-primary" id="empty-add-session-btn">
           Add study time
         </button>
       </div>
     `;
-    const btn = document.getElementById('empty-launch-btn');
+    const btn = document.getElementById('empty-add-session-btn');
     if (btn) btn.addEventListener('click', () => openActivityModal());
     return;
   }
 
-  // Render Timeline with Date Grouping
+  // The list, one group per day
   const groups = {};
   filtered.forEach(act => {
     const dStr = act.date ? act.date.slice(0, 10) : 'Unknown';
@@ -227,7 +234,7 @@ export function renderProgress() {
                     <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
                       ${escapeHTML(act.title)}
                     </h4>
-                    <span class="badge badge-cyan">${escapeHTML(act.skill)}</span>
+                    <span class="badge badge-muted">${escapeHTML(skillLabel(act.skill))}</span>
                     <span class="badge badge-muted">${escapeHTML(typeLabel(act.type))}</span>
                   </div>
 
@@ -252,10 +259,10 @@ export function renderProgress() {
                   ${formatDuration(act.duration)}
                 </span>
                 <div style="display: flex; gap: 4px;">
-                  <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" aria-label="Edit this study session" title="Edit">
+                  <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${escapeHTML(act.id)}" aria-label="Edit this study session" title="Edit">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
                   </button>
-                  <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" aria-label="Delete this study session" title="Delete" style="color: var(--danger);">
+                  <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${escapeHTML(act.id)}" aria-label="Delete this study session" title="Delete" style="color: var(--danger);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                   </button>
                 </div>
@@ -295,21 +302,25 @@ export function renderProgress() {
   });
 }
 
-function populateSkillFilterOptions(skills) {
+function populateSkillFilterOptions(skills, activities) {
   const filter = document.getElementById('log-skill-filter');
   if (!filter) return;
 
   const currentVal = filter.value;
-  const skillNames = Array.from(new Set(skills.map(s => s.name)));
+  const skillNames = Array.from(
+    new Set([...skills.map(s => s.name), ...activities.map(a => a.skill)].filter(Boolean))
+  );
 
   filter.innerHTML =
     `<option value="All">All skills</option>` +
     skillNames
       .map(
         name =>
-          `<option value="${escapeHTML(name)}" ${currentVal === name ? 'selected' : ''}>${escapeHTML(name)}</option>`
+          `<option value="${escapeHTML(name)}" ${currentVal === name ? 'selected' : ''}>${escapeHTML(skillLabel(name))}</option>`
       )
       .join('');
+  // The chosen skill may be gone (deleted, or a restore); then show all again.
+  activeSkill = filter.value || 'All';
 }
 
 export function openActivityModal(activityId = null) {
@@ -319,28 +330,30 @@ export function openActivityModal(activityId = null) {
   form.reset();
   const skills = storage.getSkills();
 
-  // Populate skill select dropdown
+  const act = activityId ? (storage.getActivities() || []).find(a => a.id === activityId) : null;
+  if (activityId && !act) return;
+
+  // Skill choices: your skills, then "General". When editing a session whose
+  // skill was deleted, keep that name as a choice so saving does not change it.
   const skillSelect = document.getElementById('activity-form-skill');
   if (skillSelect) {
+    const names = skills.map(s => s.name).filter(Boolean);
+    if (act && act.skill && act.skill !== GENERAL_SKILL && !names.includes(act.skill)) {
+      names.push(act.skill);
+    }
     skillSelect.innerHTML =
-      skills.length > 0
-        ? skills
-            .map(s => `<option value="${escapeHTML(s.name)}">${escapeHTML(s.name)}</option>`)
-            .join('') + `<option value="General Exploration">General Exploration</option>`
-        : `<option value="General Exploration">General Exploration</option>`;
+      names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('') +
+      `<option value="${GENERAL_SKILL}">General (not one of my skills)</option>`;
   }
 
   const titleEl = document.getElementById('activity-modal-title');
   const dateInput = document.getElementById('activity-form-date');
 
-  if (activityId) {
-    const act = (storage.getActivities() || []).find(a => a.id === activityId);
-    if (!act) return;
-
+  if (act) {
     if (titleEl) titleEl.textContent = 'Edit study time';
     document.getElementById('activity-form-id').value = act.id;
     document.getElementById('activity-form-title').value = act.title || '';
-    if (skillSelect) skillSelect.value = act.skill || '';
+    if (skillSelect) skillSelect.value = act.skill || GENERAL_SKILL;
     document.getElementById('activity-form-duration').value = act.duration || 60;
     document.getElementById('activity-form-type').value = act.type || 'Coding';
     if (dateInput) dateInput.value = act.date ? act.date.slice(0, 10) : getTodayISO();
@@ -387,12 +400,8 @@ function handleActivityFormSubmit(e) {
 
   storage.saveActivity(actData);
   closeModal('activity-modal');
-  toast.success(id ? 'Saved' : 'Study time added', `${formatDuration(duration)} on ${skill}.`);
-}
-
-/** Words people see for each stored session type (stored values stay the same). */
-function typeLabel(type) {
-  if (type === 'Practice Problems') return 'Practice problems';
-  if (type === 'Project Development') return 'Project work';
-  return type || 'Other';
+  toast.success(
+    id ? 'Saved' : 'Study time added',
+    `${formatDuration(duration)} on ${skillLabel(skill)}.`
+  );
 }

@@ -1,10 +1,11 @@
 /**
- * CODEORBIT — MILESTONES (GOAL MANAGEMENT) MODULE
- * Learning horizons, priority flags, deadline countdowns, and completion metrics.
+ * CODEORBIT — GOALS PAGE
+ * Goal cards with due dates ("3 days left", "2 days late"), search, status and
+ * priority filters, "Mark as done", and the add / edit goal dialog.
  */
 
 import { storage } from './storage.js';
-import { escapeHTML, formatDate, formatRelativeTime, getTodayISO } from './utils.js';
+import { escapeHTML, formatDate, getTodayISO } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
 
 let searchQuery = '';
@@ -120,7 +121,7 @@ export function renderGoals() {
     filtered = filtered.filter(g => g.priority === activePriority);
   }
 
-  // Sort: Overdue first, then high priority, then deadline
+  // Sort: late goals first, then by due date (no due date last)
   filtered.sort((a, b) => {
     const aOverdue = a.status === 'Active' && a.deadline && a.deadline < today;
     const bOverdue = b.status === 'Active' && b.deadline && b.deadline < today;
@@ -155,8 +156,10 @@ export function renderGoals() {
     .map(g => {
       const isCompleted = g.status === 'Completed';
       const isOverdue = !isCompleted && g.deadline && g.deadline < today;
+      const id = escapeHTML(g.id);
+      const progress = Math.max(0, Math.min(100, Number(g.progress) || 0));
       const ringCircum = 2 * Math.PI * 20; // 125.66 for r=20
-      const ringOffset = ringCircum - (Math.min(100, Number(g.progress) || 0) / 100) * ringCircum;
+      const ringOffset = ringCircum - (progress / 100) * ringCircum;
 
       let deadlineDisplay = 'No due date';
       if (g.deadline) {
@@ -173,7 +176,7 @@ export function renderGoals() {
       }
 
       return `
-      <div class="card card-glow-orange goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="card goal-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
         <div>
           <!-- Header Row -->
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
@@ -187,10 +190,10 @@ export function renderGoals() {
             </div>
 
             <div style="display: flex; gap: 4px;">
-              <button class="btn btn-ghost btn-sm btn-icon-only edit-goal-btn" data-id="${g.id}" aria-label="Edit ${escapeHTML(g.title)}" title="Edit">
+              <button class="btn btn-ghost btn-sm btn-icon-only edit-goal-btn" data-id="${id}" aria-label="Edit ${escapeHTML(g.title)}" title="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
               </button>
-              <button class="btn btn-ghost btn-sm btn-icon-only delete-goal-btn" data-id="${g.id}" aria-label="Delete ${escapeHTML(g.title)}" title="Delete" style="color: var(--danger);">
+              <button class="btn btn-ghost btn-sm btn-icon-only delete-goal-btn" data-id="${id}" aria-label="Delete ${escapeHTML(g.title)}" title="Delete" style="color: var(--danger);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
               </button>
             </div>
@@ -198,13 +201,13 @@ export function renderGoals() {
 
           <!-- Goal Info with Circular Progress Ring -->
           <div style="display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px;">
-            <div class="goal-ring-wrap" title="${g.progress}% done">
+            <div class="goal-ring-wrap" title="${progress}% done">
               <svg class="goal-ring-svg" viewBox="0 0 50 50">
                 <circle class="goal-ring-bg" cx="25" cy="25" r="20"></circle>
                 <circle class="goal-ring-fill ${isCompleted ? 'fill-done' : ''}" cx="25" cy="25" r="20"
                   stroke-dasharray="125.66" stroke-dashoffset="${ringOffset}"></circle>
               </svg>
-              <span class="goal-ring-text">${g.progress}%</span>
+              <span class="goal-ring-text">${progress}%</span>
             </div>
 
             <div style="flex: 1;">
@@ -221,19 +224,16 @@ export function renderGoals() {
         <div>
           <!-- Progress Bar Meter -->
           <div class="progress-bar-container" style="height: 6px; margin-bottom: 12px;">
-            <div class="progress-bar-fill ${isCompleted ? 'fill-success' : 'fill-orange'}" style="width: ${g.progress}%;"></div>
+            <div class="progress-bar-fill ${isCompleted ? 'fill-success' : 'fill-primary'}" style="width: ${progress}%;"></div>
           </div>
 
           <!-- Bottom Footer & Quick Complete -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
-            <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.6875rem; color: ${isOverdue ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: ${isOverdue ? '700' : '500'}; font-family: var(--font-mono);">
-                ${deadlineDisplay}
-              </span>
-              <span style="font-size: 0.625rem; color: var(--text-muted);">${formatRelativeTime(g.deadline)}</span>
-            </div>
+            <span style="font-size: 0.6875rem; color: ${isOverdue ? 'var(--danger)' : 'var(--text-muted)'}; font-weight: ${isOverdue ? '700' : '500'}; font-family: var(--font-mono);">
+              ${deadlineDisplay}
+            </span>
 
-            <button class="btn btn-sm btn-outline toggle-complete-goal-btn" data-id="${g.id}">
+            <button class="btn btn-sm btn-outline toggle-complete-goal-btn" data-id="${id}">
               ${isCompleted ? 'Not done yet' : 'Mark as done'}
             </button>
           </div>
@@ -277,9 +277,8 @@ export function renderGoals() {
 function getPriorityBadge(priority) {
   switch (priority) {
     case 'Critical':
-      return 'badge-danger';
     case 'High':
-      return 'badge-orange';
+      return 'badge-accent';
     case 'Medium':
       return 'badge-warning';
     default:

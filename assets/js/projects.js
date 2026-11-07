@@ -1,10 +1,11 @@
 /**
- * CODEORBIT — SPACE MISSIONS (PROJECT MANAGEMENT) MODULE
- * Developer project tracker, multi-tech tag management, and progress horizons.
+ * CODEORBIT — PROJECTS PAGE
+ * Project cards with search, status filter and sorting, and the add / edit
+ * project dialog (tools used, links, dates, how far along).
  */
 
 import { storage } from './storage.js';
-import { escapeHTML, formatDate } from './utils.js';
+import { escapeHTML, formatDate, safeUrl, projectStatusLabel } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
 
 let searchQuery = '';
@@ -70,7 +71,7 @@ function setupProjectEventListeners() {
     });
   }
 
-  // Tag Input field in modal
+  // "Tools used": Enter or comma adds one
   const tagInputField = document.getElementById('project-tag-input');
   if (tagInputField) {
     tagInputField.addEventListener('keydown', e => {
@@ -93,7 +94,7 @@ export function renderProjects() {
 
   let projects = storage.getProjects();
 
-  // Summary counts
+  // Counts at the top
   const total = projects.length;
   const inProgress = projects.filter(p => p.status === 'In Progress').length;
   const planning = projects.filter(p => p.status === 'Planning').length;
@@ -124,7 +125,7 @@ export function renderProjects() {
 
   // Sorting
   projects.sort((a, b) => {
-    if (activeSort === 'name-asc') return a.name.localeCompare(b.name);
+    if (activeSort === 'name-asc') return (a.name || '').localeCompare(b.name || '');
     if (activeSort === 'progress-desc') return (b.progress || 0) - (a.progress || 0);
     if (activeSort === 'progress-asc') return (a.progress || 0) - (b.progress || 0);
     if (activeSort === 'date-desc') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
@@ -156,6 +157,11 @@ export function renderProjects() {
   container.innerHTML = projects
     .map(p => {
       const isCompleted = p.status === 'Completed';
+      const id = escapeHTML(p.id);
+      const progress = Math.max(0, Math.min(100, Number(p.progress) || 0));
+      // Only http(s) links become links (a backup file could hold "javascript:...")
+      const githubUrl = safeUrl(p.githubUrl);
+      const liveUrl = safeUrl(p.liveDemoUrl);
 
       let targetDateDisplay = 'No finish date';
       if (p.targetDate) {
@@ -170,7 +176,7 @@ export function renderProjects() {
       }
 
       return `
-      <div class="card card-glow-cyan project-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="card project-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
         <div>
           <!-- Top Row -->
           <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px;">
@@ -178,10 +184,10 @@ export function renderProjects() {
               ${escapeHTML(projectStatusLabel(p.status))}
             </span>
             <div style="display: flex; gap: 4px;">
-              <button class="btn btn-ghost btn-sm btn-icon-only edit-project-btn" data-id="${p.id}" aria-label="Edit ${escapeHTML(p.name)}" title="Edit">
+              <button class="btn btn-ghost btn-sm btn-icon-only edit-project-btn" data-id="${id}" aria-label="Edit ${escapeHTML(p.name)}" title="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
               </button>
-              <button class="btn btn-ghost btn-sm btn-icon-only delete-project-btn" data-id="${p.id}" aria-label="Delete ${escapeHTML(p.name)}" title="Delete" style="color: var(--danger);">
+              <button class="btn btn-ghost btn-sm btn-icon-only delete-project-btn" data-id="${id}" aria-label="Delete ${escapeHTML(p.name)}" title="Delete" style="color: var(--danger);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
               </button>
             </div>
@@ -205,20 +211,20 @@ export function renderProjects() {
           <!-- Progress -->
           <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 6px;">
             <span class="label-mono">How far along</span>
-            <span style="font-weight: 800; font-size: var(--text-lg); color: var(--text-primary); font-variant-numeric: tabular-nums;">${p.progress}%</span>
+            <span style="font-weight: 800; font-size: var(--text-lg); color: var(--text-primary); font-variant-numeric: tabular-nums;">${progress}%</span>
           </div>
 
           <div class="progress-bar-container" style="height: 7px; margin-bottom: 14px;">
-            <div class="progress-bar-fill ${isCompleted ? 'fill-success' : 'fill-primary'}" style="width: ${p.progress}%;"></div>
+            <div class="progress-bar-fill ${isCompleted ? 'fill-success' : 'fill-primary'}" style="width: ${progress}%;"></div>
           </div>
 
           <!-- Bottom Links and Dates -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 10px; font-size: var(--text-xs); flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; gap: 10px;">
               ${
-                p.githubUrl
+                githubUrl
                   ? `
-                <a href="${escapeHTML(p.githubUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Code on GitHub">
+                <a href="${escapeHTML(githubUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Code on GitHub">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
                   <span style="font-size: 0.6875rem;">Code</span>
                 </a>
@@ -226,9 +232,9 @@ export function renderProjects() {
                   : ''
               }
               ${
-                p.liveDemoUrl
+                liveUrl
                   ? `
-                <a href="${escapeHTML(p.liveDemoUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-accent); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Live site">
+                <a href="${escapeHTML(liveUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-primary); display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Live site">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                   <span style="font-size: 0.6875rem;">Live site</span>
                 </a>
@@ -276,10 +282,6 @@ function getStatusBadge(status) {
   switch (status) {
     case 'Completed':
       return 'badge-primary';
-    case 'In Progress':
-      return 'badge-cyan';
-    case 'Planning':
-      return 'badge-secondary';
     case 'On Hold':
       return 'badge-warning';
     default:
@@ -296,7 +298,7 @@ function renderModalTags() {
       tag => `
     <span class="tag-badge">
       ${escapeHTML(tag)}
-      <span class="tag-remove-btn" data-tag="${escapeHTML(tag)}">&times;</span>
+      <button type="button" class="tag-remove-btn" data-tag="${escapeHTML(tag)}" aria-label="Remove ${escapeHTML(tag)}">&times;</button>
     </span>
   `
     )
@@ -341,7 +343,6 @@ export function openProjectModal(projectId = null) {
     document.getElementById('project-form-id').value = '';
     document.getElementById('project-form-progress').value = 10;
     if (progBadge) progBadge.textContent = '10%';
-    modalTechTags = ['TypeScript', 'Node.js'];
   }
 
   renderModalTags();
@@ -366,12 +367,12 @@ function handleProjectFormSubmit(e) {
     return;
   }
 
-  // Basic URL format validation if provided
-  if (githubUrl && !githubUrl.startsWith('http')) {
+  // Links are optional, but must be real web links (same rule as on the cards)
+  if (githubUrl && !safeUrl(githubUrl)) {
     toast.error('Check the link', 'The GitHub link must start with http:// or https://');
     return;
   }
-  if (liveDemoUrl && !liveDemoUrl.startsWith('http')) {
+  if (liveDemoUrl && !safeUrl(liveDemoUrl)) {
     toast.error('Check the link', 'The live site link must start with http:// or https://');
     return;
   }
@@ -395,12 +396,4 @@ function handleProjectFormSubmit(e) {
   storage.saveProject(projectData);
   closeModal('project-modal');
   toast.success(id ? 'Saved' : 'Project added', `${name}`);
-}
-
-/** Words people see for each stored project status (stored values stay the same). */
-function projectStatusLabel(status) {
-  if (status === 'Completed') return 'Finished';
-  if (status === 'On Hold') return 'Paused';
-  if (status === 'In Progress') return 'In progress';
-  return status || 'Planning';
 }

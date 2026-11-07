@@ -1,21 +1,22 @@
 /**
- * CODEORBIT — SETTINGS & DATA MANAGEMENT MODULE
- * Profile editing, avatar presets, JSON backup/restore, and data reset.
+ * CODEORBIT — SETTINGS PAGE
+ * Profile and profile picture, study goals and sounds, and "Your data":
+ * download / restore a backup, load sample data, delete everything, install.
  */
 
 import { storage } from './storage.js';
-import { getTodayISO } from './utils.js';
+import { getTodayISO, DEFAULT_DAILY_HOURS, DEFAULT_WEEKLY_HOURS } from './utils.js';
 import { toast, showConfirmDialog } from './components.js';
 
 export function initSettings() {
   setupSettingsEventListeners();
-  // The sidebar profile card is visible on every page, so fill it now.
+  // The profile picture in the top bar is on every page, so fill it now.
   // The settings form itself is filled by renderSettings() when the page is opened.
-  updateSidebarProfile(storage.getProfile());
+  updateTopbarProfile(storage.getProfile());
 }
 
 function setupSettingsEventListeners() {
-  // Section Navigation Bar
+  // Section buttons at the top: scroll to the section and outline it briefly
   document.querySelectorAll('#settings-nav-bar .settings-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document
@@ -26,11 +27,9 @@ function setupSettingsEventListeners() {
       const targetEl = document.getElementById(targetId);
       if (targetEl) {
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        targetEl.style.borderColor = 'var(--cyan-accent)';
-        targetEl.style.boxShadow = '0 0 25px var(--cyan-glow)';
+        targetEl.style.borderColor = 'var(--text-primary)';
         setTimeout(() => {
           targetEl.style.borderColor = '';
-          targetEl.style.boxShadow = '';
         }, 1400);
       }
     });
@@ -48,7 +47,7 @@ function setupSettingsEventListeners() {
     prefForm.addEventListener('submit', handlePreferencesSubmit);
   }
 
-  // Avatar preset options
+  // Profile picture choices
   document.querySelectorAll('.avatar-option-btn').forEach(btn => {
     btn.innerHTML = getAvatarSvg(btn.getAttribute('data-avatar'));
     btn.setAttribute('aria-label', btn.getAttribute('title') || 'Profile picture');
@@ -60,17 +59,17 @@ function setupSettingsEventListeners() {
       const avatarVal = btn.getAttribute('data-avatar');
       const hiddenInput = document.getElementById('settings-avatar-input');
       if (hiddenInput) hiddenInput.value = avatarVal;
-      updateSidebarAvatar(avatarVal);
+      updateTopbarAvatar(avatarVal);
     });
   });
 
-  // Export JSON
+  // Download backup
   const exportBtn = document.getElementById('export-data-btn');
   if (exportBtn) {
     exportBtn.addEventListener('click', downloadBackup);
   }
 
-  // Import JSON File input
+  // Restore from backup (hidden file input)
   const importFileInput = document.getElementById('import-file-input');
   const importTriggerBtn = document.getElementById('import-data-btn');
   if (importTriggerBtn && importFileInput) {
@@ -101,10 +100,10 @@ function setupSettingsEventListeners() {
     });
   }
 
-  // Load Demo Data
-  const loadDemoBtn = document.getElementById('load-demo-data-btn');
-  if (loadDemoBtn) {
-    loadDemoBtn.addEventListener('click', () => {
+  // Load sample data
+  const loadSampleBtn = document.getElementById('load-sample-data-btn');
+  if (loadSampleBtn) {
+    loadSampleBtn.addEventListener('click', () => {
       showConfirmDialog({
         title: 'Load sample data?',
         message:
@@ -112,7 +111,7 @@ function setupSettingsEventListeners() {
         confirmText: 'Load sample data',
         confirmClass: 'btn-primary',
         onConfirm: () => {
-          storage.loadDemoUniverse();
+          storage.loadSampleData();
           renderSettings();
           toast.success('Sample data loaded', 'You can delete it any time from this page.');
         }
@@ -120,7 +119,7 @@ function setupSettingsEventListeners() {
     });
   }
 
-  // Reset Application Data
+  // Delete all my data
   const resetBtn = document.getElementById('reset-data-btn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
@@ -144,7 +143,7 @@ export function renderSettings() {
   const profile = storage.getProfile();
   const settings = storage.getSettings();
 
-  // Populate Profile Inputs
+  // Profile
   const nameInput = document.getElementById('settings-name-input');
   const titleInput = document.getElementById('settings-title-input');
   const bioInput = document.getElementById('settings-bio-input');
@@ -157,7 +156,7 @@ export function renderSettings() {
   if (githubInput) githubInput.value = profile.github || '';
   if (avatarInput) avatarInput.value = profile.avatar || 'astronaut';
 
-  // Highlight selected avatar preset
+  // Show which profile picture is chosen
   document.querySelectorAll('.avatar-option-btn').forEach(btn => {
     if (btn.getAttribute('data-avatar') === (profile.avatar || 'astronaut')) {
       btn.classList.add('selected');
@@ -166,17 +165,17 @@ export function renderSettings() {
     }
   });
 
-  // Populate Preferences Inputs
+  // Preferences
   const dailyTargetInput = document.getElementById('settings-daily-target');
   const weeklyTargetInput = document.getElementById('settings-weekly-target');
   const soundCheckbox = document.getElementById('settings-sound-enabled');
 
-  if (dailyTargetInput) dailyTargetInput.value = settings.dailyTargetHours || 2;
-  if (weeklyTargetInput) weeklyTargetInput.value = settings.weeklyTargetHours || 12;
+  if (dailyTargetInput) dailyTargetInput.value = settings.dailyTargetHours || DEFAULT_DAILY_HOURS;
+  if (weeklyTargetInput)
+    weeklyTargetInput.value = settings.weeklyTargetHours || DEFAULT_WEEKLY_HOURS;
   if (soundCheckbox) soundCheckbox.checked = settings.soundEnabled !== false;
 
-  // Update sidebar profile card
-  updateSidebarProfile(profile);
+  updateTopbarProfile(profile);
 }
 
 function handleProfileSubmit(e) {
@@ -195,16 +194,17 @@ function handleProfileSubmit(e) {
 
   const updatedProfile = { name, title, bio, github, avatar };
   storage.saveProfile(updatedProfile);
-  updateSidebarProfile(updatedProfile);
+  updateTopbarProfile(updatedProfile);
   toast.success('Saved', 'Your profile was updated.');
 }
 
 function handlePreferencesSubmit(e) {
   e.preventDefault();
 
-  const dailyTargetHours = parseFloat(document.getElementById('settings-daily-target').value) || 2;
+  const dailyTargetHours =
+    parseFloat(document.getElementById('settings-daily-target').value) || DEFAULT_DAILY_HOURS;
   const weeklyTargetHours =
-    parseFloat(document.getElementById('settings-weekly-target').value) || 10;
+    parseFloat(document.getElementById('settings-weekly-target').value) || DEFAULT_WEEKLY_HOURS;
   const soundEnabled = document.getElementById('settings-sound-enabled').checked;
 
   const newSettings = {
@@ -217,23 +217,23 @@ function handlePreferencesSubmit(e) {
   toast.success('Saved', 'Your preferences were updated.');
 }
 
-function updateSidebarProfile(profile) {
-  const nameEl = document.getElementById('sidebar-user-name');
-  const levelEl = document.getElementById('sidebar-user-level');
+/** The profile picture in the top bar (and the name screen readers hear on it). */
+function updateTopbarProfile(profile) {
+  const nameEl = document.getElementById('topbar-user-name');
   if (nameEl) nameEl.textContent = profile.name || 'Developer';
-  if (levelEl) levelEl.textContent = profile.title || '';
 
-  updateSidebarAvatar(profile.avatar || 'astronaut');
+  updateTopbarAvatar(profile.avatar || 'astronaut');
 }
 
-function updateSidebarAvatar(avatarKey) {
-  const avatarImg = document.getElementById('sidebar-avatar-img');
+function updateTopbarAvatar(avatarKey) {
+  const avatarImg = document.getElementById('topbar-avatar');
   if (avatarImg) {
     avatarImg.innerHTML = getAvatarSvg(avatarKey);
   }
 }
 
-export function getAvatarSvg(avatarKey) {
+/** Profile pictures. The keys are stored in saved data; the names people see are in index.html. */
+function getAvatarSvg(avatarKey) {
   switch (avatarKey) {
     case 'robot':
       return `<svg viewBox="0 0 40 40" width="100%" height="100%" fill="none"><rect width="40" height="40" rx="20" style="fill: var(--avatar-bg)"/><rect x="11" y="13" width="18" height="15" rx="3" fill="#B9B9BE"/><circle cx="16" cy="20" r="2.5" fill="#FF4D6A"/><circle cx="24" cy="20" r="2.5" fill="#FF4D6A"/><path d="M16 24h8" stroke="#FFFFFF" stroke-width="1.5"/><line x1="20" y1="13" x2="20" y2="8" stroke="#FF4D6A" stroke-width="2"/><circle cx="20" cy="7" r="2" fill="#B8002F"/></svg>`;
@@ -263,7 +263,7 @@ function handleExportJSON() {
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = `codeorbit-universe-${getTodayISO()}.json`;
+  a.download = `codeorbit-backup-${getTodayISO()}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -271,7 +271,7 @@ function handleExportJSON() {
 
   toast.success(
     'Backup downloaded',
-    'Keep the file somewhere safe. You can restore it from this page.'
+    'Keep the file somewhere safe. To bring it back: Settings → Your data → Restore from backup.'
   );
 }
 

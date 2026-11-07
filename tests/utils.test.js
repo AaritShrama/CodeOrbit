@@ -1,5 +1,6 @@
 /**
- * Unit tests for assets/js/utils.js: dates, the peak weekday, streaks, the productivity score, escaping.
+ * Unit tests for assets/js/utils.js: escaping and safe links, the words shown for stored
+ * values, dates, the peak weekday, days in a row, the progress score, backup reminder, recap.
  * Run with `npm test` (every timezone) or `npm run test:quick` (yours only).
  */
 import { test, describe } from 'node:test';
@@ -15,10 +16,16 @@ import {
   isWithinLastNDays,
   peakWeekday,
   calculateStreak,
-  calculateProductivityScore,
+  calculateProgressScore,
   streakMessage,
   backupReminder,
-  weeklyRecap
+  weeklyRecap,
+  safeUrl,
+  statusLabel,
+  projectStatusLabel,
+  typeLabel,
+  skillLabel,
+  GENERAL_SKILL
 } from '../assets/js/utils.js';
 import { freezeTime, TZ } from './helpers/clock.js';
 
@@ -43,6 +50,61 @@ describe('escapeHTML', () => {
 
 // Security regression: formatDate used to return an invalid input unchanged, and
 // its result is inserted into innerHTML. A malicious imported "date" ran as code.
+// Security: escapeHTML does not make a link safe; "javascript:" has nothing to escape.
+describe('safeUrl', () => {
+  test('keeps http and https links', () => {
+    assert.equal(safeUrl('https://github.com/me/app'), 'https://github.com/me/app');
+    assert.equal(safeUrl('  http://example.com  '), 'http://example.com');
+  });
+
+  test('drops anything that is not a web link', () => {
+    for (const bad of [
+      'javascript:alert(1)',
+      'JavaScript:alert(1)',
+      ' javascript:alert(1)',
+      'data:text/html,<b>x</b>',
+      'httpx://example.com',
+      'https://',
+      'example.com',
+      '',
+      null,
+      42
+    ]) {
+      assert.equal(safeUrl(bad), '', String(bad));
+    }
+  });
+});
+
+// D-022: stored values never change; these are the words people see.
+describe('labels for stored values', () => {
+  test('skill status', () => {
+    assert.deepEqual(
+      ['Not Started', 'Learning', 'Practicing', 'Completed', undefined].map(statusLabel),
+      ['Not started', 'Learning', 'Practising', 'Finished', 'Learning']
+    );
+  });
+
+  test('project status', () => {
+    assert.deepEqual(
+      ['Planning', 'In Progress', 'On Hold', 'Completed', undefined].map(projectStatusLabel),
+      ['Planning', 'In progress', 'Paused', 'Finished', 'Planning']
+    );
+  });
+
+  test('study session type', () => {
+    assert.deepEqual(
+      ['Practice Problems', 'Project Development', 'Coding', undefined].map(typeLabel),
+      ['Practice problems', 'Project work', 'Coding', 'Other']
+    );
+  });
+
+  test('a session not tied to one of your skills reads as "General"', () => {
+    assert.equal(skillLabel(GENERAL_SKILL), 'General');
+    assert.equal(skillLabel(''), 'General');
+    assert.equal(skillLabel('Python'), 'Python');
+  });
+});
+
 describe('formatDate / formatRelativeTime never echo invalid input', () => {
   const evil = '<img src=x onerror=alert(1)>';
   test('invalid dates become a fixed label, never the input', () => {
@@ -205,10 +267,10 @@ describe('calculateStreak', () => {
   });
 });
 
-describe('calculateProductivityScore', () => {
+describe('calculateProgressScore', () => {
   // Regression for D-015: a brand-new user used to get 20/100 for doing nothing.
   test('an empty universe scores 0', () => {
-    const r = calculateProductivityScore({});
+    const r = calculateProgressScore({});
     assert.equal(r.score, 0);
     assert.equal(r.breakdown.projects.points, 0);
     assert.equal(r.breakdown.skills.points, 0);
@@ -216,7 +278,7 @@ describe('calculateProductivityScore', () => {
   });
 
   test('skills and projects with no sessions still score only what they earn', () => {
-    const r = calculateProductivityScore({
+    const r = calculateProgressScore({
       skills: [{ progress: 50 }],
       projects: [{ progress: 50 }]
     });
@@ -225,7 +287,7 @@ describe('calculateProductivityScore', () => {
 
   test('one session today with nothing else: consistency + hours + neutral baselines', t => {
     freezeTime(t, localNoon(2026, 11, 7));
-    const r = calculateProductivityScore({
+    const r = calculateProgressScore({
       activities: sessions('2026-11-07'), // 60 minutes
       settings: { weeklyTargetHours: 10 }
     });
@@ -239,7 +301,7 @@ describe('calculateProductivityScore', () => {
   test('a perfect week scores 100 and never more', t => {
     freezeTime(t, localNoon(2026, 11, 7));
     const week = getLastNDaysISO(7).map((date, i) => ({ id: `w${i}`, date, duration: 600 }));
-    const r = calculateProductivityScore({
+    const r = calculateProgressScore({
       activities: week,
       skills: [{ progress: 100 }],
       projects: [{ progress: 100 }],
@@ -252,7 +314,7 @@ describe('calculateProductivityScore', () => {
   test('a weekly target of 0 or garbage does not produce NaN', t => {
     freezeTime(t, localNoon(2026, 11, 7));
     for (const weeklyTargetHours of [0, -3, 'abc', null]) {
-      const r = calculateProductivityScore({
+      const r = calculateProgressScore({
         activities: sessions('2026-11-07'),
         settings: { weeklyTargetHours }
       });
@@ -263,7 +325,7 @@ describe('calculateProductivityScore', () => {
 
   test('sessions older than 7 days do not count toward this week', t => {
     freezeTime(t, localNoon(2026, 11, 7));
-    const r = calculateProductivityScore({ activities: sessions('2026-10-31') });
+    const r = calculateProgressScore({ activities: sessions('2026-10-31') });
     assert.equal(r.breakdown.consistency.activeDays, 0);
     assert.equal(r.breakdown.learningHours.currentHours, 0);
   });
