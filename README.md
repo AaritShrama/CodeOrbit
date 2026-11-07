@@ -209,6 +209,7 @@ CodeOrbit/
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
 │   ├── workflows/
 │   │   └── deploy.yml              # Deployment workflow
+│   ├── dependabot.yml              # Automated security updates for GitHub Actions
 │   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
 │   ├── css/
@@ -241,6 +242,7 @@ CodeOrbit/
 │   ├── ARCHITECTURE.md             # System design & data schema reference
 │   ├── CODE_OF_CONDUCT.md          # Contributor Covenant 2.1 code of conduct
 │   ├── CONTRIBUTING.md             # Contributor onboarding & workflow guide
+│   ├── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
 │   └── SECURITY.md                 # Security policies & reporting guidelines
 ├── CODE_OF_CONDUCT.md              # Root Code of Conduct link
 ├── CONTRIBUTING.md                 # Root Contributing guide
