@@ -313,7 +313,7 @@ Whether you are fixing a typo in documentation, polishing responsive styles, or 
 - [ ] Custom colours for project technology tags
 - [ ] Progressive Web App (offline support)
 
-Want to work on one? Check [open issues](https://github.com/LetsCook-Organization/CodeOrbit/issues) or open one to discuss it first.
+Every unticked item above has an [open issue](https://github.com/LetsCook-Organization/CodeOrbit/issues) with the files to change and a clear "done" checklist. New here? Start with a [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22).
 
 ---
 

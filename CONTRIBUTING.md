@@ -171,15 +171,22 @@ git push origin your-branch-name
 
 ---
 
-## 💡 Good First Contribution Ideas
+## 💡 Picking an Issue
 
-Looking for a place to begin? Here are great ways to contribute:
+Every open issue says which files to change and exactly what "done" means. Use the labels to find one that fits you:
 
-- Improving documentation, fixing typos, or translating guides.
-- Adding new responsive styling refinements for uncommon screen sizes.
-- Enhancing keyboard accessibility or ARIA announcements.
-- Suggesting new achievable Universe Badges in `assets/js/achievements.js`.
-- Adding subtle micro-interaction enhancements to CSS transitions.
+| Label | Meaning |
+| :--- | :--- |
+| [`good first issue`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22) | Small, well-defined, a few hours. Start here. |
+| [`help wanted`](https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22help+wanted%22) | Bigger tasks the maintainers would love help with |
+| `difficulty: easy` / `medium` / `hard` | Rough size. **Hard** issues need a design agreed in the comments before any code. |
+| `bug`, `tests`, `accessibility`, `data`, `dates & timezones`, `documentation`, `enhancement` | What area the work is in |
+
+**How to claim one**
+1. Comment on the issue ("I'd like to work on this") and wait to be assigned. Unassigned PRs for assigned issues may be closed.
+2. **One `good first issue` per person.** They are meant for people making their first contribution; after your first one is merged, move on to `help wanted` issues and leave the rest for newcomers.
+3. If you are assigned but cannot continue, say so in the issue. Issues with no activity for **14 days** may be reassigned.
+4. Found a problem that has no issue? Open one first (bug report or feature request template) so it can be discussed.
 
 ---
 

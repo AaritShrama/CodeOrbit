@@ -211,6 +211,22 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - Score fix: a user with skills or projects but **no sessions** now gets only what those earn (e.g. 20/100 for 50% on both) instead of an extra free baseline.
 - **Alternatives rejected:** Jest or Vitest: popular, but add a dependency tree and config, and Jest's ESM support needs extra setup for this codebase's native modules.
 
+### D-016: Seed the issue tracker; all issues open to everyone; one good first issue per person
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** README and CONTRIBUTING told contributors to look for `good first issue`, but the repository had **no issues at all**. A newcomer arriving from a community post found nothing to pick up.
+- **Decision:**
+  1. Open **13 issues** (#8–#20) from gaps found while reviewing the code: 6 `good first issue`, 6 medium, 1 hard. Each names the files to change, gives steps and a "Done when" checklist.
+  2. Add labels for area (`tests`, `data`, `dates & timezones`, `accessibility`) and size (`difficulty: easy/medium/hard`).
+  3. **All issues are open to everyone**; none reserved for maintainers' own community.
+  4. **One `good first issue` per person**, claim by comment, reassign after 14 days without activity (CONTRIBUTING → "Picking an Issue").
+  5. **Hard issues are design-first:** discussion in comments before code.
+- **Why:**
+  - Specific issues with a definition of done get better PRs and fewer review rounds than vague ideas.
+  - Every issue was checked against the code before posting. One planned issue (missing `aria-label`s on icon buttons) was **dropped** because all 68 buttons already had labels, and checking turned up three **new real bugs** (#8 deadlines, #9 peak weekday, #10 import duration), reproduced with the timezone set to India and US West.
+  - Reserving issues for insiders discourages outside contributors, and an open-source project grows from outsiders. The one-per-person rule protects beginners without gatekeeping.
+- **Trade-off accepted:** Maintainers must answer claims and review PRs quickly or contributors leave; 14-day reassignment means some work is abandoned midway. The `good first issue` pool will run out fast and needs refilling.
+- **Alternatives rejected:** Reserving issues for Let's Cook members first: easier onboarding for the community, but signals the project is not really open.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)
