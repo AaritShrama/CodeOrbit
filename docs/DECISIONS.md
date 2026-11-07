@@ -167,6 +167,28 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** "v0.1.0" looks less finished than "v1.0.0" at first glance. Every new user-visible change now needs a changelog line (enforced by a PR-template checkbox).
 - **Alternatives rejected:** Keeping 1.0.0 and only fixing the wording: the version number itself is the biggest claim of stability.
 
+### D-014: ESLint + Prettier, checked in CI, and deploy only after checks pass
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** No linter, no formatter, no automated check of any kind. Since D-012, every push to `main` deploys to the live site within a minute, and outside contributors will soon send pull requests from different editors.
+- **Decision:**
+  1. **ESLint 10** (flat config, `eslint.config.js`) with `recommended` plus bug-catching rules only: unused/undefined variables, accidental globals, shadowing, `eqeqeq`, `prefer-const`, `consistent-return`, no `eval`. No stylistic rules.
+  2. **Prettier 3** owns formatting, configured to match the existing style (single quotes, semicolons, 2 spaces, no trailing commas, 100 columns). It formats **JS, CSS, JSON and YAML only**.
+  3. One workflow, `.github/workflows/ci.yml`: job `check` runs on every PR and push; job `deploy` runs **only on pushes to `main` and only if `check` passed** (`needs: check`). Replaces `deploy-pages.yml`.
+  4. Tools are exact-pinned in `package.json` + `package-lock.json`, installed with `npm ci --ignore-scripts`; Dependabot updates them monthly as one grouped PR.
+  5. The one-time reformat is a separate commit listed in `.git-blame-ignore-revs`.
+- **Why:**
+  - Turning ESLint on found **13 real problems** in code that looked fine: unused imports, an unused variable, values assigned and never read, and a skills "proficiency" filter that could never activate because nothing set it.
+  - Formatting arguments in code review waste beginners' time; an automatic formatter ends them.
+  - Making deploy depend on checks means a push that fails lint never reaches the live site.
+  - HTML is excluded because Prettier can change whitespace between inline elements, which is visible in the UI; Markdown is excluded so hand-written docs stay as written.
+  - The reformat was verified by comparing the parsed syntax tree of every JS file before and after: only two object keys lost redundant quotes.
+- **Trade-off accepted:**
+  - The repo now has a `package.json`, a lockfile and three config files, after advertising "no npm". The app itself still needs **no install and no build**; `package.json` is `private` with devDependencies only, and deploy strips these files from the published site.
+  - Contributors who want to run checks locally need Node.js 20+. Those who don't will see the result on their PR instead.
+  - A one-time 1,400-line formatting diff; `git blame` skips it via `.git-blame-ignore-revs`.
+  - CI only checks code quality, not behaviour. Behaviour tests are the next step.
+- **Alternatives rejected:** Running checks in a separate workflow and deploying via `workflow_run`: harder to read, and a failed check would not visibly block the deploy on the same commit.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

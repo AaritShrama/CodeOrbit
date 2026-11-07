@@ -25,6 +25,8 @@ Before contributing code, please keep our core architectural rules in mind:
 
 You do **not** need `npm install`, Node.js, Webpack, Vite, or any build setup to run and develop CodeOrbit!
 
+Node.js is only needed if you want to run the automated code checks on your own computer before pushing (see step 5). If you skip that, the same checks run automatically on your pull request.
+
 ### Prerequisites
 - A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, or Apple Safari).
 - A text editor or IDE (such as VS Code, Sublime Text, or Cursor).
@@ -113,7 +115,19 @@ git commit -m "feat(skills): add quick-step buttons for skill progress"
 ```
 
 ### 5. Testing Your Changes
-Before opening a pull request, perform these verification checks:
+
+**Automated checks (lint + format).** Every pull request runs ESLint (catches bugs such as unused or undefined variables) and Prettier (consistent formatting). A pull request with a red ❌ cannot be merged. To run the same checks locally (needs [Node.js](https://nodejs.org/) 20 or newer):
+
+```bash
+npm install          # one time: installs the dev tools into node_modules/ (not committed)
+npm run check        # runs ESLint + Prettier check, exactly like CI
+npm run format       # auto-fixes formatting
+npm run lint:fix     # auto-fixes the lint problems that can be fixed automatically
+```
+
+Prettier formats JavaScript, CSS, JSON and YAML. It does not touch `index.html` or Markdown files.
+
+**Manual checks.** Then perform these verification checks in the browser:
 
 1. **Browser Functionality:** Manually test the feature in your browser. Create, edit, and delete items to ensure CRUD pipelines work smoothly.
 2. **Zero Console Errors:** Open browser DevTools (`F12` or `Ctrl+Shift+I` / `Cmd+Option+I`) and check the **Console** tab. Ensure there are **no red errors or unhandled exceptions**.

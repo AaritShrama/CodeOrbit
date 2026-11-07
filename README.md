@@ -26,7 +26,7 @@
   <!-- Shields.io Badges Row -->
   <p align="center">
     <a href="https://github.com/LetsCook-Organization/CodeOrbit"><img src="https://img.shields.io/badge/GitHub-LetsCook--Organization%2FCodeOrbit-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository"></a>
-    <a href="https://letscook-organization.github.io/CodeOrbit/"><img src="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/deploy-pages.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
+    <a href="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/ci.yml"><img src="https://github.com/LetsCook-Organization/CodeOrbit/actions/workflows/ci.yml/badge.svg" alt="CI: lint, format and deploy"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge" alt="MIT License"></a>
     <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
     <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
@@ -46,7 +46,7 @@ Experience CodeOrbit's developer command center and explore your personal develo
 
 [![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://letscook-organization.github.io/CodeOrbit/)
 
-*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main`.*
+*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main` once lint and format checks pass.*
 
 </div>
 
@@ -160,12 +160,13 @@ CodeOrbit is deliberately built with clean, standards-compliant web technologies
 | **Lucide Icons** | ![Lucide](https://img.shields.io/badge/Lucide-Icons-F56565?style=flat-square&logo=feather&logoColor=white) | Modern, consistent SVG iconography |
 | **LocalStorage** | ![LocalStorage](https://img.shields.io/badge/Storage-Browser_LocalStorage-22C55E?style=flat-square) | Fast, atomic, client-side data persistence with zero network latency |
 | **GitHub Pages** | ![GitHub Pages](https://img.shields.io/badge/Hosting-GitHub_Pages-222222?style=flat-square&logo=githubpages&logoColor=white) | Static hosting with HTTPS, deployed by GitHub Actions on every push to `main` |
+| **ESLint + Prettier** | ![ESLint](https://img.shields.io/badge/Checks-ESLint_%2B_Prettier-4B32C3?style=flat-square&logo=eslint&logoColor=white) | Development only: catch bugs and keep formatting consistent; run on every PR and push |
 
 ---
 
 ## ⚡ Getting Started
 
-You do **not** need `npm install`, Node.js, Webpack, or any build setup to run CodeOrbit.
+You do **not** need `npm install`, Node.js, Webpack, or any build setup to run CodeOrbit. (Node.js is only used by contributors who want to run the lint/format checks locally; see [CONTRIBUTING.md](CONTRIBUTING.md#5-testing-your-changes).)
 
 ### Prerequisites
 - A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, or Apple Safari).
@@ -208,8 +209,8 @@ CodeOrbit/
 │   │   ├── bug_report.yml          # Structured GitHub bug report issue form
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
 │   ├── workflows/
-│   │   └── deploy-pages.yml        # Deploys to GitHub Pages on every push to main
-│   ├── dependabot.yml              # Keeps the workflow's GitHub Actions up to date
+│   │   └── ci.yml                  # Lint + format checks on every PR/push; deploys main to GitHub Pages
+│   ├── dependabot.yml              # Keeps GitHub Actions and dev tools up to date
 │   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
 │   ├── css/
@@ -243,11 +244,15 @@ CodeOrbit/
 │   ├── DECISIONS.md                # Decision log: what we chose, why, and the trade-offs
 │   ├── FLOW.md                     # Code execution flow: entry point, call order, data loop
 │   └── MAINTAINER_SECURITY.md      # Administrative security checklist & access guidance
+├── .git-blame-ignore-revs          # Formatting-only commits hidden from git blame
+├── .prettierrc.json                # Prettier formatting rules
 ├── CHANGELOG.md                    # Release history (what changed in each version)
 ├── CODE_OF_CONDUCT.md              # Contributor Covenant 2.1 code of conduct
 ├── CONTRIBUTING.md                 # Contributor onboarding & workflow guide
+├── eslint.config.js                # ESLint rules (bug-catching, not style)
 ├── index.html                      # Semantic single-page application entry point
 ├── LICENSE                         # MIT License
+├── package.json                    # Dev tools only (lint/format scripts); the app needs no install
 ├── README.md                       # Main project documentation
 └── SECURITY.md                     # Security policy & vulnerability reporting
 ```
@@ -287,7 +292,6 @@ Whether you are fixing a typo in documentation, polishing responsive styles, or 
 - [x] Command Palette (`Ctrl+K` / `Cmd+K`), dark/light themes, JSON export/import
 
 ### 🔧 Next: v0.2.0 (contributors welcome)
-- [ ] **Lint and format checks** (ESLint + Prettier) running on every PR and push
 - [ ] **Unit tests** for the core logic in `utils.js` and `storage.js` (streaks, score, import validation)
 - [ ] **Data migrations**: `storage.js` stores a `version` number but has no code to upgrade old data yet
 - [ ] **First-run onboarding**: guide new users from the empty dashboard to their first skill, or to the demo data

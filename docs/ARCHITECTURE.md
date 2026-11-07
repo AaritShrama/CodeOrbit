@@ -58,10 +58,10 @@ codeorbit/
 │   └── MAINTAINER_SECURITY.md  # Administrative security checklist
 └── .github/
     └── workflows/
-        └── deploy-pages.yml    # Deploys to GitHub Pages on every push to main
+        └── ci.yml              # Lint + format checks; deploys main to GitHub Pages
 ```
 
-**Deployment:** GitHub Pages, owned by the LetsCook-Organization org, deployed by `.github/workflows/deploy-pages.yml` on every push to `main`. See `DECISIONS.md` D-012.
+**Deployment:** GitHub Pages, owned by the LetsCook-Organization org, deployed by `.github/workflows/ci.yml` on every push to `main`, **only after ESLint and Prettier checks pass**. See `DECISIONS.md` D-012 and D-014.
 
 ---
 

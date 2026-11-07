@@ -13,3 +13,17 @@ updates:
     labels:
       - 'dependencies'
       - 'security'
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    commit-message:
+      prefix: 'chore(deps)'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+    groups:
+      dev-tools:
+        patterns:
+          - '*'

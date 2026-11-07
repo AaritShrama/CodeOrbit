@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+- Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.
+
+### Removed
+- An unused skills "proficiency" filter that had no button to turn it on.
+
 ## [0.1.0] - 2026-11-07
 
 First public version under the LetsCook-Organization GitHub org.
