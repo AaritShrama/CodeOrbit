@@ -312,6 +312,17 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** A backup can no longer carry a theme across devices; the user sets it once per device.
 - **Alternatives rejected:** Moving the theme to its own `localStorage` key: cleaner, but it changes the stored format and needs a migration (issue #17 covers migrations).
 
+### D-024: Installable and offline with a network-first service worker
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** CodeOrbit keeps all data on the device, and most of its users are students on phones, yet it could only be opened as a web page with a connection.
+- **Decision:** Add `manifest.webmanifest` (name, icons made from the Let's Cook mark, standalone display) and `sw.js`. The service worker pre-caches the app's own files and the two pinned CDN libraries, and answers every request **network first**: online it behaves exactly like before and refreshes the cache; offline it serves the cached copy. Settings shows *Install CodeOrbit on this device* when the browser offers it. `tests/offline.test.js` fails if a stylesheet, script or font is missing from the offline list, or if a listed file does not exist.
+- **Why:**
+  - Network first means a new deploy reaches users on their next visit; cache-first would keep serving old code until the worker updates, the classic service-worker trap.
+  - The CDN files are cached as CORS responses, so their SRI hashes (D-011) are still checked when they come from the cache.
+  - The worker never touches `localStorage`, so it cannot lose or change data.
+- **Trade-off accepted:** On a slow connection every load still waits for the network before falling back. Adding a file the app needs now means adding it to `APP_FILES` (the test enforces it). A broken `sw.js` could serve stale files; bump `CACHE_VERSION` to drop old caches. iPhones have no install prompt: users use Share → *Add to Home Screen*.
+- **Alternatives rejected:** Cache first / stale-while-revalidate: faster, but users would run old code after fixes, including security fixes. A build tool such as Workbox: conflicts with the no-build rule (B-001).
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

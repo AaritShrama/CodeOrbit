@@ -23,6 +23,8 @@ CodeOrbit is a **frontend-only Single Page Application (SPA) with no build step*
 ```text
 codeorbit/
 ├── index.html                  # Semantic entry point with all views and accessible dialogs
+├── sw.js                       # Offline support, network first (D-024)
+├── manifest.webmanifest        # App name and icons for installing
 ├── README.md                   # Project overview, setup, and philosophy
 ├── LICENSE                     # MIT License
 ├── .gitignore                  # Clean repository ignores

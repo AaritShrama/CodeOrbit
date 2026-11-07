@@ -184,6 +184,7 @@ Then open **http://localhost:3000**. (On macOS and Linux you may need `python3` 
 ```text
 CodeOrbit/
 ├── index.html            ← the only page. All 8 screens live here; one is shown at a time.
+├── sw.js, manifest.webmanifest ← lets CodeOrbit be installed and work offline
 ├── assets/
 │   ├── css/              ← how it looks (colours, layout, animations, mobile)
 │   └── js/

@@ -4,7 +4,7 @@
    Three rings turn slowly; everything stops when reduced motion is on.
    ========================================================================== */
 .home-orbit {
-  --orbit-size: min(460px, 86vw);
+  --orbit-size: min(460px, 78vw); /* room for the tap area around edge planets */
   position: relative;
   width: var(--orbit-size);
   height: var(--orbit-size);

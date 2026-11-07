@@ -97,6 +97,29 @@ function setupSettingsEventListeners() {
     importFileInput.addEventListener('change', handleImportFile);
   }
 
+  // "Install CodeOrbit on this device": only browsers that support it fire this event.
+  let installPrompt = null;
+  const installBtn = document.getElementById('install-app-btn');
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); // show our own button instead of the browser's mini bar
+    installPrompt = e;
+    if (installBtn) installBtn.hidden = false;
+  });
+  window.addEventListener('appinstalled', () => {
+    installPrompt = null;
+    if (installBtn) installBtn.hidden = true;
+    toast.success('Installed', 'CodeOrbit is now on this device, and it works offline.');
+  });
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!installPrompt) return;
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
+      installBtn.hidden = true;
+    });
+  }
+
   // Load Demo Data
   const loadDemoBtn = document.getElementById('load-demo-data-btn');
   if (loadDemoBtn) {

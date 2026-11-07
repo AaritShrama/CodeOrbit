@@ -50,6 +50,15 @@ export default [
     languageOptions: { sourceType: 'module', globals: { ...globals.node } }
   },
   {
+    // The service worker is a classic script with its own globals (self, caches, clients)
+    files: ['sw.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'script',
+      globals: { ...globals.serviceworker }
+    }
+  },
+  {
     // Tests run in Node with browser stand-ins (tests/helpers/browser-globals.js)
     files: ['tests/**/*.js'],
     languageOptions: {

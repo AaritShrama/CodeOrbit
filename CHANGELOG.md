@@ -12,6 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A new look for the whole app: black and white with one Let's Cook crimson, big clear numbers, and a quiet space theme. Works in dark and light.
 - A first-visit screen that explains the app and offers *Add your first skill* or *Try it with sample data first*.
 - Home shows each skill as a planet: the bigger it is, the further along you are; red means finished.
+- CodeOrbit can be installed as an app (Settings → *Install CodeOrbit on this device*, or *Add to Home Screen* on iPhone) and opens without internet once you have used it online. New app icon made from the Let's Cook logo.
 - A backup reminder at the bottom of Home when you have real data and no backup in the last 30 days, with *Download backup* and *Not now* (asks again in a week). It never shows for sample data.
 - If you studied yesterday but not yet today, Home now says "Study today to keep your 4 days in a row going." in crimson, while there is still time to save the run.
 - One-tap logging on Home: a "+30 min on <your last skill>" button next to *Add study time*, with an Undo for 10 seconds.

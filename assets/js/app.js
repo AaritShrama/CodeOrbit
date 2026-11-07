@@ -54,6 +54,9 @@ function initApp() {
   runStep('modals', setupModalDismissHandlers, failures);
   runStep('shortcuts', setupGlobalShortcuts, failures);
 
+  // 3b. Offline support + install as an app (sw.js). Optional: failure only means no offline use.
+  runStep('offline support', registerServiceWorker, failures);
+
   // 4. Register views with the router (cannot fail, but keep the pattern uniform)
   runStep(
     'routes',
@@ -218,4 +221,17 @@ function initCosmicStarfield() {
       attributeFilter: ['data-theme']
     });
   }
+}
+
+/* ==========================================================================
+   OFFLINE SUPPORT (see sw.js and docs/DECISIONS.md D-024)
+   ========================================================================== */
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  // Service workers only run on https (GitHub Pages) or on this computer while developing.
+  const local = ['localhost', '127.0.0.1'].includes(location.hostname);
+  if (location.protocol !== 'https:' && !local) return;
+  navigator.serviceWorker.register('./sw.js').catch(err => {
+    console.warn('CodeOrbit: offline support is not available.', err);
+  });
 }

@@ -7,8 +7,10 @@
   <meta name="description" content="A free study tracker for developers: add the skills you are learning, record your study time, and see your progress. Everything stays on your device. Made by Let's Cook.">
   <meta name="theme-color" content="#0a0a0b">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <!-- Icons + installable app (manifest and sw.js, see D-024) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
 
   <!-- Fonts (Inter, JetBrains Mono) are served from assets/fonts via style.css: no font CDN. -->
   <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -771,7 +773,11 @@
                   <p style="font-size: var(--text-xs); color: var(--text-secondary);">A free, open-source study tracker for developers &bull; made by Let's Cook</p>
                 </div>
               </div>
-              <span class="badge badge-primary">Version 0.1.0 &bull; MIT License</span>
+              <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                <!-- Shown only when the browser offers installing (settings.js) -->
+                <button type="button" class="btn btn-secondary btn-sm" id="install-app-btn" hidden>Install CodeOrbit on this device</button>
+                <span class="badge badge-primary">Version 0.1.0 &bull; MIT License</span>
+              </div>
             </div>
           </div>
         </section>
