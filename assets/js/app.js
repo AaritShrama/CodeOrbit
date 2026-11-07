@@ -6,7 +6,7 @@
 
 import { storage } from './storage.js';
 import { navigation } from './navigation.js';
-import { setupModalDismissHandlers, openCommandPalette, closeCommandPalette, renderPaletteResults, openModal, closeModal, toast } from './components.js';
+import { setupModalDismissHandlers, openCommandPalette, renderPaletteResults, toast } from './components.js';
 import { initDashboard, renderDashboard } from './dashboard.js';
 import { initSkills, renderSkills, openSkillModal } from './skills.js';
 import { initProgress, renderProgress, openActivityModal } from './progress.js';

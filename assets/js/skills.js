@@ -10,7 +10,6 @@ import { openModal, closeModal, toast, showConfirmDialog } from './components.js
 let searchQuery = '';
 let activeCategory = 'All';
 let activeStatus = 'All';
-let activeProficiency = 'All';
 let activeSort = 'progress-desc';
 
 export function initSkills() {
@@ -104,12 +103,7 @@ export function renderSkills() {
     skills = skills.filter(s => s.status === activeStatus);
   }
 
-  // 4. Proficiency Filter
-  if (activeProficiency !== 'All') {
-    skills = skills.filter(s => s.proficiency === activeProficiency);
-  }
-
-  // 5. Sorting
+  // 4. Sorting
   skills.sort((a, b) => {
     if (activeSort === 'name-asc') return a.name.localeCompare(b.name);
     if (activeSort === 'name-desc') return b.name.localeCompare(a.name);
@@ -256,7 +250,7 @@ function stepSkillProgress(skillId, delta) {
   const skill = storage.getSkillById(skillId);
   if (!skill) return;
 
-  let newProgress = Math.min(100, Math.max(0, (Number(skill.progress) || 0) + delta));
+  const newProgress = Math.min(100, Math.max(0, (Number(skill.progress) || 0) + delta));
   skill.progress = newProgress;
   if (newProgress === 100) {
     skill.status = 'Completed';

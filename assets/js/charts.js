@@ -136,7 +136,6 @@ class ChartManager {
 
     const labels = [];
     const hours = [];
-    const now = new Date();
 
     for (let i = 29; i >= 0; i--) {
       const d = new Date();

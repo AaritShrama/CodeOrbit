@@ -311,7 +311,7 @@ class StorageManager {
    * Initializes local storage and migrates or sets default state.
    */
   init() {
-    let raw = null;
+    let raw;
     try {
       raw = localStorage.getItem(STORAGE_KEY);
     } catch (e) {
@@ -327,7 +327,7 @@ class StorageManager {
       return;
     }
 
-    let parsed = null;
+    let parsed;
     try {
       parsed = JSON.parse(raw);
     } catch (e) {

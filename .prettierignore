@@ -1,0 +1,8 @@
+# Prettier formats JS, CSS, JSON and YAML only (see docs/DECISIONS.md D-014).
+# HTML is excluded because reformatting index.html can change inline whitespace
+# that is visible in the UI; Markdown is excluded to keep hand-written docs as written.
+node_modules/
+package-lock.json
+*.html
+*.md
+*.svg

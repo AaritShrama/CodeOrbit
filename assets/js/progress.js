@@ -11,8 +11,7 @@ import {
   formatRelativeTime,
   getTodayISO,
   getRelativeISO,
-  isWithinLastNDays,
-  minutesToHours
+  isWithinLastNDays
 } from './utils.js';
 import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
 

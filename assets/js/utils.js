@@ -193,7 +193,7 @@ export function calculateStreak(activities = []) {
 
   let currentStreak = 0;
   if (hasToday || hasYesterday) {
-    let checkDate = new Date();
+    const checkDate = new Date();
     if (!hasToday) checkDate.setDate(checkDate.getDate() - 1);
 
     while (true) {
@@ -268,7 +268,7 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
   const hoursScore = Math.min(30, Math.round((weeklyHours / weeklyTargetHours) * 30));
 
   // 3. Project Progress (Max 20)
-  let projectScore = 0;
+  let projectScore;
   if (projects.length > 0) {
     const avgProjectProg = projects.reduce((sum, p) => sum + (Number(p.progress) || 0), 0) / projects.length;
     projectScore = Math.round((avgProjectProg / 100) * 20);
@@ -277,7 +277,7 @@ export function calculateProductivityScore({ activities = [], skills = [], proje
   }
 
   // 4. Skill Development (Max 20)
-  let skillScore = 0;
+  let skillScore;
   if (skills.length > 0) {
     const avgSkillProg = skills.reduce((sum, s) => sum + (Number(s.progress) || 0), 0) / skills.length;
     skillScore = Math.round((avgSkillProg / 100) * 20);
