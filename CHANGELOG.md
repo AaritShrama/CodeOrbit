@@ -10,6 +10,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 - Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.
+- 52 unit tests for dates, streaks, the productivity score, storage, import/export and achievement rules, run in four timezones on every pull request and push.
+
+### Fixed
+- A brand-new account with nothing logged showed a productivity score of 20/100. It now shows 0 until the first session is logged.
 
 ### Removed
 - An unused skills "proficiency" filter that had no button to turn it on.

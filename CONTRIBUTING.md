@@ -116,14 +116,18 @@ git commit -m "feat(skills): add quick-step buttons for skill progress"
 
 ### 5. Testing Your Changes
 
-**Automated checks (lint + format).** Every pull request runs ESLint (catches bugs such as unused or undefined variables) and Prettier (consistent formatting). A pull request with a red ❌ cannot be merged. To run the same checks locally (needs [Node.js](https://nodejs.org/) 20 or newer):
+**Automated checks.** Every pull request runs three things: ESLint (catches bugs such as unused or undefined variables), Prettier (consistent formatting) and the unit tests. A pull request with a red ❌ cannot be merged. To run the same checks locally (needs [Node.js](https://nodejs.org/) 20.4 or newer):
 
 ```bash
 npm install          # one time: installs the dev tools into node_modules/ (not committed)
-npm run check        # runs ESLint + Prettier check, exactly like CI
+npm run check        # lint + format check + unit tests, exactly like CI
+npm test             # unit tests only, in 4 timezones (India, UTC, US West, UTC+14)
+npm run test:quick   # unit tests only, in your computer's timezone (faster)
 npm run format       # auto-fixes formatting
 npm run lint:fix     # auto-fixes the lint problems that can be fixed automatically
 ```
+
+**Writing tests.** Tests live in `tests/*.test.js` and use Node's built-in test runner (`node:test`); there is no test library to learn. If you change logic in `utils.js`, `storage.js` or the achievement rules, add or update a test. For anything involving dates, freeze the clock with `freezeTime()` from `tests/helpers/clock.js`; the runner repeats every test in four timezones, so a date bug cannot hide in the one timezone you happen to be in.
 
 Prettier formats JavaScript, CSS, JSON and YAML. It does not touch `index.html` or Markdown files.
 

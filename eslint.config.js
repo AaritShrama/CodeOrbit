@@ -46,7 +46,16 @@ export default [
     }
   },
   {
-    files: ['*.js', '*.mjs'],
+    files: ['*.js', '*.mjs', 'scripts/**/*.mjs'],
     languageOptions: { sourceType: 'module', globals: { ...globals.node } }
+  },
+  {
+    // Tests run in Node with browser stand-ins (tests/helpers/browser-globals.js)
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: { ...globals.node, ...globals.browser }
+    }
   }
 ];

@@ -189,6 +189,28 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - CI only checks code quality, not behaviour. Behaviour tests are the next step.
 - **Alternatives rejected:** Running checks in a separate workflow and deploying via `workflow_run`: harder to read, and a failed check would not visibly block the deploy on the same commit.
 
+### D-015: Unit tests with Node's built-in runner, repeated in four timezones; empty universe scores 0
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** Lint and format checks (D-014) catch sloppy code, not wrong answers. The core logic (local dates, streaks, the productivity score, storage, import validation, achievement rules) had no tests, and that day alone it had shipped a timezone bug, fake badges and a double-counting score. While planning the tests, one more bug was found: `calculateProductivityScore` gave **20/100 to a brand-new user with nothing logged**, because "no projects" and "no skills" each counted as a neutral 10/20.
+- **Decision:**
+  1. **52 unit tests** in `tests/` using **`node:test`** and `node:assert` (built into Node, no test library).
+  2. **`npm test` runs them once per timezone:** Asia/Kolkata, UTC, America/Los_Angeles (DST change on 1 Nov 2026) and Pacific/Kiritimati (UTC+14), via `scripts/test.mjs` so it works the same on Windows.
+  3. Date tests **freeze the clock** (`node:test` mock timers) at exact moments, e.g. 02:00 IST, a leap day, the US DST change.
+  4. Browser APIs the modules need at import (`localStorage`, `window` events) are provided by a small stand-in, `tests/helpers/browser-globals.js`, loaded with `node --import`. No jsdom.
+  5. CI gets a separate **`Unit tests`** job; deploy needs both it and `Lint & format`. The existing job name is kept because the branch ruleset requires it by name.
+  6. **Score fix:** the neutral 10/20 for having no projects/skills applies only after the user has logged at least one session. An empty universe scores 0.
+- **Why:**
+  - **Proof the tests guard the fixes:** reintroducing three of the day's bugs one at a time made the suite fail each time: the UTC date bug (13 failures across the timezone runs), the 20/100 empty score (4), demo data on first visit (44). With the fixes restored: 0.
+  - A date bug is invisible in UTC, which is what CI machines use. Running every test in four zones is the only way CI sees what users in India see.
+  - `node:test` keeps the "no heavy tooling" spirit: nothing new to install or learn.
+  - Score: a progress tracker that rewards doing nothing undermines the number's meaning.
+- **Trade-off accepted:**
+  - Tests cover pure logic and storage only. Page modules (DOM rendering, forms) are untested; browser end-to-end tests would need Playwright and a browser in CI, a much heavier step, left for later.
+  - The browser stand-ins are simpler than real browsers (e.g. no storage quota), so storage edge cases around quotas are not covered.
+  - Running four timezones makes `npm test` four times slower (still a few seconds); `npm run test:quick` runs one.
+  - Score fix: a user with skills or projects but **no sessions** now gets only what those earn (e.g. 20/100 for 50% on both) instead of an extra free baseline.
+- **Alternatives rejected:** Jest or Vitest: popular, but add a dependency tree and config, and Jest's ESM support needs extra setup for this codebase's native modules.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)

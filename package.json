@@ -2,18 +2,20 @@
   "name": "codeorbit",
   "version": "0.1.0",
   "private": true,
-  "description": "CodeOrbit — Your Universe of Developer Growth. Development tooling only: the app itself needs no install or build.",
+  "description": "CodeOrbit \u2014 Your Universe of Developer Growth. Development tooling only: the app itself needs no install or build.",
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.4"
   },
   "scripts": {
+    "test": "node scripts/test.mjs",
+    "test:quick": "node scripts/test.mjs --quick",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run lint && npm run format:check"
+    "check": "npm run lint && npm run format:check && npm test"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

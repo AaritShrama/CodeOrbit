@@ -46,7 +46,7 @@ Experience CodeOrbit's developer command center and explore your personal develo
 
 [![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://letscook-organization.github.io/CodeOrbit/)
 
-*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main` once lint and format checks pass.*
+*Hosted on GitHub Pages by the Let's Cook organization, deployed automatically on every push to `main` once lint, format and unit-test checks pass.*
 
 </div>
 
@@ -209,7 +209,7 @@ CodeOrbit/
 │   │   ├── bug_report.yml          # Structured GitHub bug report issue form
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
 │   ├── workflows/
-│   │   └── ci.yml                  # Lint + format checks on every PR/push; deploys main to GitHub Pages
+│   │   └── ci.yml                  # Lint, format and unit tests on every PR/push; deploys main to GitHub Pages
 │   ├── dependabot.yml              # Keeps GitHub Actions and dev tools up to date
 │   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
@@ -237,6 +237,13 @@ CodeOrbit/
 │       ├── analytics.js            # Analytical calculations & automated habit insights
 │       ├── settings.js             # Profile management, theme toggle, JSON backup/restore
 │       └── charts.js               # Chart.js configurations & lifecycle management
+├── scripts/
+│   └── test.mjs                    # Runs the unit tests in 4 timezones
+├── tests/
+│   ├── helpers/                    # Browser stand-ins and a clock-freezing helper for tests
+│   ├── achievements.test.js        # Achievement rules unlock exactly at their thresholds
+│   ├── storage.test.js             # First visit, corrupt data, saving, import/export
+│   └── utils.test.js               # Local dates, streaks, productivity score, escaping
 ├── docs/
 │   ├── screenshots/
 │   │   └── README.md               # Screenshot capture instructions and specifications
@@ -292,7 +299,7 @@ Whether you are fixing a typo in documentation, polishing responsive styles, or 
 - [x] Command Palette (`Ctrl+K` / `Cmd+K`), dark/light themes, JSON export/import
 
 ### 🔧 Next: v0.2.0 (contributors welcome)
-- [ ] **Unit tests** for the core logic in `utils.js` and `storage.js` (streaks, score, import validation)
+- [ ] **More tests**: unit tests cover `utils.js`, `storage.js` and the achievement rules; the page modules and UI flows have none yet
 - [ ] **Data migrations**: `storage.js` stores a `version` number but has no code to upgrade old data yet
 - [ ] **First-run onboarding**: guide new users from the empty dashboard to their first skill, or to the demo data
 - [ ] **Real screenshots** in this README (replace the illustrative layout above)

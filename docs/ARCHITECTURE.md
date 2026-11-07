@@ -61,7 +61,7 @@ codeorbit/
         └── ci.yml              # Lint + format checks; deploys main to GitHub Pages
 ```
 
-**Deployment:** GitHub Pages, owned by the LetsCook-Organization org, deployed by `.github/workflows/ci.yml` on every push to `main`, **only after ESLint and Prettier checks pass**. See `DECISIONS.md` D-012 and D-014.
+**Deployment:** GitHub Pages, owned by the LetsCook-Organization org, deployed by `.github/workflows/ci.yml` on every push to `main`, **only after ESLint, Prettier and the unit tests pass**. See `DECISIONS.md` D-012, D-014 and D-015.
 
 ---
 
