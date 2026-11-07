@@ -1,0 +1,346 @@
+/**
+ * CODEORBIT — MISSION LOGS (LEARNING PROGRESS) MODULE
+ * Time tracking, daily target progress ring, session timeline, and activity CRUD.
+ */
+
+import { storage } from './storage.js';
+import {
+  escapeHTML,
+  formatDate,
+  formatDuration,
+  formatRelativeTime,
+  getTodayISO,
+  minutesToHours
+} from './utils.js';
+import { openModal, closeModal, toast, showConfirmDialog } from './components.js';
+
+let searchQuery = '';
+let activeType = 'All';
+let activeSkill = 'All';
+let activeSort = 'date-desc';
+
+export function initProgress() {
+  setupProgressEventListeners();
+  renderProgress();
+}
+
+function setupProgressEventListeners() {
+  // Search
+  const searchInput = document.getElementById('log-search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      renderProgress();
+    });
+  }
+
+  // Activity Type Filter
+  const typeFilter = document.getElementById('log-type-filter');
+  if (typeFilter) {
+    typeFilter.addEventListener('change', (e) => {
+      activeType = e.target.value;
+      renderProgress();
+    });
+  }
+
+  // Skill Filter
+  const skillFilter = document.getElementById('log-skill-filter');
+  if (skillFilter) {
+    skillFilter.addEventListener('change', (e) => {
+      activeSkill = e.target.value;
+      renderProgress();
+    });
+  }
+
+  // Sort Filter
+  const sortSelect = document.getElementById('log-sort-select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      activeSort = e.target.value;
+      renderProgress();
+    });
+  }
+
+  // Add Log Button
+  const addBtn = document.getElementById('launch-session-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => openActivityModal());
+  }
+
+  // Activity Form Submission
+  const logForm = document.getElementById('activity-modal-form');
+  if (logForm) {
+    logForm.addEventListener('submit', handleActivityFormSubmit);
+  }
+}
+
+export function renderProgress() {
+  const container = document.getElementById('mission-logs-timeline');
+  if (!container) return;
+
+  const data = storage.getUniverse();
+  const activities = data.activities || [];
+  const skills = data.skills || [];
+  const settings = data.settings || {};
+
+  // Populate skill filter dropdown
+  populateSkillFilterOptions(skills);
+
+  // 1. Calculate Progress Metrics
+  const totalMinutes = activities.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+  const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
+  const totalSessions = activities.length;
+  const avgSessionMins = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
+
+  // Last 7 days & Last 30 days
+  const now = Date.now();
+  const weekMins = activities
+    .filter(a => (now - new Date(a.date).getTime()) <= 7 * 86400000)
+    .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+  const monthMins = activities
+    .filter(a => (now - new Date(a.date).getTime()) <= 30 * 86400000)
+    .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+
+  // Set Metric Elements
+  const setEl = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+  setEl('metric-total-hours', `${totalHours}h`);
+  setEl('metric-weekly-hours', `${Math.round((weekMins / 60) * 10) / 10}h`);
+  setEl('metric-monthly-hours', `${Math.round((monthMins / 60) * 10) / 10}h`);
+  setEl('metric-avg-session', `${avgSessionMins}m`);
+  setEl('metric-total-sessions', totalSessions);
+
+  // 2. Daily Goal Circular Progress
+  const today = getTodayISO();
+  const todayMins = activities
+    .filter(a => a.date && a.date.slice(0, 10) === today)
+    .reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+  const todayHours = Math.round((todayMins / 60) * 10) / 10;
+  const dailyTargetHours = Number(settings.dailyTargetHours) || 2;
+  const dailyPct = Math.min(100, Math.round((todayHours / dailyTargetHours) * 100));
+
+  setEl('daily-target-display', `${todayHours} / ${dailyTargetHours}h`);
+  setEl('daily-target-pct', `${dailyPct}%`);
+
+  const dailyRing = document.getElementById('daily-target-ring');
+  if (dailyRing) {
+    const circum = 2 * Math.PI * 40; // r=40 -> 251.32
+    const offset = circum - (dailyPct / 100) * circum;
+    dailyRing.style.strokeDasharray = `${circum}`;
+    dailyRing.style.strokeDashoffset = `${offset}`;
+  }
+
+  // 3. Filter & Sort Activities List
+  let filtered = [...activities];
+
+  if (searchQuery) {
+    filtered = filtered.filter(a =>
+      a.title.toLowerCase().includes(searchQuery) ||
+      a.skill.toLowerCase().includes(searchQuery) ||
+      (a.notes && a.notes.toLowerCase().includes(searchQuery))
+    );
+  }
+
+  if (activeType !== 'All') {
+    filtered = filtered.filter(a => a.type === activeType);
+  }
+
+  if (activeSkill !== 'All') {
+    filtered = filtered.filter(a => a.skill === activeSkill);
+  }
+
+  filtered.sort((a, b) => {
+    if (activeSort === 'date-asc') return new Date(a.date) - new Date(b.date);
+    if (activeSort === 'duration-desc') return (Number(b.duration) || 0) - (Number(a.duration) || 0);
+    if (activeSort === 'duration-asc') return (Number(a.duration) || 0) - (Number(b.duration) || 0);
+    return new Date(b.date) - new Date(a.date); // default date-desc
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h4 class="empty-state-title">No Mission Logs Recorded</h4>
+        <p class="empty-state-desc">
+          ${searchQuery || activeType !== 'All' || activeSkill !== 'All'
+            ? 'No activities match the current filters. Clear your filters to see more.'
+            : 'Track your coding sprints, reading, and problem solving sessions to keep your streak glowing.'}
+        </p>
+        <button class="btn btn-primary" id="empty-launch-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Log Session Now
+        </button>
+      </div>
+    `;
+    const btn = document.getElementById('empty-launch-btn');
+    if (btn) btn.addEventListener('click', () => openActivityModal());
+    return;
+  }
+
+  // Render Timeline
+  container.innerHTML = filtered.map(act => `
+    <div class="activity-timeline-item card card-elevated" style="margin-bottom: 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+      <div style="display: flex; gap: 14px; flex: 1;">
+        <div class="log-type-icon" style="width: 40px; height: 40px; font-size: 1.1rem; flex-shrink: 0;">
+          ${getActivityIcon(act.type)}
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+            <h4 style="font-size: var(--text-base); font-weight: 700; color: var(--text-primary); margin: 0;">
+              ${escapeHTML(act.title)}
+            </h4>
+            <span class="badge badge-primary" style="font-size: 0.625rem;">${escapeHTML(act.skill)}</span>
+            <span class="badge badge-muted" style="font-size: 0.625rem;">${escapeHTML(act.type)}</span>
+          </div>
+
+          ${act.notes ? `
+            <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; margin-bottom: 6px;">
+              ${escapeHTML(act.notes)}
+            </p>
+          ` : ''}
+
+          <div style="font-size: 0.6875rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
+            <span>🗓 ${formatDate(act.date, true)} (${formatRelativeTime(act.date)})</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
+        <span class="badge badge-cyan" style="font-family: var(--font-mono); font-size: var(--text-xs); padding: 4px 10px;">
+          ⏱ ${formatDuration(act.duration)}
+        </span>
+        <div style="display: flex; gap: 4px;">
+          <button class="btn btn-ghost btn-sm btn-icon-only edit-log-btn" data-id="${act.id}" title="Edit log">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+          </button>
+          <button class="btn btn-ghost btn-sm btn-icon-only delete-log-btn" data-id="${act.id}" title="Delete log" style="color: var(--danger);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Wire actions
+  container.querySelectorAll('.edit-log-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      openActivityModal(id);
+    });
+  });
+
+  container.querySelectorAll('.delete-log-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      showConfirmDialog({
+        title: 'Delete Mission Log',
+        message: 'Are you sure you want to delete this recorded session? This will affect your total hours and streaks.',
+        confirmText: 'Delete Log',
+        onConfirm: () => {
+          storage.deleteActivity(id);
+          toast.info('Session Deleted', 'Mission log record was removed.');
+        }
+      });
+    });
+  });
+}
+
+function getActivityIcon(type) {
+  switch (type) {
+    case 'Coding': return '&lt;/&gt;';
+    case 'Reading': return '📖';
+    case 'Practice Problems': return '🧩';
+    case 'Project Development': return '🚀';
+    case 'Research': return '🔍';
+    case 'Tutorial': return '📺';
+    default: return '⚡';
+  }
+}
+
+function populateSkillFilterOptions(skills) {
+  const filter = document.getElementById('log-skill-filter');
+  if (!filter) return;
+
+  const currentVal = filter.value;
+  const skillNames = Array.from(new Set(skills.map(s => s.name)));
+
+  filter.innerHTML = `<option value="All">All Skills</option>` +
+    skillNames.map(name => `<option value="${escapeHTML(name)}" ${currentVal === name ? 'selected' : ''}>${escapeHTML(name)}</option>`).join('');
+}
+
+export function openActivityModal(activityId = null) {
+  const form = document.getElementById('activity-modal-form');
+  if (!form) return;
+
+  form.reset();
+  const skills = storage.getSkills();
+
+  // Populate skill select dropdown
+  const skillSelect = document.getElementById('activity-form-skill');
+  if (skillSelect) {
+    skillSelect.innerHTML = skills.length > 0
+      ? skills.map(s => `<option value="${escapeHTML(s.name)}">${escapeHTML(s.name)}</option>`).join('') + `<option value="General Exploration">General Exploration</option>`
+      : `<option value="General Exploration">General Exploration</option>`;
+  }
+
+  const titleEl = document.getElementById('activity-modal-title');
+  const dateInput = document.getElementById('activity-form-date');
+
+  if (activityId) {
+    const act = (storage.getActivities() || []).find(a => a.id === activityId);
+    if (!act) return;
+
+    if (titleEl) titleEl.textContent = 'Edit Mission Log';
+    document.getElementById('activity-form-id').value = act.id;
+    document.getElementById('activity-form-title').value = act.title || '';
+    if (skillSelect) skillSelect.value = act.skill || '';
+    document.getElementById('activity-form-duration').value = act.duration || 60;
+    document.getElementById('activity-form-type').value = act.type || 'Coding';
+    if (dateInput) dateInput.value = act.date ? act.date.slice(0, 10) : getTodayISO();
+    document.getElementById('activity-form-notes').value = act.notes || '';
+  } else {
+    if (titleEl) titleEl.textContent = 'Launch Learning Session';
+    document.getElementById('activity-form-id').value = '';
+    if (dateInput) dateInput.value = getTodayISO();
+    document.getElementById('activity-form-duration').value = 45;
+  }
+
+  openModal('activity-modal');
+}
+
+function handleActivityFormSubmit(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('activity-form-id').value;
+  const title = document.getElementById('activity-form-title').value.trim();
+  const skill = document.getElementById('activity-form-skill').value;
+  const duration = parseInt(document.getElementById('activity-form-duration').value, 10);
+  const type = document.getElementById('activity-form-type').value;
+  const date = document.getElementById('activity-form-date').value;
+  const notes = document.getElementById('activity-form-notes').value.trim();
+
+  if (!title) {
+    toast.error('Validation Error', 'Activity title is required.');
+    return;
+  }
+  if (!duration || duration <= 0) {
+    toast.error('Validation Error', 'Please enter a valid session duration in minutes.');
+    return;
+  }
+
+  const actData = {
+    title,
+    skill,
+    duration,
+    type,
+    date: date || getTodayISO(),
+    notes
+  };
+  if (id) actData.id = id;
+
+  storage.saveActivity(actData);
+  closeModal('activity-modal');
+  toast.success(id ? 'Session Updated' : 'Session Logged', `Logged ${formatDuration(duration)} on ${skill}!`);
+}
