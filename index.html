@@ -143,7 +143,7 @@
             </div>
 
             <figure class="home-orbit-figure">
-              <div class="home-orbit" id="home-orbit" role="img" aria-label="Your skills shown as planets">
+              <div class="home-orbit" id="home-orbit" role="group" aria-label="Your skills as planets. Choose one to see it.">
                 <span class="orbit-star" style="left: 8%; top: 12%;"></span>
                 <span class="orbit-star" style="left: 88%; top: 20%; animation-delay: 1.5s;"></span>
                 <span class="orbit-star" style="left: 80%; top: 90%; animation-delay: 3s;"></span>
@@ -154,6 +154,12 @@
                 <div class="orbit-core"><img src="assets/images/letscook-mark-dark.png" alt=""></div>
               </div>
               <figcaption class="home-orbit-caption" id="home-orbit-caption">Each planet is one of your skills. The bigger it is, the further along you are. Red means finished.</figcaption>
+              <div class="orbit-detail" id="home-orbit-detail" aria-live="polite" hidden>
+                <span class="label-mono" id="orbit-detail-cat"></span>
+                <strong class="orbit-detail-name" id="orbit-detail-name"></strong>
+                <span class="orbit-detail-meta" id="orbit-detail-meta"></span>
+                <a href="#skills" class="home-more">Open Skills →</a>
+              </div>
             </figure>
           </div>
 

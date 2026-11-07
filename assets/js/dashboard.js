@@ -143,7 +143,9 @@ function renderOrbit(skills) {
     const done = progress >= 100 || skill.status === 'Completed';
     const size = Math.round(10 + progress * 0.2); // 10px .. 30px
 
-    const planet = document.createElement('span');
+    // A real button: tap on a phone, click, or Tab + Enter all show the skill.
+    const planet = document.createElement('button');
+    planet.type = 'button';
     planet.className = done ? 'orbit-planet is-done' : 'orbit-planet';
     planet.style.width = `${size}px`;
     planet.style.height = `${size}px`;
@@ -151,20 +153,36 @@ function renderOrbit(skills) {
     planet.style.left = `${50 + 50 * Math.sin(rad)}%`;
     planet.style.top = `${50 - 50 * Math.cos(rad)}%`;
     planet.title = `${skill.name}: ${progress}%`;
+    planet.setAttribute('aria-label', `${skill.name}, ${progress}%`);
+    const show = () => showPlanet(planet, skill, progress, done);
+    planet.addEventListener('click', show);
+    planet.addEventListener('mouseenter', show);
+    planet.addEventListener('focus', show);
     ring.appendChild(planet);
   });
 
-  const list = shown.map(s => `${s.name} ${Number(s.progress) || 0}%`).join(', ');
-  orbit.setAttribute(
-    'aria-label',
-    shown.length ? `Your skills as planets: ${list}` : 'No skills yet'
-  );
+  // A re-render drops the old planets, so drop the old selection too.
+  setHidden('home-orbit-detail', true);
+  setHidden('home-orbit-caption', false);
   setText(
     'home-orbit-caption',
     shown.length
       ? 'Each planet is one of your skills. The bigger it is, the further along you are. Red means finished.'
       : 'Add a skill and it will appear here as a planet.'
   );
+}
+
+/** Shows the chosen planet's skill under the orbit, in place of the caption. */
+function showPlanet(planet, skill, progress, done) {
+  document
+    .querySelectorAll('.orbit-planet.is-selected')
+    .forEach(p => p.classList.remove('is-selected'));
+  planet.classList.add('is-selected');
+  setText('orbit-detail-cat', skill.category || 'Skill');
+  setText('orbit-detail-name', skill.name || 'Skill');
+  setText('orbit-detail-meta', done ? 'Finished · 100%' : `${progress}% of the way there`);
+  setHidden('home-orbit-caption', true);
+  setHidden('home-orbit-detail', false);
 }
 
 /** Hours studied on each of the last 7 days, oldest on the left, today on the right. */

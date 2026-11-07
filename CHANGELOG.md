@@ -12,6 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A new look for the whole app: black and white with one Let's Cook crimson, big clear numbers, and a quiet space theme. Works in dark and light.
 - A first-visit screen that explains the app and offers *Add your first skill* or *Try it with sample data first*.
 - Home shows each skill as a planet: the bigger it is, the further along you are; red means finished.
+- Tap, click or Tab to a planet on Home to see which skill it is and how far along you are. The orbit holds still while you choose. Works on phones and with a keyboard.
 - Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.
 - Unit tests for dates, streaks, the productivity score, storage, import/export, page addresses and achievement rules, run in four timezones on every pull request and push.
 
