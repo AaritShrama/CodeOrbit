@@ -1,0 +1,567 @@
+/* ==========================================================================
+   CODEORBIT — COMMAND CENTER (DASHBOARD) STYLES
+   Cinematic Hero, KPI Cards, Productivity Score Gauge, Recent Logs & Projects
+   ========================================================================== */
+
+/* ==========================================================================
+   CINEMATIC DASHBOARD HERO
+   ========================================================================== */
+.dashboard-hero {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(16, 21, 43, 0.95) 0%, rgba(14, 21, 40, 0.95) 50%, rgba(30, 20, 60, 0.85) 100%);
+  border: 1px solid var(--border);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+/* Subtle Cosmic Planetary Elements in Hero */
+.dashboard-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(56, 189, 248, 0.1) 50%, transparent 70%);
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+.dashboard-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 30%;
+  width: 180px;
+  height: 180px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+  filter: blur(25px);
+}
+
+.hero-orbital-accent {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 220px;
+  height: 110px;
+  border: 1px dashed rgba(56, 189, 248, 0.25);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: rotate(-15deg);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.hero-text-block {
+  max-width: 650px;
+}
+
+.hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.hero-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--cyan-accent);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.hero-streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: #FFA500;
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  animation: pulseStreak 2s infinite ease-in-out;
+}
+
+@keyframes pulseStreak {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 12px 2px rgba(249, 115, 22, 0.4);
+  }
+}
+
+.hero-heading {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #FFFFFF 20%, #E2E8F0 60%, var(--cyan-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   KPI CARDS GRID
+   ========================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.kpi-title {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.kpi-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-card:nth-child(1) .kpi-icon-wrap {
+  background: var(--cyan-subtle);
+  color: var(--cyan-accent);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.kpi-card:nth-child(2) .kpi-icon-wrap {
+  background: var(--primary-subtle);
+  color: #C4B5FD;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.kpi-card:nth-child(3) .kpi-icon-wrap {
+  background: var(--secondary-subtle);
+  color: #A5B4FC;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.kpi-card:nth-child(4) .kpi-icon-wrap {
+  background: var(--orange-subtle);
+  color: var(--orbital-orange);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.kpi-main-val {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.kpi-unit {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.kpi-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.kpi-subtext-highlight {
+  color: var(--cyan-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   DASHBOARD MAIN TWO-COLUMN LAYOUT
+   ========================================================================== */
+.dashboard-grid-2col {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ==========================================================================
+   PRODUCTIVITY SCORE WIDGET
+   ========================================================================== */
+.productivity-card {
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(25, 36, 61, 0.8) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.productivity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--cyan-accent) 100%);
+}
+
+.score-gauge-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  stroke: var(--bg-input);
+  stroke-width: 10;
+  fill: none;
+}
+
+.gauge-fill {
+  stroke-width: 10;
+  stroke-linecap: round;
+  fill: none;
+  stroke: url(#gaugeGradient);
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.score-center-val {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-number {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.score-scale {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.productivity-info {
+  flex: 1;
+}
+
+.productivity-badge-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.productivity-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.productivity-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: var(--space-sm);
+}
+
+.productivity-factors {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.factor-pill {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+}
+
+.factor-pill span {
+  color: var(--cyan-accent);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   RECENT MISSION LOGS WIDGET
+   ========================================================================== */
+.recent-logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.recent-log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.recent-log-item:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  background-color: var(--bg-card-hover);
+}
+
+.recent-log-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.log-type-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-xs);
+  background: rgba(124, 58, 237, 0.12);
+  color: #C4B5FD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+}
+
+.log-title-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-item-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.log-item-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recent-log-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.log-duration-badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--cyan-accent);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   ACTIVE SPACE MISSIONS WIDGET
+   ========================================================================== */
+.active-missions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+.mission-preview-card {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  transition: all var(--transition-fast);
+}
+
+.mission-preview-card:hover {
+  border-color: var(--secondary);
+}
+
+.mission-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.mission-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mission-tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mission-tech-tag {
+  font-size: 0.6875rem;
+  font-family: var(--font-mono);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   UPCOMING MILESTONES WIDGET
+   ========================================================================== */
+.milestones-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.milestone-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  gap: var(--space-sm);
+}
+
+.milestone-info {
+  flex: 1;
+}
+
+.milestone-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: 4px;
+}
+
+.milestone-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.milestone-deadline {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
