@@ -110,6 +110,31 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Why:** A broken page should cost that page, not the app. Measured after: with Goals broken, navigation still works and the user sees which part failed.
 - **Trade-off accepted:** A partially broken app keeps running, so a bug can look less urgent than a blank screen. The error toast and console log keep it visible.
 
+### D-011: Pin CDN scripts to exact versions with Subresource Integrity hashes
+- **Date:** 2026-11-07 · **Status:** Accepted · Supersedes B-006, amends B-005
+- **Context:** Lucide loaded as `lucide@latest` from unpkg, so any new release ran on every visitor's page unreviewed. Neither script had an `integrity` hash. Chart.js was requested as `chart.umd.min.js`, a file that **does not exist in the Chart.js 4.4.7 npm package**; jsDelivr generated it on the fly, so its bytes (and any hash of them) were not guaranteed to stay the same.
+- **Decision:**
+  1. Pin Lucide to **1.70.0**, the version `@latest` resolved to on this date, so live behaviour does not change.
+  2. Load both libraries from **jsDelivr** (Lucide moved off unpkg).
+  3. Load Chart.js from the real file `dist/chart.umd.js` (already minified, 205,615 bytes).
+  4. Add `integrity="sha384-…"`, `crossorigin="anonymous"` and `referrerpolicy="no-referrer"` to both.
+- **Why:**
+  - An `integrity` hash makes the browser refuse a CDN file that differs from the reviewed one, so a compromised or changed CDN cannot run code on the site.
+  - Hashes were computed from the npm tarballs **and** checked against the bytes jsDelivr actually serves; both matched exactly.
+  - Before pinning, all 34 icon names used in `index.html` and `assets/js/` were checked to exist in Lucide 1.70.0.
+  - One CDN means one fewer third party that can fail or be compromised.
+- **Trade-off accepted:**
+  - Upgrading a library is now a deliberate manual change (new version **and** new hash). That is the intent.
+  - Both libraries now depend on jsDelivr alone. If jsDelivr is down, charts and icons are missing (the rest of the app still works).
+  - Google Fonts CSS is **not** hashed: Google serves different CSS per browser, so SRI cannot be used there. Its failure mode is only a fallback font.
+- **Alternatives rejected:** Self-hosting both files in `assets/vendor/`: removes the CDN dependency entirely, but adds ~690 KB of third-party code to the repo and every upgrade becomes a file copy. Worth reconsidering if a CDN outage ever bites.
+
+**Updating CDN libraries (how-to):**
+1. Pick the exact version, e.g. `lucide@1.71.0`, and the exact file path that exists in the npm package (`npm pack lucide@1.71.0`, then look inside `package/dist/`). Never use `.min.js` names that the package does not ship.
+2. Compute the hash: `curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A`, then prefix it with `sha384-`.
+3. Update `src` and `integrity` in `index.html`, open the app, and check that the console shows no integrity errors and icons/charts render.
+4. Add a decision entry if the upgrade changes behaviour.
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)
@@ -139,10 +164,12 @@ These choices were made before this log existed. **The original reasons were not
 - **Trade-off:** URLs contain `#`; all 8 pages live in one HTML file (1,400+ lines).
 
 ### B-005: Chart.js 4.4.7 from the jsDelivr CDN
+- **Status:** Library choice still in force; loading superseded by D-011 (SRI hash, real file path)
 - **Likely why:** Mature, well-documented, canvas-based, handles bar/line/doughnut charts with theming, and needs no bundler.
 - **Trade-offs:** The app depends on jsDelivr being reachable; if the script is blocked, `chartManager` silently skips charts. Loaded **without a Subresource Integrity (`integrity`) hash**, so a tampered CDN file would run with full page access.
 
 ### B-006: Lucide icons from unpkg, version `@latest`
+- **Status:** Superseded by D-011
 - **Likely why:** Large consistent icon set, swapped in at runtime via `lucide.createIcons()`.
 - **Trade-offs:** `@latest` means any new upstream release, including a breaking or malicious one, is loaded automatically with no review. No SRI hash. **Open issue: pin the version and add SRI.**
 

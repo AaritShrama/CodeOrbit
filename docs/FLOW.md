@@ -41,8 +41,10 @@ After that, everything is driven by user events, and every data change follows O
 | Order | What | How it loads | Result |
 |---|---|---|---|
 | 1 | CSS files (`style`, `components`, `dashboard`, `orbital`, `responsive`) | `<link>` in `<head>` | Styles ready before first paint |
-| 2 | Chart.js 4.4.7 (jsDelivr) | classic `<script>` in `<head>`, blocking | Creates global `window.Chart` |
-| 3 | Lucide (unpkg) | classic `<script>` in `<head>`, blocking | Creates global `window.lucide` |
+| 2 | Chart.js 4.4.7 (jsDelivr, pinned + SRI hash) | classic `<script>` in `<head>`, blocking | Creates global `window.Chart` |
+| 3 | Lucide 1.70.0 (jsDelivr, pinned + SRI hash) | classic `<script>` in `<head>`, blocking | Creates global `window.lucide` |
+
+If a CDN file does not match its `integrity` hash, the browser refuses to run it: `window.Chart` / `window.lucide` stay undefined, charts are skipped and icons stay as empty `<i>` tags, but the rest of the app still works.
 | 4 | `assets/js/app.js` | `<script type="module">` at the end of `<body>` | Module scripts are deferred: runs **after** the whole HTML is parsed |
 
 All 8 screens already exist in the HTML as `<section class="view-page" id="view-…">`. JavaScript never creates pages; it only shows/hides them and fills them with data.

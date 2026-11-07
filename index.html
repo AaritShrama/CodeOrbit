@@ -22,8 +22,14 @@
   <link rel="stylesheet" href="assets/css/responsive.css">
 
   <!-- Third-party CDN Dependencies (Allowed: Chart.js & Lucide) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <!-- Third-party scripts are pinned to exact versions with Subresource Integrity hashes.
+       To upgrade, follow "Updating CDN libraries" in docs/DECISIONS.md (D-011). -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.js"
+          integrity="sha384-zYPBGXwO4633CABX/5Spf6emCKUJCfoOkhOMYyxMsatqQZPnDblmmOewfjsIVWCM"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@1.70.0/dist/umd/lucide.min.js"
+          integrity="sha384-64z4N640tVzhAicQVGzxE/48VNN9yS53U5kv9UH8ca7xGU4KSJ9zz8nD4C2BEerP"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
 
