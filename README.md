@@ -1,68 +1,64 @@
-# CodeOrbit — Your Universe of Developer Growth
+<a id="readme-top"></a>
 
-<p align="center">
-  <img src="assets/images/logo.svg" alt="CodeOrbit Logo" width="128" height="128">
-</p>
+<div align="center">
 
-<p align="center">
-  <strong>Your Universe of Developer Growth.</strong><br>
-  A personal developer productivity and learning management platform that transforms your technical journey into a structured, visually stunning, cosmic experience.
-</p>
+  <img src="assets/images/logo.svg" alt="CodeOrbit Logo" width="120" height="120">
 
-<p align="center">
-  <a href="#-project-overview">Overview</a> •
-  <a href="#-core-features">Features</a> •
-  <a href="#-visual-interface--layout">Visual Tour</a> •
-  <a href="#-technology-stack">Tech Stack</a> •
-  <a href="#-system-architecture">Architecture</a> •
-  <a href="#-folder-structure">Folder Structure</a> •
-  <a href="#-quick-start--local-development">Quick Start</a> •
-  <a href="#-roadmap">Roadmap</a> •
-  <a href="#-contributing">Contributing</a> •
-  <a href="#-organization">Organization</a> •
-  <a href="#-license">License</a>
-</p>
+  # CodeOrbit
+  ### Your Universe of Developer Growth
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Organization-LET'S_COOK_—_THE_FOUNDRY-7C3AED?style=for-the-badge" alt="LET'S COOK — THE FOUNDRY">
-  <img src="https://img.shields.io/badge/Stack-Vanilla_JS_ES6+-38BDF8?style=for-the-badge" alt="Vanilla JS">
-  <img src="https://img.shields.io/badge/Storage-100%25_LocalStorage-22C55E?style=for-the-badge" alt="LocalStorage">
-  <img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge" alt="MIT License">
-  <img src="https://img.shields.io/badge/Zero-Build_Steps-6366F1?style=for-the-badge" alt="Zero Build Steps">
-</p>
+  <p align="center">
+    A personal developer productivity and learning management platform designed to organize technical skills, maintain focused learning logs, manage development projects, and monitor milestones through an interactive cosmic dashboard.
+  </p>
 
----
+  <p align="center">
+    <a href="#-explore-codeorbit"><strong>Explore Live Demo »</strong></a>
+    <br><br>
+    <a href="#-about-codeorbit">About</a> •
+    <a href="#-core-features">Features</a> •
+    <a href="#%EF%B8%8F-built-with">Tech Stack</a> •
+    <a href="#-getting-started">Getting Started</a> •
+    <a href="#-project-structure">Structure</a> •
+    <a href="#-contributing-to-codeorbit">Contributing</a> •
+    <a href="#-license">License</a>
+  </p>
 
-## 🌌 Project Overview
+  <!-- Shields.io Badges Row -->
+  <p align="center">
+    <a href="https://github.com/LetsCook-Organization/CodeOrbit"><img src="https://img.shields.io/badge/GitHub-LetsCook--Organization%2FCodeOrbit-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository"></a>
+    <a href="https://codeorbit-c7q4.onrender.com/"><img src="https://img.shields.io/badge/Deployment-Render_Live-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Render Deployment"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F97316?style=for-the-badge" alt="MIT License"></a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"></a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"></a>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript ES6+"></a>
+    <img src="https://img.shields.io/badge/Open_Source-LET'S_COOK_—_THE_FOUNDRY-7C3AED?style=for-the-badge" alt="LET'S COOK — THE FOUNDRY">
+  </p>
 
-**CodeOrbit** is an open-source personal developer productivity platform designed and maintained under **LET'S COOK — THE FOUNDRY**. It bridges the gap between scattered learning bookmarks, unmeasured coding sprints, and unstructured project ideas by organizing a developer's entire growth trajectory into a personal, interactive **universe**.
-
-Students and developers frequently face common growth friction:
-- *What should I study next?*
-- *How many hours did I code this week?*
-- *Are my personal projects making verifiable progress?*
-- *Am I staying consistent over time?*
-
-CodeOrbit answers these questions through a space-inspired Command Center equipped with **real-time telemetry**, **planetary orbital visualizers**, **deep-focus mission logs**, **space mission portfolio trackers**, **milestone target horizons**, and **multi-dimensional universe analytics**.
-
-### Key Highlights
-- **100% Offline & Private:** All data resides exclusively in your browser's `localStorage`. No mandatory user accounts, cloud databases, external trackers, or telemetry collection.
-- **Zero Build Tooling:** Native HTML5, modern CSS3, and ES6+ modules (`import`/`export`). No `npm install`, Webpack, Vite, Babel, or complex runtime toolchains required to get started.
-- **Cinematic Celestial Aesthetics:** Deep cosmic navy themes, subtle animated starfields, glassmorphic cards, luminous orbital rings, and an accessible high-contrast Orbital Light theme.
-- **Deterministic Velocity Engine:** Real-time productivity scoring calculated dynamically from weekly consistency, learning hours vs. target, project velocity, and skill advancements.
-- **Full Data Sovereignty:** One-click JSON backup, restoration, pre-loaded demo exploration datasets, and safe factory wipes.
+</div>
 
 ---
 
-## 🪐 Visual Interface & Layout
+## 🚀 Explore CodeOrbit
 
-CodeOrbit combines the visual polish of modern SaaS developer tools with the captivating immersion of a cosmic operating system.
+Experience CodeOrbit's developer command center and explore your personal developer universe in real time:
 
-### Command Center Topology
+<div align="center">
+
+[![Launch CodeOrbit](https://img.shields.io/badge/🌌_Launch_CodeOrbit_Live-7C3AED?style=for-the-badge&logoColor=white)](https://codeorbit-c7q4.onrender.com/)
+
+*Hosted live as a Static Site on Render with automated global distribution.*
+
+</div>
+
+---
+
+## 📸 Application Preview
+
+The CodeOrbit Command Center brings a space-inspired aesthetic into modern developer workflow tracking:
 
 ```text
 +----------------------------------------------------------------------------------------------------+
-|  [LOGO] CodeOrbit         [ Search Entire Universe (Ctrl+K) ]      [Day 5 Streak 🔥]  [Theme] [Avatar]|
+|  [LOGO] CodeOrbit         [ Search Universe (Ctrl+K) ]               [Day 5 Streak 🔥]  [Theme] [Avatar]|
 +----------------------------------------------------------------------------------------------------+
 | SIDEBAR      | HERO COMMAND CENTER                                                                 |
 |              | "Welcome to Your Developer Universe, Pilot"                                        |
@@ -71,10 +67,10 @@ CodeOrbit combines the visual polish of modern SaaS developer tools with the cap
 | 📝 Logs      | TELEMETRY KPI CARDS                                                                 |
 | 🛰 Projects  | [ Skills: 12 Active ] [ Learning: 42.5 hrs ] [ Projects: 4 Flights ] [ Streak: 5d ]  |
 | 🎯 Goals     +--------------------------------------------------+----------------------------------+
-| ⭐ Badges    | ORBITAL SKILL UNIVERSE (Canvas / SVG)            | VELOCITY TRAJECTORY & METRICS    |
-| 📊 Analytics |       (Core: React)                              | Weekly Learning Distribution     |
-| ⚙️ Settings  |      /       |       \                           | [Mon: 2h] [Tue: 3.5h] [Wed: 1h]  |
-|              |   (Node.js)  (Python)  (TypeScript)              | Developer Velocity Index: 84/100 |
+| ⭐ Badges    | ORBITAL SKILL UNIVERSE (Interactive Canvas / SVG)| VELOCITY TRAJECTORY & METRICS    |
+| 📊 Analytics |          (Core: React)                           | Weekly Learning Distribution     |
+| ⚙️ Settings  |         /       |       \                        | [Mon: 2h] [Tue: 3.5h] [Wed: 1h]  |
+|              |      (Node)  (Python)  (TypeScript)              | Developer Velocity Index: 84/100 |
 |              | [Pause / Resume]  [Constellation Grid View]      | [View Calculation Breakdown]     |
 |              +--------------------------------------------------+----------------------------------+
 |              | ACTIVE FLIGHTPATHS (Projects)                    | UPCOMING HORIZONS (Milestones)   |
@@ -83,149 +79,127 @@ CodeOrbit combines the visual polish of modern SaaS developer tools with the cap
 +----------------------------------------------------------------------------------------------------+
 ```
 
----
-
-## 🚀 Core Features
-
-CodeOrbit features 9 deeply integrated modules designed to support every phase of your software journey:
-
-### 1. 🪐 Command Center (Dashboard)
-- **Celestial Hero Section:** Live greeting, personalized pilot callsign, active streak counter, and rapid 1-click modal launchers.
-- **Dynamic Telemetry Cards:** 4 real-time KPI indicators displaying active vs. mastered skills, total hours logged, active space missions, and unbroken streak days.
-- **Developer Velocity Index (0–100):** Real-time algorithm synthesizing weekly learning cadence, target hours, project completion ratios, and skill advances into a single actionable velocity rating with an interactive math breakdown dialog.
-- **Orbital Planetary Engine:** Multi-ring planetary visualizer built with responsive CSS and SVG geometry. Orbits scale with skill proficiency levels, rotating around the developer core with interactive tooltips, play/pause controls, and an accessible Constellation Grid toggle.
-- **Live Stream Previews:** Instant glance at recent mission logs, active space mission flightpaths, and upcoming milestone horizons.
-
-### 2. 🪐 Skill Universe (Competency Engine)
-- **Taxonomy Categories:** Organize proficiencies across **Programming Languages, Web Development, AI & Machine Learning, Data Science, Databases, DevOps & Cloud, and Computer Science**.
-- **Proficiency Tracking:** Progress from Beginner (0–24%) $\rightarrow$ Intermediate (25–49%) $\rightarrow$ Advanced (50–74%) $\rightarrow$ Expert (75–100%).
-- **Quick-Step Adjusters:** Adjust skill percentages with 1-click `+10%` / `-10%` buttons directly from skill cards.
-- **Fast Search & Filter:** Filter by category, proficiency tier, learning status (Not Started, In Progress, Completed), or search keyword.
-
-### 3. 📝 Mission Logs (Learning Progress Tracker)
-- **Multi-Disciplinary Session Logging:** Record sessions across **Coding, Reading & Documentation, Practice Problems & LeetCode, Project Development, Technical Research, and Tutorials**.
-- **Animated Daily Goal Ring:** Visual SVG circular gauge tracking hours logged today against your customized daily target.
-- **Aggregated Analytics:** Real-time stats calculating all-time hours, weekly volume, monthly velocity, average session length, and total sessions completed.
-- **Chronological Timeline:** Grouped timeline cards with direct inline session editing, date filters, and category badges.
-
-### 4. 🛰 Space Missions (Developer Project Tracker)
-- **Flightpath Progress Tracker:** Monitor progress bars (0–100%), delivery status (**Planning, In Progress, On Hold, Completed**), and launch target dates.
-- **Dynamic Tag System:** Add, remove, and filter custom technology badges (e.g. `React`, `Docker`, `FastAPI`, `GraphQL`).
-- **Verified Link Integrations:** Embedded direct actions for GitHub repository source code and deployed live production URLs with automated sanitization.
-
-### 5. 🎯 Milestones (Goal Management)
-- **Target Horizons:** Structure long-term engineering ambitions with designated target completion dates.
-- **Priority Tiering:** Categorize milestones by priority: **Critical, High, Medium, or Low**.
-- **Automated Overdue Detection:** Highlights horizons that have exceeded their target deadline with clear visual flags.
-- **Status Metrics:** Real-time summary displaying total milestones, active horizons, completed goals, and overall completion percentages.
-
-### 6. ⭐ Universe Achievements
-- **Deterministic Badges:** 10 unlocks triggered strictly by genuine user activity:
-  - *First Orbit* (Created your first skill)
-  - *Skill Pioneer* (Added 5 skills)
-  - *Orbit Master* (Reached 100% on any skill)
-  - *Log Initialized* (Logged first learning sprint)
-  - *Century Club* (Completed 100 hours of learning)
-  - *Mission Launched* (Created first project)
-  - *Mission Accomplished* (Completed a project)
-  - *Horizon Reached* (Completed a milestone)
-  - *Deep Space Voyager* (Maintained a 7-day streak)
-  - *Universe Architect* (Created 10 skills and completed 3 projects)
-- **Web Audio Chime Synthesizer:** Celebratory custom sound synthesis using browser `AudioContext` without external MP3 audio assets.
-
-### 7. 📊 Universe Analytics
-- **5 Custom Chart.js Visualizers:**
-  1. *Weekly Learning Distribution* (Mon–Sun daily hours bar chart)
-  2. *30-Day Velocity Trajectory* (Smooth glowing line chart tracking cumulative activity)
-  3. *Skill Category Breakdown* (Doughnut distribution of competencies)
-  4. *Space Mission Status* (Doughnut ratio of project pipeline)
-  5. *Activity Type Allocation* (Horizontal bar chart of learning methods)
-- **Automated Developer Insights:** Heuristic engine detecting your top focus skill, highest-output day of the week, and active milestone momentum.
-
-### 8. ⚙️ System Settings & Data Sovereignty
-- **Developer Profile Customization:** Custom pilot name, title, bio, GitHub handle, and 6 cosmic avatar presets.
-- **Theme Engine:** Instant switching between **Cosmic Dark Theme** (default) and **Orbital Light Theme** with persisted preference.
-- **Full Data Backup & Restore:** Export complete state as clean, timestamped `codeorbit-universe-YYYY-MM-DD.json`.
-- **Validation Engine:** Strict schema validation checks during JSON import to prevent data corruption.
-- **Demo Mode & Clean Slate:** Load comprehensive pre-populated universe data for exploration, or perform a complete factory wipe.
-
-### 9. 🔍 Global Command Palette (`Ctrl+K` / `Cmd+K`)
-- **Instant Universal Search:** Accessible from anywhere via keyboard shortcut or header search bar.
-- **Keyboard Navigation:** Navigate matching skills, projects, logs, and milestones using `ArrowUp`, `ArrowDown`, and `Enter`.
+> [!TIP]
+> Visit the [Live Application](https://codeorbit-c7q4.onrender.com/) to interact with the animated orbital canvas, dynamic telemetry gauges, and cosmic dark theme in real time. For contributors preparing visual materials, see [docs/screenshots/README.md](docs/screenshots/README.md) for full image capture specifications.
 
 ---
 
-## 🛠 Technology Stack
+## 🌌 About CodeOrbit
 
-CodeOrbit embraces a **pure, standards-based vanilla web architecture** designed for performance, accessibility, and zero-barrier open-source contribution:
+**CodeOrbit** is an open-source personal developer productivity and learning management platform designed to help students, self-taught engineers, and experienced developers organize their technical learning journey.
 
-| Layer | Technology | Rationale |
+### The Problem
+Modern developers frequently navigate an overwhelming amount of information across disparate tools. Learning trajectories, project repos, coding sprint logs, and technical milestones end up scattered across browser bookmarks, loose notes, and unmaintained spreadsheets. Without a centralized system, maintaining momentum, tracking consistency, and measuring skill acquisition becomes challenging.
+
+### The Solution
+CodeOrbit provides a focused, unified workspace for developer growth. By transforming competencies into an interactive **Skill Universe**, study sessions into **Mission Logs**, engineering builds into **Space Missions**, and targets into **Milestone Horizons**, CodeOrbit turns professional development into an engaging, structured, and measurable journey.
+
+Everything runs **100% client-side** using browser `localStorage` — prioritizing privacy, zero network latency, and complete user data sovereignty with zero required account logins or paid cloud subscriptions.
+
+---
+
+## ✨ Core Features
+
+All features listed below are fully implemented in the current release:
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🪐 Command Center</h3>
+      <p>The centralized mission hub presenting an immediate overview of developer momentum, featuring a celestial greeting, live local date, active streak tracking, 4 dynamic telemetry KPI cards, and an interactive Developer Velocity Index (0–100) with mathematical scoring breakdowns.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🌌 Orbital Skill Universe</h3>
+      <p>An interactive multi-ring planetary visualization where orbiting bodies scale and position themselves based on proficiency. Includes real-time tooltips, orbital animation controls (play/pause), and an accessible Constellation Grid toggle.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📚 Skill Taxonomy & Tracking</h3>
+      <p>Manage competencies across 7 categories (Programming Languages, Web Dev, AI/ML, Data Science, Databases, DevOps, Computer Science). Track proficiency tiers (Beginner to Expert) with fast inline <code>+10%</code> / <code>-10%</code> step controls, search, and sorting.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>📝 Mission Logs (Learning Sprints)</h3>
+      <p>Log focused learning sessions across Coding, Reading, Practice Problems, Project Development, Research, and Tutorials. Features an animated SVG daily goal progress ring, session duration math, and chronological timeline history.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🛰️ Space Missions (Projects)</h3>
+      <p>Portfolio tracker monitoring engineering flightpaths from Planning to Completion. Features custom technology stack tags, progress indicators (0–100%), and direct sanitized links to GitHub repositories and live deployments.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🎯 Milestones (Goal Horizons)</h3>
+      <p>Set technical objectives with designated deadlines and priority classifications (Critical, High, Medium, Low). Automatically calculates completion rates, active horizons, and highlights overdue goals.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📊 Universe Analytics</h3>
+      <p>Five Chart.js visualizers including weekly learning volume (Mon–Sun), 30-day velocity trajectories, skill distributions, project pipeline breakdowns, and activity type allocations, accompanied by automated developer habit insights.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>⭐ Achievements & Sovereignty</h3>
+      <p>10 reactive achievement badges triggered strictly by genuine user milestones with synthesized Web Audio chimes. Includes JSON backup export, schema-validated import, demo data loading, and theme switching (Cosmic Dark / Orbital Light).</p>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 🛠️ Built With
+
+CodeOrbit is deliberately built with clean, standards-compliant web technologies without heavy frontend frameworks or bundlers, ensuring instant load times and high accessibility:
+
+| Technology | Badge | Purpose |
 | :--- | :--- | :--- |
-| **Markup** | HTML5 Semantic Elements | High accessibility, screen-reader support, native `<dialog>` modals |
-| **Styling** | Modern CSS3 & CSS Variables | Fast rendering, glassmorphic effects, fluid grid/flexbox layouts |
-| **Scripting** | Vanilla JavaScript (ES6+ Modules) | Zero bundlers, instant native browser execution, clean module boundaries |
-| **Storage** | Browser `localStorage` API | 100% client-side privacy, persistent across sessions, zero network latency |
-| **Visuals** | Chart.js 4.4+ (CDN) | Lightweight, accessible, canvas-based statistical visualizers |
-| **Icons** | Lucide Icons (CDN) | Modern, clean, crisp SVG vector icons |
-| **Audio** | HTML5 Web Audio API | Custom procedural audio chimes without external media downloads |
-| **Fonts** | Inter & JetBrains Mono (Google Fonts) | Optimized readability for dashboards and code-adjacent metrics |
-
-> **Strict Architectural Rules:**  
-> ❌ No React • ❌ No Next.js • ❌ No Vue • ❌ No TypeScript • ❌ No Tailwind CSS • ❌ No Bootstrap • ❌ No Backend Server • ❌ No Paid APIs
+| **HTML5** | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) | Semantic structure, accessible dialogs, and clean application shell |
+| **CSS3** | ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) | Custom design system tokens, glassmorphism, responsive grid, and orbital animations |
+| **JavaScript** | ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | Modular architecture using native ES Modules (`import`/`export`) |
+| **Chart.js** | ![Chart.js](https://img.shields.io/badge/Chart.js-4.4+-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | Responsive canvas charts configured with custom cosmic gradients |
+| **Lucide Icons** | ![Lucide](https://img.shields.io/badge/Lucide-Icons-F56565?style=flat-square&logo=feather&logoColor=white) | Modern, consistent SVG iconography |
+| **LocalStorage** | ![LocalStorage](https://img.shields.io/badge/Storage-Browser_LocalStorage-22C55E?style=flat-square) | Fast, atomic, client-side data persistence with zero network latency |
+| **Render** | ![Render](https://img.shields.io/badge/Hosting-Render_Static_Site-46E3B7?style=flat-square&logo=render&logoColor=white) | Continuous deployment and static site hosting with automated SSL |
 
 ---
 
-## 🏗 System Architecture
+## ⚡ Getting Started
 
-CodeOrbit operates as an event-driven, single-page application (SPA) centered on an atomic data manager and a reactive event bus:
+You do **not** need `npm install`, Node.js, Webpack, or any build setup to run CodeOrbit.
 
-```text
-+---------------------------------------------------------------------------+
-|                              BROWSER DOM                                  |
-|   index.html (Semantic Containers, Modals, Views, Command Palette)        |
-+---------------------------------------------------------------------------+
-                                     ▲
-                                     │  (Dynamic Rendering & Event Binding)
-                                     ▼
-+---------------------------------------------------------------------------+
-|                          MODULE CONTROLLERS                               |
-|   dashboard.js  •  skills.js  •  progress.js  •  projects.js  •  goals.js  |
-|   analytics.js  •  achievements.js  •  settings.js  •  components.js      |
-+---------------------------------------------------------------------------+
-         ▲                                                ▲
-         │ (Trigger UI updates)                           │ (CRUD mutations)
-         ▼                                                ▼
-+---------------------------------------------------------------------------+
-|                       REACTIVE EVENT BUS                                  |
-|               window.dispatchEvent('codeorbit:data-changed')             |
-+---------------------------------------------------------------------------+
-                                     ▲
-                                     │ (Reads / Writes)
-                                     ▼
-+---------------------------------------------------------------------------+
-|                     CENTRAL STORAGE SINGLETON                             |
-|                           storage.js                                      |
-|    Schema validation  •  Seed initialization  •  Atomic state mutations   |
-+---------------------------------------------------------------------------+
-                                     ▲
-                                     │ (Serialization)
-                                     ▼
-+---------------------------------------------------------------------------+
-|                     BROWSER LOCALSTORAGE                                  |
-|         Key: 'codeorbit_data'  |  Format: JSON Object                     |
-+---------------------------------------------------------------------------+
-```
+### Prerequisites
+- A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, or Apple Safari).
+- A text editor or IDE (such as [VS Code](https://code.visualstudio.com/)).
+- [Git](https://git-scm.com/) installed on your computer.
 
-### Architectural Highlights
-1. **Centralized Data Store (`storage.js`):** All read and write operations route through safe getter/setter functions. Direct mutations to `localStorage` are prohibited elsewhere in the codebase.
-2. **Reactive Event Bus (`codeorbit:data-changed`):** When any record is added, updated, deleted, or imported, `storage.js` broadcasts a custom event. All active views reactively re-render, ensuring cross-page telemetry is always synchronized.
-3. **Hash-Based Routing (`navigation.js`):** Lightweight client-side navigation using URL hashes (`#dashboard`, `#skills`, `#progress`, `#projects`, `#goals`, `#achievements`, `#analytics`, `#settings`) with browser history support (`popstate`).
-4. **XSS Defense-in-Depth (`utils.js`):** All user input strings are strictly escaped via `escapeHTML()` before being injected into HTML templates.
-5. **Chart Lifecycle Management (`charts.js`):** Chart instances are tracked and safely destroyed (`chart.destroy()`) before re-instantiation, preventing canvas memory leaks.
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/LetsCook-Organization/CodeOrbit.git
+   cd CodeOrbit
+   ```
+
+2. **Serve the application:**  
+   Because CodeOrbit uses native JavaScript ES Modules, browsers require files to be served via HTTP/HTTPS rather than the direct `file://` protocol. Choose any of the following:
+
+   - **VS Code Live Server (Recommended):**  
+     Install the "Live Server" extension, right-click `index.html`, and select **"Open with Live Server"**.
+   - **Python (Built into Windows, macOS, Linux):**  
+     ```bash
+     python -m http.server 3000
+     ```
+   - **Node.js (Optional):**  
+     ```bash
+     npx serve .
+     ```
+
+3. **Open in your browser:**  
+   Navigate to `http://localhost:3000` (or the port indicated in your terminal) to explore your developer universe.
 
 ---
 
-## 📁 Folder Structure
+## 📁 Project Structure
 
 ```text
 CodeOrbit/
@@ -234,162 +208,124 @@ CodeOrbit/
 │   │   ├── bug_report.yml          # Structured GitHub bug report issue form
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
 │   ├── workflows/
-│   │   └── deploy.yml              # GitHub Pages continuous deployment action
-│   └── PULL_REQUEST_TEMPLATE.md    # Contributor checklist & PR guidelines
+│   │   └── deploy.yml              # Deployment workflow
+│   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
 │   ├── css/
-│   │   ├── style.css               # Design tokens, CSS variables, base layout & resets
-│   │   ├── components.css          # Reusable buttons, cards, inputs, badges, modals
+│   │   ├── style.css               # Design tokens, variables, base layout & resets
+│   │   ├── components.css          # Reusable buttons, cards, modals, dropdowns
 │   │   ├── dashboard.css           # Command Center hero, telemetry cards, velocity ring
 │   │   ├── orbital.css             # Dynamic planetary SVG/CSS orbital animation engine
-│   │   └── responsive.css          # Media queries (Desktop, Laptop, Tablet, Mobile)
+│   │   └── responsive.css          # Breakpoints (Desktop, Laptop, Tablet, Mobile)
 │   ├── images/
-│   │   ├── favicon.svg             # Cosmic orbital SVG favicon
-│   │   └── logo.svg                # Vector CodeOrbit brand mark
+│   │   ├── favicon.svg             # SVG favicon
+│   │   └── logo.svg                # Brand vector mark
 │   └── js/
-│       ├── app.js                  # Master bootstrap, routing dispatcher & canvas starfield
+│       ├── app.js                  # Application orchestrator & canvas starfield
 │       ├── storage.js              # Centralized LocalStorage manager & migration engine
 │       ├── utils.js                # XSS sanitization, math scoring, Web Audio chimes
-│       ├── navigation.js           # Hash routing, mobile drawer toggles & navigation state
-│       ├── components.js           # Modal dialog system, toast notifications, Command Palette
+│       ├── navigation.js           # Hash-based routing (#dashboard, #skills, etc.)
+│       ├── components.js           # Modal dialog system, toasts, Command Palette (Ctrl+K)
 │       ├── dashboard.js            # Command Center KPI calculations & orbital renderers
-│       ├── skills.js               # Skill Universe CRUD, category filters, progress stepping
-│       ├── progress.js             # Mission Logs sprint tracking & daily goal circular ring
+│       ├── skills.js               # Skill Universe CRUD, filters, quick-step adjusters
+│       ├── progress.js             # Mission Logs sprint tracking & daily goal gauge
 │       ├── projects.js             # Space Missions project manager & tech stack tags
 │       ├── goals.js                # Milestones target horizons & overdue detection
 │       ├── achievements.js         # Real-time condition evaluation & achievement unlocks
-│       ├── analytics.js            # Analytics calculations & automated habit insights
+│       ├── analytics.js            # Analytical calculations & automated habit insights
 │       ├── settings.js             # Profile management, theme toggle, JSON backup/restore
-│       └── charts.js               # Chart.js cosmic gradient configurations & lifecycle
+│       └── charts.js               # Chart.js configurations & lifecycle management
 ├── docs/
-│   ├── ARCHITECTURE.md             # Detailed engineering system design & data schemas
+│   ├── screenshots/
+│   │   └── README.md               # Screenshot capture instructions and specifications
+│   ├── ARCHITECTURE.md             # System design & data schema reference
 │   ├── CODE_OF_CONDUCT.md          # Contributor Covenant 2.1 code of conduct
-│   ├── CONTRIBUTING.md             # Detailed guide for open-source contributors
-│   └── SECURITY.md                 # Security model, reporting policies & boundaries
-├── .gitignore                      # Git ignore rules for OS files, logs, and artifacts
+│   ├── CONTRIBUTING.md             # Contributor onboarding & workflow guide
+│   └── SECURITY.md                 # Security policies & reporting guidelines
 ├── CODE_OF_CONDUCT.md              # Root Code of Conduct link
 ├── CONTRIBUTING.md                 # Root Contributing guide
 ├── index.html                      # Semantic single-page application entry point
-├── LICENSE                         # MIT License file
+├── LICENSE                         # MIT License
 ├── README.md                       # Main project documentation
 └── SECURITY.md                     # Root Security policy link
 ```
 
 ---
 
-## ⚡ Quick Start & Local Development
+## 🤝 Contributing to CodeOrbit
 
-Because CodeOrbit uses native JavaScript ES Modules (`import`/`export`), web browsers require files to be served via HTTP or HTTPS rather than the raw `file://` protocol.
+CodeOrbit is an open-source project proudly developed and maintained under **LET'S COOK — THE FOUNDRY**. We actively welcome contributions from developers, designers, and students of all skill levels!
 
-Getting started takes less than **60 seconds**:
+Whether you are fixing a typo in documentation, polishing responsive styles, or proposing a new feature, your help is appreciated.
 
-### Prerequisites
-- A modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox, Apple Safari).
-- Git installed on your system.
-- Any lightweight local web server (Python, VS Code, or Node).
+### How to Get Involved
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/LetsCook-Organization/CodeOrbit.git
-cd CodeOrbit
-```
+1. **Browse Existing Issues:** Check the [GitHub Issues](https://github.com/LetsCook-Organization/CodeOrbit/issues) tab. Look for issues labeled `good first issue` or `help wanted`.
+2. **Issue Assignment:** To avoid duplicate efforts, please comment on an issue and wait to be assigned before beginning work. If you have an idea for a new feature or found a bug, open an issue first.
+3. **Follow the Workflow:** Read our comprehensive guide in [CONTRIBUTING.md](CONTRIBUTING.md) for step-by-step instructions on forking, creating topic branches, following Conventional Commits (`feat:`, `fix:`, `docs:`), and testing locally.
+4. **Submit a Pull Request:** Complete the provided [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md) and describe your verification steps clearly.
 
-### 2. Launch Local Server
+<div align="center">
 
-Choose any method that fits your environment:
+[![Start Contributing](https://img.shields.io/badge/🤝_Start_Contributing-Read_Guide-7C3AED?style=for-the-badge)](CONTRIBUTING.md)
 
-#### Option A: Python (Built into Windows, macOS, Linux)
-```bash
-# Python 3
-python -m http.server 3000
-```
-
-#### Option B: VS Code Live Server (Beginner Recommended)
-1. Open the `CodeOrbit` folder in VS Code.
-2. Install the **Live Server** extension (by Ritwick Dey).
-3. Right-click `index.html` in the file tree $\rightarrow$ click **"Open with Live Server"**.
-
-#### Option C: Node.js `npx serve`
-```bash
-npx serve .
-```
-
-### 3. Open Your Universe
-Point your browser to:
-```text
-http://localhost:3000
-```
-*(or the local port displayed in your terminal)*.
+</div>
 
 ---
 
-## 🗺 Roadmap
+## 🛰️ Project Roadmap
 
-CodeOrbit follows a transparent, community-driven development roadmap:
-
-### 🌟 Phase 1: Core Genesis (Completed — v1.0.0)
-- [x] Complete 9-module Single Page Application architecture.
-- [x] Responsive Command Center with dynamic telemetry and planetary orbital visualizer.
-- [x] Comprehensive CRUD engines for Skills, Mission Logs, Space Missions, and Milestones.
-- [x] Deterministic Developer Velocity Index (0–100) and automated habit insights.
-- [x] 10 reactive Universe Achievements with procedural Web Audio chimes.
-- [x] Dual cosmic dark and orbital light themes.
-- [x] Full JSON data export, schema-validated import, demo data seeder, and reset utility.
-- [x] Global Command Palette (`Ctrl+K` / `Cmd+K`) with keyboard navigation.
-
-### 🔭 Phase 2: Horizons & Expansion (Current Focus — v1.1.0)
-- [ ] **Interactive Pomodoro Sprint Timer:** In-dashboard focus timer with cosmic visual countdowns that automatically logs completed sessions into Mission Logs.
-- [ ] **Export Reports to Markdown & CSV:** Generate shareable resume-ready skill matrices and progress reports.
-- [ ] **Custom Tag Color Coding:** Allow developers to customize tag colors for project technologies and milestone categories.
-- [ ] **Web Share API Integration:** Share milestone completions and unlocked universe badges as clean summary cards.
-
-### 🌌 Phase 3: Offline PWA & Long-Range Telemetry (Planned — v1.2.0)
-- [ ] **Progressive Web App (PWA):** Service worker caching for installability on desktop and mobile with 100% offline access.
-- [ ] **Yearly Contribution Heatmap:** GitHub-style 365-day orbital activity matrix reflecting daily learning density.
-- [ ] **Multi-Profile Support:** Manage separate developer profiles (e.g. Work vs. Personal Open-Source).
+- [x] Initial Command Center dashboard with hero telemetry and streak tracking
+- [x] Skill Universe with 7 categories, proficiency tiers, and quick-step progression
+- [x] Mission Logs with multi-activity tracking and animated daily goal gauge
+- [x] Space Missions project manager with tech tags and repository links
+- [x] Milestones goal management with priority tiering and overdue horizon detection
+- [x] Deterministic Developer Velocity Index (0–100) and automated habit insights
+- [x] 10 reactive Universe Achievements with synthesized Web Audio chimes
+- [x] Global Command Palette (`Ctrl+K` / `Cmd+K`) with instant keyboard navigation
+- [x] Dual themes (Cosmic Dark & Orbital Light) and complete JSON backup/restore
+- [ ] Interactive in-dashboard Pomodoro focus sprint timer
+- [ ] Exportable resume-ready skill matrices and progress reports (Markdown & CSV)
+- [ ] Custom tag color configuration for project technologies
+- [ ] Progressive Web App (PWA) offline service worker caching
 
 ---
 
-## 🤝 Contributing
+## 🌱 Open Source
 
-We warmly welcome contributions from everyone — whether you are a seasoned software architect or a student making your **very first open-source pull request**!
+CodeOrbit is developed as an open educational resource under **LET'S COOK — THE FOUNDRY**. The project serves as an active platform for learners and engineers to:
 
-Please read our [Contributing Guide](CONTRIBUTING.md) for full instructions on:
-- How to fork and clone the repository.
-- Setting up your local environment with zero build tooling.
-- Conventional commit message standards (`feat:`, `fix:`, `docs:`, `style:`, etc.).
-- Testing and verifying your changes before submitting.
-- Submitting an accessible, descriptive pull request.
+- Practice practical **Git and GitHub collaboration workflows**.
+- Understand modular **vanilla JavaScript architecture** without framework abstractions.
+- Learn accessible **UI/UX design principles** and responsive CSS layout techniques.
+- Gain experience contributing to real-world, maintained open-source software.
 
-To report bugs or propose feature enhancements, please use our [GitHub Issue Templates](https://github.com/LetsCook-Organization/CodeOrbit/issues/new/choose).
-
-Please also review our [Code of Conduct](CODE_OF_CONDUCT.md) to ensure an open, welcoming, and harassment-free community environment.
-
----
-
-## 🍳 Organization
-
-**LET'S COOK — THE FOUNDRY** is an open-source development guild dedicated to crafting beautiful, high-performance, developer-first tools. We believe in:
-- **Radical Simplicity:** Tools that run everywhere without requiring fragile dependency chains.
-- **Data Sovereignty:** Software that respects user privacy and keeps data under local user ownership.
-- **Craftsmanship & Joy:** Developing software that is both technically robust and visually delightful.
+We believe the best way to grow as a developer is by building, experimenting, and contributing in public.
 
 ---
 
 ## 📄 License
 
-CodeOrbit is open-source software licensed under the **[MIT License](LICENSE)**.
+CodeOrbit is open-source software distributed under the terms of the **[MIT License](LICENSE)**.
 
 ```text
 Copyright (c) 2026 LET'S COOK — THE FOUNDRY
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
 ```
+
+See the [LICENSE](LICENSE) file for complete terms and permissions.
+
+---
+
+<div align="center">
+
+  Built with curiosity, code, and community.<br>
+  <strong>CodeOrbit</strong> • <strong>LET'S COOK — THE FOUNDRY</strong>
+  <br><br>
+  <a href="https://codeorbit-c7q4.onrender.com/">Live Demo</a> ·
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit">GitHub</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a> ·
+  <a href="LICENSE">License</a>
+  <br><br>
+  <a href="#readme-top">Back to top ↑</a>
+
+</div>

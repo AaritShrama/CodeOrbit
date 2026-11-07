@@ -28,7 +28,7 @@ CodeOrbit runs 100% locally in your browser. It was designed from day one to ope
 If you identify a security vulnerability or potential threat in CodeOrbit, please **do not disclose it publicly** in public GitHub issues, discussions, or social channels.
 
 Instead, please responsibly report the issue to the maintainers of **LET'S COOK — THE FOUNDRY**:
-- **Email:** `security@letscook.foundry`
+- **Email:** `foundry@letscook.co.in`
 - **GitHub:** Open a [Private Vulnerability Advisory](https://github.com/LetsCook-Organization/CodeOrbit/security/advisories/new)
 
 Please include:
