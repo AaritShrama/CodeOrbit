@@ -207,9 +207,7 @@ CodeOrbit/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.yml          # Structured GitHub bug report issue form
 │   │   └── feature_request.yml     # Structured GitHub feature request issue form
-│   ├── workflows/
-│   │   └── deploy.yml              # Deployment workflow
-│   ├── dependabot.yml              # Automated security updates for GitHub Actions
+│   ├── dependabot.yml              # Automated updates for GitHub Actions (none yet)
 │   └── PULL_REQUEST_TEMPLATE.md    # Contributor PR checklist & guidelines
 ├── assets/
 │   ├── css/

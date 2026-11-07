@@ -46,13 +46,16 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
   - Keeping docs-only PRs separate from behaviour changes keeps each PR small enough to review, and lets each bug get its own issue, test and discussion.
 - **Trade-off accepted:** Readers must search for a function instead of jumping to a line. Known bugs stay live a little longer.
 
-### D-004: Deployment target: Render vs GitHub Pages
-- **Date:** 2026-11-07 · **Status:** Proposed, awaiting maintainer decision
+### D-004: Deployment target: keep Render, remove the GitHub Pages workflow
+- **Date:** 2026-11-07 · **Status:** Accepted (option A)
 - **Context:** The live site runs on Render, but `.github/workflows/deploy.yml` deploys to GitHub Pages, which is not enabled. The workflow has failed on every run, and four Dependabot PRs exist only to update that workflow's actions.
 - **Options:**
   - **A. Keep Render:** delete `deploy.yml`, close the Dependabot PRs for it. *Cost:* deploys depend on a third-party account outside the GitHub org.
   - **B. Move to GitHub Pages:** enable Pages, keep the workflow, update README links. *Cost:* the public URL changes.
-- **Recommended:** A. Render already works and deploys automatically from `main`; the failing workflow adds nothing but a red ❌ on every commit.
+- **Decision:** A. Delete `.github/workflows/deploy.yml`; close Dependabot PRs #1–#4, which only updated that workflow.
+- **Why:** The site is already live on Render (`codeorbit-c7q4.onrender.com`) and Render deploys automatically on every push to `main`. The Pages workflow never succeeded, and its red ❌ on every commit made the repo look broken to contributors.
+- **Trade-off accepted:** Deploys depend on a Render account outside the GitHub org; whoever owns it must keep access.
+- **Note:** `.github/dependabot.yml` is kept. It watches GitHub Actions and will cover the CI workflow added later.
 
 ### D-005: Render only the visible page; `init` functions only wire listeners
 - **Date:** 2026-11-07 · **Status:** Accepted

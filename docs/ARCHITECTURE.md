@@ -56,10 +56,10 @@ codeorbit/
 │   ├── DECISIONS.md            # Decision log with reasons and trade-offs
 │   ├── FLOW.md                 # Code execution flow between files
 │   └── MAINTAINER_SECURITY.md  # Administrative security checklist
-└── .github/
-    └── workflows/
-        └── deploy.yml          # GitHub Pages automated deployment workflow
+└── .github/                    # Issue/PR templates and Dependabot config
 ```
+
+**Deployment:** Render static site, deployed automatically by Render on every push to `main` (no GitHub Actions workflow involved). See `DECISIONS.md` D-004.
 
 ---
 

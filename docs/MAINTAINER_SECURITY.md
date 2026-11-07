@@ -58,7 +58,7 @@ To protect the integrity of the production codebase, direct pushes to the primar
 - [ ] **Require a Pull Request Before Merging:** Disable direct pushes to `main`. All changes must arrive via a pull request.
 - [ ] **Require Approvals:** Require at least **1 approving review** from a maintainer before a pull request can be merged.
 - [ ] **Dismiss Stale Pull Request Approvals:** Automatically revoke previous approvals when new commits are pushed to an open pull request.
-- [ ] **Require Status Checks to Pass:** Require CI workflows (e.g., automated checks, GitHub Pages deployment validations) to pass before merging.
+- [ ] **Require Status Checks to Pass:** Require CI workflows (e.g., lint and test workflows) to pass before merging.
 - [ ] **Require Branches to be Up to Date:** Ensure changes are tested against the latest `main` commit prior to merge.
 - [ ] **Restrict Who Can Dismiss Reviews:** Limit review dismissal privileges to repository administrators.
 - [ ] **Do Not Allow Force Pushes:** Explicitly block `git push --force` on `main` to preserve an immutable commit history.
@@ -70,7 +70,7 @@ To protect the integrity of the production codebase, direct pushes to the primar
 
 - [ ] **Zero Secrets in Code:** Never commit API keys, cloud access tokens, passwords, or deployment keys directly into repository files.
 - [ ] **Use GitHub Actions Secrets:** Store sensitive parameters strictly in **Settings $\rightarrow$ Secrets and Variables $\rightarrow$ Actions**.
-- [ ] **Scope Secrets Appropriately:** Restrict deployment secrets to specific production environments (e.g., `github-pages` or `production`) rather than repository-wide or organization-wide exposure.
+- [ ] **Scope Secrets Appropriately:** Restrict deployment secrets to specific production environments (e.g., `production`) rather than repository-wide or organization-wide exposure.
 - [ ] **Incident Credential Rotation:** If a token or key is ever committed or exposed, immediately consider it compromised:
   1. Revoke the token at the source provider immediately.
   2. Issue a replacement credential and update GitHub Secrets.
