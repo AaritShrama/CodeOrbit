@@ -1,5 +1,5 @@
 /**
- * Unit tests for assets/js/utils.js: dates, streaks, the productivity score, escaping.
+ * Unit tests for assets/js/utils.js: dates, the peak weekday, streaks, the productivity score, escaping.
  * Run with `npm test` (every timezone) or `npm run test:quick` (yours only).
  */
 import { test, describe } from 'node:test';
@@ -13,6 +13,7 @@ import {
   getRelativeISO,
   getLastNDaysISO,
   isWithinLastNDays,
+  peakWeekday,
   calculateStreak,
   calculateProductivityScore
 } from '../assets/js/utils.js';
@@ -114,6 +115,33 @@ describe('local calendar dates', () => {
     assert.equal(isWithinLastNDays('2026-11-05T23:59:00.000Z', 7), true);
     assert.equal(isWithinLastNDays('', 7), false);
     assert.equal(isWithinLastNDays(undefined, 7), false);
+  });
+});
+
+describe('peakWeekday', () => {
+  test('a session on a known Saturday counts as Saturday in every timezone', () => {
+    // 2026-11-07 is a Saturday on the calendar. Parsing the plain date as UTC
+    // midnight makes it "Friday" for anyone west of UTC, which is exactly what
+    // the America/Los_Angeles run of scripts/test.mjs catches.
+    assert.equal(peakWeekday(sessions('2026-11-07')), 'Saturday');
+  });
+
+  test('the weekday with the most focused minutes wins', () => {
+    const acts = [
+      { id: 'sat', date: '2026-11-07', duration: 120 }, // Saturday
+      { id: 'mon1', date: '2026-11-09', duration: 60 }, // Monday
+      { id: 'mon2', date: '2026-11-16', duration: 90 } // Monday
+    ];
+    assert.equal(peakWeekday(acts), 'Monday');
+  });
+
+  test('no sessions means no peak, without crashing', () => {
+    assert.equal(peakWeekday([]), 'Weekday');
+  });
+
+  test('entries without dates are ignored', () => {
+    const acts = [{ id: 'x' }, { id: 'sat', date: '2026-11-07', duration: 30 }];
+    assert.equal(peakWeekday(acts), 'Saturday');
   });
 });
 

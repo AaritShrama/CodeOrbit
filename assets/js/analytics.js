@@ -4,7 +4,7 @@
  */
 
 import { storage } from './storage.js';
-import { calculateStreak, isWithinLastNDays } from './utils.js';
+import { calculateStreak, isWithinLastNDays, peakWeekday } from './utils.js';
 import { chartManager } from './charts.js';
 import { escapeHTML } from './utils.js';
 
@@ -100,16 +100,7 @@ function generateHabitInsights(activities, skills, goals) {
   }
 
   // Find most active day of week
-  const dayCounts = [0, 0, 0, 0, 0, 0, 0]; // Sun..Sat
-  activities.forEach(a => {
-    if (a.date) {
-      const d = new Date(a.date);
-      dayCounts[d.getDay()] += Number(a.duration) || 0;
-    }
-  });
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const maxDayIdx = dayCounts.indexOf(Math.max(...dayCounts));
-  const peakDay = dayNames[maxDayIdx] || 'Weekday';
+  const peakDay = peakWeekday(activities);
 
   // Pending goals count
   const pendingGoals = goals.filter(g => g.status === 'Active').length;

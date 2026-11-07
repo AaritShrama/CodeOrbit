@@ -91,6 +91,27 @@ export function getTodayISO() {
 }
 
 /**
+ * The weekday with the highest total focused minutes, e.g. 'Saturday'.
+ * Plain YYYY-MM-DD dates are parsed as LOCAL midnight: `new Date('2026-11-07')`
+ * alone is UTC midnight, which is still the previous day west of UTC and
+ * shifts every weekday count by one (the same trap toLocalISO documents below).
+ * @param {Array<{date?: string, duration?: number}>} activities
+ * @returns {string} The peak weekday name, or 'Weekday' when no session has minutes.
+ */
+export function peakWeekday(activities = []) {
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayCounts = [0, 0, 0, 0, 0, 0, 0]; // Sun..Sat
+  for (const a of activities) {
+    if (!a || !a.date) continue;
+    const d = new Date(a.date.slice(0, 10) + 'T00:00:00');
+    if (Number.isNaN(d.getTime())) continue;
+    dayCounts[d.getDay()] += Number(a.duration) || 0;
+  }
+  if (!dayCounts.some(mins => mins > 0)) return 'Weekday';
+  return dayNames[dayCounts.indexOf(Math.max(...dayCounts))];
+}
+
+/**
  * Formats an ISO date string into a friendly localized format.
  * Example: '2026-11-07' -> 'Nov 7, 2026'
  * @param {string} dateStr - Date string
