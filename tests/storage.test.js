@@ -293,3 +293,39 @@ describe('light/dark choice survives replacing the data', () => {
     assert.equal(storage.getSettings().weeklyTargetHours, 20);
   });
 });
+
+describe('change events say when the whole data set was replaced', () => {
+  beforeEach(freshVisit);
+
+  const reasons = fn => {
+    const seen = [];
+    const listener = e => seen.push(e.detail && e.detail.reason);
+    window.addEventListener('codeorbit:data-changed', listener);
+    try {
+      fn();
+    } finally {
+      window.removeEventListener('codeorbit:data-changed', listener);
+    }
+    return seen;
+  };
+
+  test('sample data, delete all and restore are "replace"; normal saves are "edit"', () => {
+    assert.deepEqual(
+      reasons(() => storage.loadDemoUniverse()),
+      ['replace']
+    );
+    assert.deepEqual(
+      reasons(() => storage.resetAllData()),
+      ['replace']
+    );
+    const backup = JSON.stringify({ skills: [], activities: [], projects: [] });
+    assert.deepEqual(
+      reasons(() => storage.importJSON(backup)),
+      ['replace']
+    );
+    assert.deepEqual(
+      reasons(() => storage.saveSettings({ weeklyTargetHours: 9 })),
+      ['edit']
+    );
+  });
+});

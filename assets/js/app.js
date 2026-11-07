@@ -88,10 +88,12 @@ function initApp() {
   runStep('navigation', () => navigation.init(), failures);
 
   // 8. Global data-change listener (event bus)
-  window.addEventListener('codeorbit:data-changed', () => {
+  window.addEventListener('codeorbit:data-changed', e => {
     // If this unlocks achievements it saves, which dispatches data-changed again;
     // that nested round re-renders everything below, so stop here to avoid a double render.
-    if (evaluateAchievements()) return;
+    // Replacing the whole data set (sample data, restore, delete all) unlocks quietly.
+    const silent = Boolean(e && e.detail && e.detail.reason === 'replace');
+    if (evaluateAchievements({ silent })) return;
 
     navigation.renderCurrentView();
     refreshIcons();

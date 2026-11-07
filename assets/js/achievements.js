@@ -162,10 +162,12 @@ let isEvaluating = false;
  * The save dispatches 'codeorbit:data-changed' again (synchronously); that nested
  * round re-renders the page, and isEvaluating stops it from evaluating again.
  *
+ * @param {{ silent?: boolean }} [options] - silent: unlock without pop-ups (used when
+ *   the whole data set was replaced, e.g. sample data or a restored backup)
  * @returns {boolean} true if anything was unlocked (i.e. data was saved and the
  *   nested data-changed round has already re-rendered the UI).
  */
-export function evaluateAchievements() {
+export function evaluateAchievements({ silent = false } = {}) {
   if (isEvaluating) return false;
   isEvaluating = true;
   try {
@@ -178,7 +180,7 @@ export function evaluateAchievements() {
     if (newlySatisfied.length === 0) return false;
 
     const saved = storage.unlockAchievements(newlySatisfied.map(def => def.id));
-    if (saved) {
+    if (saved && !silent) {
       newlySatisfied.forEach(def => {
         toast.achievement('You earned a badge', `${def.title}: ${def.description}`);
       });

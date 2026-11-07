@@ -373,12 +373,18 @@ class StorageManager {
   /**
    * Safe atomic write to localStorage with event emission.
    */
-  saveUniverse(data) {
+  /**
+   * @param {Object} data
+   * @param {'edit'|'replace'} [reason='edit'] - 'replace' when the whole data set is
+   *   swapped (sample data, restore, delete all). Listeners use it to stay quiet,
+   *   e.g. no "You earned a badge" pop-ups for badges nobody just earned.
+   */
+  saveUniverse(data, reason = 'edit') {
     try {
       this.cache = data;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       window.dispatchEvent(
-        new CustomEvent('codeorbit:data-changed', { detail: { timestamp: Date.now() } })
+        new CustomEvent('codeorbit:data-changed', { detail: { timestamp: Date.now(), reason } })
       );
       return true;
     } catch (e) {
@@ -688,7 +694,7 @@ class StorageManager {
         a.duration = Math.max(1, parseInt(a.duration, 10) || 30);
       });
 
-      this.saveUniverse(parsed);
+      this.saveUniverse(parsed, 'replace');
       return { success: true };
     } catch (e) {
       return { success: false, error: e.message };
@@ -696,11 +702,11 @@ class StorageManager {
   }
 
   resetAllData() {
-    return this.saveUniverse(this.keepCurrentTheme(getEmptyUniverse()));
+    return this.saveUniverse(this.keepCurrentTheme(getEmptyUniverse()), 'replace');
   }
 
   loadDemoUniverse() {
-    return this.saveUniverse(this.keepCurrentTheme(getDefaultUniverse()));
+    return this.saveUniverse(this.keepCurrentTheme(getDefaultUniverse()), 'replace');
   }
 
   /**

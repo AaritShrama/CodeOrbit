@@ -24,6 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Badges and search results use simple line icons instead of emoji.
 
 ### Fixed
+- Loading sample data, restoring a backup or deleting all data no longer shows "You earned a badge" pop-ups. Badges you really earn still get one.
 - Finished goals no longer show as "late".
 - The chosen profile picture in Settings is now visibly selected.
 - Search results can be opened with the keyboard.
