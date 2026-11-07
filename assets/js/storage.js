@@ -530,19 +530,25 @@ class StorageManager {
   }
 
   unlockAchievement(achievementId) {
+    return this.unlockAchievements([achievementId]);
+  }
+
+  /**
+   * Unlocks several achievements with a single save (one data-changed event).
+   * @param {string[]} achievementIds
+   * @returns {boolean} true if at least one was newly unlocked and saved
+   */
+  unlockAchievements(achievementIds) {
     const data = this.getUniverse();
     const achievements = data.achievements || [];
+    const unlockedAt = new Date().toISOString();
 
-    if (!achievements.some(a => a.id === achievementId)) {
-      achievements.push({
-        id: achievementId,
-        unlockedAt: new Date().toISOString()
-      });
-      data.achievements = achievements;
-      this.saveUniverse(data);
-      return true; // Newly unlocked
-    }
-    return false;
+    const fresh = achievementIds.filter(id => !achievements.some(a => a.id === id));
+    if (fresh.length === 0) return false;
+
+    fresh.forEach(id => achievements.push({ id, unlockedAt }));
+    data.achievements = achievements;
+    return this.saveUniverse(data);
   }
 
   /* ========================================================================

@@ -60,8 +60,9 @@ function initApp() {
 
     // 8. Global State Change Listener (Event Bus)
     window.addEventListener('codeorbit:data-changed', () => {
-      // Evaluate achievement unlocks
-      evaluateAchievements();
+      // If this unlocks achievements it saves, which dispatches data-changed again;
+      // that nested round re-renders everything below, so stop here to avoid a double render.
+      if (evaluateAchievements()) return;
 
       // Re-render currently active view
       const current = navigation.currentRoute;

@@ -131,35 +131,44 @@ export function initAchievements() {
     });
   });
 
-  window.addEventListener('codeorbit:data-changed', () => {
-    evaluateAchievements();
-    renderAchievements();
-  });
+  // No data-changed listener here: app.js owns the single listener that
+  // evaluates achievements and re-renders the visible page (incl. this one).
 }
 
 let isEvaluating = false;
 
 /**
- * Checks all conditions and unlocks newly satisfied achievements.
+ * Checks all conditions and unlocks every newly satisfied achievement in ONE save.
+ *
+ * Called from app.js's single 'codeorbit:data-changed' listener and once at startup.
+ * The save dispatches 'codeorbit:data-changed' again (synchronously); that nested
+ * round re-renders the page, and isEvaluating stops it from evaluating again.
+ *
+ * @returns {boolean} true if anything was unlocked (i.e. data was saved and the
+ *   nested data-changed round has already re-rendered the UI).
  */
 export function evaluateAchievements() {
-  if (isEvaluating) return;
+  if (isEvaluating) return false;
   isEvaluating = true;
   try {
     const data = storage.getUniverse();
     const unlocked = data.achievements || [];
 
-    ACHIEVEMENT_DEFINITIONS.forEach(def => {
-      const isAlreadyUnlocked = unlocked.some(a => a.id === def.id);
-      if (!isAlreadyUnlocked && def.check(data)) {
-        const newlyUnlocked = storage.unlockAchievement(def.id);
-        if (newlyUnlocked) {
-          toast.achievement('Achievement Unlocked!', `${def.icon} ${def.title}: ${def.description}`);
-        }
-      }
-    });
+    const newlySatisfied = ACHIEVEMENT_DEFINITIONS.filter(def =>
+      !unlocked.some(a => a.id === def.id) && def.check(data)
+    );
+    if (newlySatisfied.length === 0) return false;
+
+    const saved = storage.unlockAchievements(newlySatisfied.map(def => def.id));
+    if (saved) {
+      newlySatisfied.forEach(def => {
+        toast.achievement('Achievement Unlocked!', `${def.icon} ${def.title}: ${def.description}`);
+      });
+    }
+    return saved;
   } catch (err) {
     console.error('Achievement evaluation error:', err);
+    return false;
   } finally {
     isEvaluating = false;
   }
