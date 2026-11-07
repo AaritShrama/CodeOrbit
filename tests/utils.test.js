@@ -15,7 +15,8 @@ import {
   isWithinLastNDays,
   peakWeekday,
   calculateStreak,
-  calculateProductivityScore
+  calculateProductivityScore,
+  streakMessage
 } from '../assets/js/utils.js';
 import { freezeTime, TZ } from './helpers/clock.js';
 
@@ -263,5 +264,28 @@ describe('calculateProductivityScore', () => {
     const r = calculateProductivityScore({ activities: sessions('2026-10-31') });
     assert.equal(r.breakdown.consistency.activeDays, 0);
     assert.equal(r.breakdown.learningHours.currentHours, 0);
+  });
+});
+
+describe('streakMessage', () => {
+  test('nudges when the run is alive but today is still empty', () => {
+    assert.deepEqual(streakMessage(5, false), {
+      text: 'Study today to keep your 5 days in a row going.',
+      atRisk: true
+    });
+    assert.equal(streakMessage(1, false).atRisk, true);
+  });
+
+  test('celebrates once today is done', () => {
+    assert.deepEqual(streakMessage(5, true), {
+      text: 'You studied 5 days in a row.',
+      atRisk: false
+    });
+    assert.equal(streakMessage(1, true).atRisk, false);
+  });
+
+  test('no run yet: an invitation, not a warning', () => {
+    assert.equal(streakMessage(0, false).atRisk, false);
+    assert.equal(streakMessage(0, true).atRisk, false);
   });
 });

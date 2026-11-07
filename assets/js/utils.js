@@ -179,6 +179,30 @@ export function formatDuration(minutes) {
 }
 
 /**
+ * The "days in a row" line on Home.
+ * When yesterday counted but today has nothing yet, the run is at risk: say so,
+ * because that is the moment a nudge can still save it.
+ * @param {number} currentStreak - from calculateStreak()
+ * @param {boolean} studiedToday
+ * @returns {{ text: string, atRisk: boolean }}
+ */
+export function streakMessage(currentStreak, studiedToday) {
+  const n = Number(currentStreak) || 0;
+  if (n >= 1 && !studiedToday) {
+    return {
+      text:
+        n === 1
+          ? 'Study today to make it 2 days in a row.'
+          : `Study today to keep your ${n} days in a row going.`,
+      atRisk: true
+    };
+  }
+  if (n >= 2) return { text: `You studied ${n} days in a row.`, atRisk: false };
+  if (n === 1) return { text: 'Study again tomorrow to make it 2 days in a row.', atRisk: false };
+  return { text: 'Add study time today to start counting days in a row.', atRisk: false };
+}
+
+/**
  * Formats minutes into hours with one decimal place.
  * @param {number} minutes - Minutes
  * @returns {number} Hours

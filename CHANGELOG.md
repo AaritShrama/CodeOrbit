@@ -12,6 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A new look for the whole app: black and white with one Let's Cook crimson, big clear numbers, and a quiet space theme. Works in dark and light.
 - A first-visit screen that explains the app and offers *Add your first skill* or *Try it with sample data first*.
 - Home shows each skill as a planet: the bigger it is, the further along you are; red means finished.
+- If you studied yesterday but not yet today, Home now says "Study today to keep your 4 days in a row going." in crimson, while there is still time to save the run.
 - One-tap logging on Home: a "+30 min on <your last skill>" button next to *Add study time*, with an Undo for 10 seconds.
 - Tap, click or Tab to a planet on Home to see which skill it is and how far along you are. The orbit holds still while you choose. Works on phones and with a keyboard.
 - Automated lint (ESLint) and formatting (Prettier) checks on every pull request and push. The live site only deploys when they pass.

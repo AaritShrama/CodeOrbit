@@ -15,6 +15,7 @@ import {
   formatDuration,
   formatRelativeTime,
   calculateStreak,
+  streakMessage,
   getLastNDaysISO,
   getTodayISO,
   isWithinLastNDays
@@ -115,14 +116,13 @@ function renderWeek(activities, settings) {
       : 'You reached your weekly goal. Nice work.';
 
   const { currentStreak } = calculateStreak(activities);
-  const streakLine =
-    currentStreak >= 2
-      ? `You studied ${currentStreak} days in a row.`
-      : currentStreak === 1
-        ? 'Study again tomorrow to start a run of days in a row.'
-        : 'Add study time today to start counting days in a row.';
+  const today = getTodayISO();
+  const studiedToday = activities.some(a => a && a.date && a.date.slice(0, 10) === today);
+  const streak = streakMessage(currentStreak, studiedToday);
 
-  setText('home-week-note', `${goalLine} ${streakLine}`);
+  setText('home-week-goal', goalLine);
+  setText('home-week-streak', streak.text);
+  document.getElementById('home-week-streak')?.classList.toggle('is-at-risk', streak.atRisk);
 }
 
 /**
