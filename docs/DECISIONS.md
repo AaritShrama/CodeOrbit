@@ -258,6 +258,13 @@ Execution flow is documented separately in [`FLOW.md`](FLOW.md).
 - **Trade-off accepted:** A backup containing sessions with missing or malformed dates loses those sessions on import (the app itself never creates such sessions). The rule in B-007 still depends on every new template escaping user text; the security tests only cover the fields that exist today.
 - **Disclosure:** fixed the same day it was found, before any public report; noted in the CHANGELOG under *Security*.
 
+### D-019: Force the patched `minimatch` inside ESLint with an npm override
+- **Date:** 2026-11-07 · **Status:** Accepted
+- **Context:** Dependabot reported [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (moderate, denial of service) in `minimatch` < 11.0.1, used by ESLint 10 (`@eslint/config-array` asks for `^10.2.4`, which has no patched release). `npm audit fix --force` proposed **downgrading** ESLint to 9.
+- **Decision:** Add `"overrides": { "minimatch": "11.0.5" }` to `package.json`.
+- **Why:** The risk to users was zero: ESLint is a development tool that never ships to the live site, and the patterns it matches are written by us. But an open alert trains people to ignore alerts. The override closes it without downgrading the linter. Verified: `npm audit` reports 0 vulnerabilities, ESLint still reports planted errors, and its ignore patterns (`docs/`, `*.min.js`) still work.
+- **Trade-off accepted:** ESLint officially supports minimatch 10, not 11. If a future ESLint update breaks because of this, remove the override once ESLint itself depends on a patched version (Dependabot will open that update).
+
 ---
 
 ## Part B: Inherited decisions (reconstructed)
