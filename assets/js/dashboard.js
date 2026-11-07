@@ -50,7 +50,7 @@ export function initDashboard() {
     });
   });
   document.getElementById('home-load-sample')?.addEventListener('click', () => {
-    // Only shown when there is nothing saved yet, so there is nothing to overwrite.
+    // Only shown when nothing is saved yet (see isFirstVisit), so nothing is overwritten.
     storage.loadDemoUniverse();
     toast.success(
       'Sample data loaded',
@@ -66,7 +66,14 @@ export function renderDashboard() {
   const goals = data.goals || [];
   const settings = data.settings || {};
 
-  const isFirstVisit = skills.length === 0 && activities.length === 0;
+  // First visit = nothing saved at all. Projects and goals count too: the
+  // sample-data button replaces everything, so it must never be offered when
+  // there is anything to lose (issue #13).
+  const isFirstVisit =
+    skills.length === 0 &&
+    activities.length === 0 &&
+    goals.length === 0 &&
+    (data.projects || []).length === 0;
   setHidden('home-empty', !isFirstVisit);
   setHidden('home-main', isFirstVisit);
   if (isFirstVisit) return;

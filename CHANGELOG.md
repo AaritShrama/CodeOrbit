@@ -29,6 +29,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Badges and search results use simple line icons instead of emoji.
 
 ### Fixed
+- The getting-started screen (and its *Try it with sample data first* button) appeared when you had only projects or goals, and loading sample data would have replaced them. It now only appears when nothing at all is saved.
 - Skill cards were hard on the eyes: too many bright, heavy elements. They are calmer now: softer numbers, grey planets and bars (crimson only when finished), plain-text categories, and regular digits on the ±10% buttons. Main text is now a soft off-white instead of near-pure white.
 - Loading sample data, restoring a backup or deleting all data no longer shows "You earned a badge" pop-ups. Badges you really earn still get one.
 - Finished goals no longer show as "late".
