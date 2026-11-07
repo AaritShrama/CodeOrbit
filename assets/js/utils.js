@@ -274,6 +274,11 @@ export function calculateProductivityScore({
   const weeklyHours = weeklyMinutes / 60;
   const hoursScore = Math.min(30, Math.round((weeklyHours / weeklyTargetHours) * 30));
 
+  // Projects and skills give a neutral 10/20 when the user has none, so people who
+  // don't track projects aren't punished. That baseline is only earned once the user
+  // has logged at least one session: an empty universe scores 0, not 20. (D-015)
+  const neutralBaseline = activities.length > 0 ? 10 : 0;
+
   // 3. Project Progress (Max 20)
   let projectScore;
   if (projects.length > 0) {
@@ -281,7 +286,7 @@ export function calculateProductivityScore({
       projects.reduce((sum, p) => sum + (Number(p.progress) || 0), 0) / projects.length;
     projectScore = Math.round((avgProjectProg / 100) * 20);
   } else {
-    projectScore = 10; // Neutral baseline
+    projectScore = neutralBaseline;
   }
 
   // 4. Skill Development (Max 20)
@@ -291,7 +296,7 @@ export function calculateProductivityScore({
       skills.reduce((sum, s) => sum + (Number(s.progress) || 0), 0) / skills.length;
     skillScore = Math.round((avgSkillProg / 100) * 20);
   } else {
-    skillScore = 10;
+    skillScore = neutralBaseline;
   }
 
   const totalScore = Math.min(
