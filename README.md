@@ -26,6 +26,12 @@
   <a href="#11--questions"><b>FAQ</b></a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/releases/tag/v0.2.0">
+    <img src=".github/readme/diwali.svg" width="100%" alt="Released on Diwali. CodeOrbit v0.2.0, 8 November 2026. Happy Diwali from Let's Cook: may your code compile and your lamps stay lit.">
+  </a>
+</p>
+
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
 ## 00 — In one minute
