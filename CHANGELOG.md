@@ -41,7 +41,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Search results can be opened with the keyboard.
 - Pop-ups (add study time, add skill, search, and the rest) now slide in and fade out instead of appearing and disappearing in one jump. The motion is turned off if your device asks for reduced motion.
 - A brand-new account with nothing logged showed a progress score of 20/100. It now shows 0 until the first session is added.
-- "Your best day" on the Progress page (called "Peak Velocity Day" before) showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US).
+- "Your best day" on the Progress page (called "Peak Velocity Day" before) showed the previous weekday for users west of UTC (e.g. Saturday counted as Friday in the US). ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
 - **Settings → Sounds did nothing**, and the app chimed on every saved change and clicked on every pop-up. Now the only sound is the chime when you earn a badge, and turning Sounds off turns it off.
 - The weekly goal was 12 hours on some screens and 10 on others when you had not set one. It is 10 everywhere now.
 - A weekly goal like 10.5 hours, saved from "Your week in review", could not be saved again in Settings. Half hours now work in both.
@@ -49,7 +49,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Editing a study session whose skill had been deleted cleared its skill when you saved. The old skill name is now kept as a choice.
 - The skill filter on Study sessions now also lists "General" and skills you deleted, so every session can be found.
 - Restoring a file that is not a CodeOrbit backup showed a technical error. It now says plainly that the file is not a CodeOrbit backup.
-- Restoring a backup with unknown badges could show more than 10 of 10 badges earned. ([#9](https://github.com/LetsCook-Organization/CodeOrbit/issues/9), [#21](https://github.com/LetsCook-Organization/CodeOrbit/pull/21), thanks [@bfs2021](https://github.com/bfs2021))
+- Restoring a backup with unknown badges could show more than 10 of 10 badges earned.
 
 ### Security
 - A page address like `#constructor` or `#toString` passed the page check and showed a completely blank app; only the 8 real pages are accepted now. An error message no longer uses the page address as a console format string (found by CodeQL).
