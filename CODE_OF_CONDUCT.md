@@ -45,7 +45,7 @@ This Code of Conduct applies within all community spaces, including GitHub repos
 ## Enforcement & Reporting
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leadership team at:
-- **Email:** `community@letscook.foundry` (or open a Private Advisory on GitHub)
+- **Email:** [foundry@letscook.co.in](mailto:foundry@letscook.co.in) (please do not report conduct problems in public issues)
 
 All complaints will be reviewed and investigated promptly and fairly. All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
