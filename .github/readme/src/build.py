@@ -136,7 +136,7 @@ def hero():
     p.append(s2)
 
     # bottom meta row
-    meta = ['v0.1.0', 'FREE', 'PRIVATE', 'NO SIGN-UP', 'OPEN SOURCE']
+    meta = ['v0.2.0', 'FREE', 'PRIVATE', 'NO SIGN-UP', 'OPEN SOURCE']
     x = X
     row = ['<g class="f1">']
     for i, m in enumerate(meta):

@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-08
+
+A calmer, simpler CodeOrbit that works offline and reminds you to back up.
+
 ### Added
 - A new look for the whole app: black and white with one Let's Cook crimson, big clear numbers, and a quiet space theme.
 - A first-visit screen that explains the app and offers *Add your first skill* or *Try it with sample data first*.
@@ -92,5 +96,6 @@ First public version under the LetsCook-Organization GitHub org.
 ### Removed
 - The broken GitHub Pages workflow that failed on every push (replaced by a working one), and duplicate copies of the contributing/security/conduct docs in `docs/`.
 
-[Unreleased]: https://github.com/LetsCook-Organization/CodeOrbit/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/LetsCook-Organization/CodeOrbit/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/LetsCook-Organization/CodeOrbit/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/LetsCook-Organization/CodeOrbit/releases/tag/v0.1.0

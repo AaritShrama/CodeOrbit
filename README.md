@@ -36,7 +36,7 @@
 | **Who is it for?** | Students and anyone learning to code on their own. |
 | **What does it cost?** | Nothing. No sign-up, no account, nothing to install. |
 | **Where is my data?** | Only in your own browser, on your own computer. We never see it. |
-| **How finished is it?** | **Version 0.1.0.** It works, but it is young. There are open issues if you want to help. |
+| **How finished is it?** | **Version 0.2.0.** It works, but it is young. There are open issues if you want to help. |
 | **Who makes it?** | [Let's Cook](#12--about-lets-cook), an open-source tech community. |
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
@@ -337,7 +337,7 @@ The live site updates **only when all checks pass**, and the `main` branch is pr
 
 **✅ Done in v0.1.0:** Home, skills, study sessions, projects, goals, 10 badges, 5 charts, the 0–100 progress score, search, backup and restore, automatic checks and tests.
 
-**✅ Done since (coming in the next version, see [CHANGELOG](CHANGELOG.md)):** a calmer new design, a first-visit screen ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), one-tap "+30 min", "Your week in review", backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), working offline and installing as an app.
+**✅ Done in v0.2.0 (see [CHANGELOG](CHANGELOG.md)):** a calmer new design, a first-visit screen ([#13](https://github.com/LetsCook-Organization/CodeOrbit/issues/13)), one-tap "+30 min", "Your week in review", backup reminders ([#18](https://github.com/LetsCook-Organization/CodeOrbit/issues/18)), working offline and installing as an app.
 
 **🔧 Next:** fix the open bugs ([#8](https://github.com/LetsCook-Organization/CodeOrbit/issues/8), [#10](https://github.com/LetsCook-Organization/CodeOrbit/issues/10)), keyboard and screen-reader support ([#14](https://github.com/LetsCook-Organization/CodeOrbit/issues/14), [#15](https://github.com/LetsCook-Organization/CodeOrbit/issues/15)), browser tests ([#16](https://github.com/LetsCook-Organization/CodeOrbit/issues/16)), safe data upgrades ([#17](https://github.com/LetsCook-Organization/CodeOrbit/issues/17)).
 
@@ -372,7 +372,7 @@ Yes, the layout works on phones, and you can install it on your home screen. But
 </details>
 
 <details>
-<summary><b>Why is it version 0.1.0 and not 1.0?</b></summary>
+<summary><b>Why is it version 0.2.0 and not 1.0?</b></summary>
 <br>
 Because it is still early. Below 1.0, features and the way data is saved may still change. Read the reasoning in <a href="docs/DECISIONS.md">DECISIONS.md</a> (entry D-013).
 </details>

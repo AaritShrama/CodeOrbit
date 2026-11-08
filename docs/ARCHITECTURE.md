@@ -2,7 +2,7 @@
 
 **In one line:** a free study tracker for developers that keeps everything in your own browser  
 **Organization:** LET'S COOK — THE FOUNDRY  
-**Version:** 0.1.0 (see [CHANGELOG](../CHANGELOG.md))  
+**Version:** 0.2.0 (see [CHANGELOG](../CHANGELOG.md))  
 
 ---
 
