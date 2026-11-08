@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://letscook-organization.github.io/CodeOrbit/">
-    <img src=".github/readme/hero.svg" width="100%" alt="CodeOrbit by Let's Cook. Track what you learn in coding: skills, study time, projects and goals, in one place. Free, private, no sign-up.">
+    <img src=".github/readme/hero.svg" width="100%" alt="CodeOrbit by Let's Cook, Diwali 2026. Track what you learn in coding: skills, study time, projects and goals, in one place. Free, private, no sign-up.">
   </a>
 </p>
 
@@ -12,6 +12,8 @@
   <a href="https://github.com/LetsCook-Organization/CodeOrbit/releases"><img src="https://img.shields.io/github/v/release/LetsCook-Organization/CodeOrbit?style=for-the-badge&label=version&color=F5F5F4&labelColor=0A0A0B" alt="Latest version"></a>
   <a href="https://github.com/LetsCook-Organization/CodeOrbit/issues?q=is%3Aopen+label%3A%22good+first+issue%22"><img src="https://img.shields.io/github/issues/LetsCook-Organization/CodeOrbit/good%20first%20issue?style=for-the-badge&label=good%20first%20issues&color=B8002F&labelColor=0A0A0B" alt="Good first issues"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-F5F5F4?style=for-the-badge&labelColor=0A0A0B" alt="MIT license"></a>
+  <!-- diwali: remove after the festival -->
+  <a href="https://github.com/LetsCook-Organization/CodeOrbit/releases/tag/v0.2.0"><img src="https://img.shields.io/badge/released_on-Diwali_2026-FFB547?style=for-the-badge&labelColor=0A0A0B" alt="Released on Diwali 2026"></a>
 </p>
 
 <p align="center">
@@ -257,6 +259,9 @@ If you understand this loop, you understand the app.
 
 An **issue** is a to-do item for the project. Every CodeOrbit issue tells you **what is wrong, which files to change, and when it counts as done**, so you never have to guess.
 
+<!-- diwali: remove after the festival -->
+> 🪔 **Diwali challenge:** light your first lamp in open source. Pick one of the good first issues below, comment to claim it, and open your first pull request this festival week.
+
 ### 🟢 Good first issues: small, a few hours, perfect for your first contribution
 
 | # | What to do | Area |
@@ -416,8 +421,11 @@ CodeOrbit is free and open source under the **[MIT License](LICENSE)**. You can 
 
 <br>
 
+<!-- diwali: remove after the festival -->
+<p align="center"><i>Happy Diwali from all of us at Let's Cook. May your code compile and your lamps stay lit.</i></p>
+
 <p align="center">
-  <img src=".github/readme/footer.svg" width="100%" alt="Built by Let's Cook, The Foundry. Codere, Aedificare, Vincere: Code. Build. Win.">
+  <img src=".github/readme/footer.svg" width="100%" alt="Built by Let's Cook, The Foundry. Codere, Aedificare, Vincere: Code. Build. Win. Happy Diwali: v0.2.0 released 8 November 2026.">
 </p>
 
 <p align="center">

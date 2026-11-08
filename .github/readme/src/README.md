@@ -14,3 +14,13 @@ The animated images in the main README (`hero.svg`, `divider.svg`, `how-it-works
 3. `python .github/readme/src/build.py`
 
 `lc-mark-dark.png` is the "LC" mark cut from the official Let's Cook logo; `../letscook-logo-*.png` are the full logo for light and dark mode.
+
+## Diwali theme (v0.2.0 launch)
+
+`THEME` at the top of `build.py` is `'diwali'`: gold firework bursts, a gold planet, "DIWALI 2026" in the hero label, a small flame as the divider's moving dot, and a "Happy Diwali" line in the footer. After the festival:
+
+1. Set `THEME = 'default'` (or run with `CODEORBIT_THEME=default`) and rebuild.
+2. In the main README, delete the blocks marked `<!-- diwali: remove after the festival -->` and the words "Diwali 2026" / "Happy Diwali" from the hero and footer `alt` text.
+
+`diwali.svg` ("Released on Diwali") is a dated release note and stays.
+

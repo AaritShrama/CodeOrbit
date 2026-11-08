@@ -7,5 +7,5 @@
 @media (prefers-reduced-motion: reduce){*{animation:none!important}}
 </style>
 <g stroke="#8A8A8E" stroke-opacity=".55" stroke-width="1"><line x1="72" y1="20" x2="1208" y2="20"/><line x1="72.0" y1="15" x2="72.0" y2="25"/><line x1="166.7" y1="15" x2="166.7" y2="25"/><line x1="261.3" y1="15" x2="261.3" y2="25"/><line x1="356.0" y1="15" x2="356.0" y2="25"/><line x1="450.7" y1="15" x2="450.7" y2="25"/><line x1="545.3" y1="15" x2="545.3" y2="25"/><line x1="640.0" y1="15" x2="640.0" y2="25"/><line x1="734.7" y1="15" x2="734.7" y2="25"/><line x1="829.3" y1="15" x2="829.3" y2="25"/><line x1="924.0" y1="15" x2="924.0" y2="25"/><line x1="1018.7" y1="15" x2="1018.7" y2="25"/><line x1="1113.3" y1="15" x2="1113.3" y2="25"/><line x1="1208.0" y1="15" x2="1208.0" y2="25"/></g>
-<g class="dot"><circle cx="72" cy="20" r="11" fill="none" stroke="#B8002F" stroke-opacity=".6" class="halo"/><circle cx="72" cy="20" r="5" fill="#B8002F"/></g>
+<g class="dot"><circle cx="72" cy="20" r="12" fill="#FFB547" fill-opacity=".18" class="halo"/><path d="M72 6 C 77.5 12, 78.5 17, 72 22 C 65.5 17, 66.5 12, 72 6 Z" fill="#FFB547"/><path d="M72 13 C 74.5 16, 74.5 19, 72 21 C 69.5 19, 69.5 16, 72 13 Z" fill="#FFF1D6"/></g>
 </svg>

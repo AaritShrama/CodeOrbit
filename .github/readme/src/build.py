@@ -3,7 +3,7 @@ Style: Let's Cook brand (black / white / crimson #B8002F) + space + Swiss design
 (strict grid, flush-left grotesque type, numbered sections, mono labels, clean motion).
 All motion respects prefers-reduced-motion.
 """
-import base64, random, math
+import base64, random, math, os
 from textpath import text
 
 import os
@@ -17,6 +17,22 @@ GREY = '#8A8A8E'
 LINE = '#FFFFFF'
 
 REDUCED = '@media (prefers-reduced-motion: reduce){*{animation:none!important}}'
+
+# Festive touches for the v0.2.0 launch (Diwali, 8 Nov 2026). After the festival set
+# THEME = 'default' and rebuild: every graphic goes back to the everyday look.
+# diwali.svg (the dated release note) stays either way.
+THEME = os.environ.get('CODEORBIT_THEME', 'diwali')
+DIWALI = THEME == 'diwali'
+GOLD = '#FFB547'
+FEST_CSS = (
+    '@keyframes burst{0%{opacity:0;transform:scale(.2)}12%{opacity:.9}60%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.1)}}'
+    '.burst{transform-box:fill-box;transform-origin:50% 50%;animation:burst 5.2s cubic-bezier(.15,.7,.2,1) infinite}'
+) if DIWALI else ''
+
+
+def bursts(spec):
+    """Minimal firework bursts (Diwali theme only). spec: (x, y, radius, colour, delay)."""
+    return ''.join(_burst(*b) for b in spec) if DIWALI else ''
 
 
 def b64(path):
@@ -63,6 +79,7 @@ def hero():
 .o2{{animation:spin 22s linear infinite reverse}}
 .o3{{animation:spin 34s linear infinite}}
 .o4{{animation:spin 52s linear infinite reverse}}
+{FEST_CSS}
 {REDUCED}
 </style>
 <defs>
@@ -78,6 +95,7 @@ def hero():
 <rect width="{W}" height="{H}" fill="url(#glow)"/>
 {swiss_grid(W, H)}
 {stars(110, W, H, 7)}
+{bursts([(650, 232, 36, GOLD, 0), (1214, 92, 28, RED_LIGHT, 1.7), (690, 520, 22, WHITE, 3.1)])}
 ''')
     # ---- orbit system (right)
     radii = [86, 136, 186, 236]
@@ -98,7 +116,7 @@ def hero():
         (radii[1], 200, 9, RED_LIGHT, 'o2'),
         (radii[2], 115, 6, WHITE, 'o3'),
         (radii[2], 295, 4, GREY, 'o3'),
-        (radii[3], 250, 10, WHITE, 'o4'),
+        (radii[3], 250, 10, GOLD if DIWALI else WHITE, 'o4'),
     ]
     for r, ang, size, col, cls in planets:
         a = math.radians(ang)
@@ -122,6 +140,9 @@ def hero():
     lbl, w1 = text("LET'S COOK", 'mono', 13, X + 18, 92, 0.18, WHITE)
     p.append(f'<g class="f1"><rect x="{X}" y="81" width="10" height="10" fill="{RED}"/>{lbl}')
     sep, w2 = text('/  OPEN SOURCE  /  N° 001', 'mono', 13, X + 18 + w1 + 16, 92, 0.18, GREY)
+    if DIWALI:
+        fest, _ = text('/  DIWALI 2026', 'mono', 13, X + 18 + w1 + 16 + w2 + 16, 92, 0.18, GOLD)
+        sep += fest
     p.append(sep + '</g>')
 
     t1, _ = text('Code', 'black', 168, X - 6, 268, -0.045, WHITE, cls='r1')
@@ -161,6 +182,13 @@ def divider():
         f'<line x1="{72 + i * (W - 144) / 12:.1f}" y1="15" x2="{72 + i * (W - 144) / 12:.1f}" y2="25"/>'
         for i in range(13)
     )
+    if DIWALI:
+        dot = (f'<g class="dot"><circle cx="72" cy="20" r="12" fill="{GOLD}" fill-opacity=".18" class="halo"/>'
+               f'<path d="M72 6 C 77.5 12, 78.5 17, 72 22 C 65.5 17, 66.5 12, 72 6 Z" fill="{GOLD}"/>'
+               f'<path d="M72 13 C 74.5 16, 74.5 19, 72 21 C 69.5 19, 69.5 16, 72 13 Z" fill="#FFF1D6"/></g>')
+    else:
+        dot = (f'<g class="dot"><circle cx="72" cy="20" r="11" fill="none" stroke="{RED}" stroke-opacity=".6" class="halo"/>'
+               f'<circle cx="72" cy="20" r="5" fill="{RED}"/></g>')
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" aria-hidden="true">
 <style>
 @keyframes travel{{from{{transform:translateX(0)}}to{{transform:translateX({W - 144}px)}}}}
@@ -170,7 +198,7 @@ def divider():
 {REDUCED}
 </style>
 <g stroke="#8A8A8E" stroke-opacity=".55" stroke-width="1"><line x1="72" y1="20" x2="{W - 72}" y2="20"/>{ticks}</g>
-<g class="dot"><circle cx="72" cy="20" r="11" fill="none" stroke="{RED}" stroke-opacity=".6" class="halo"/><circle cx="72" cy="20" r="5" fill="{RED}"/></g>
+{dot}
 </svg>'''
     open(f'{OUT}/divider.svg', 'w').write(svg)
 
@@ -185,6 +213,7 @@ def how():
 @keyframes hop{{0%{{transform:translateX(0);opacity:0}}15%{{opacity:1}}85%{{opacity:1}}100%{{transform:translateX(var(--d));opacity:0}}}}
 .flow{{stroke-dasharray:6 6;animation:flow 1.2s linear infinite}}
 .hop{{animation:hop 2.4s cubic-bezier(.65,0,.35,1) infinite}}
+{FEST_CSS}
 {REDUCED}
 </style>
 <defs><clipPath id="card"><rect width="{W}" height="{H}" rx="28"/></clipPath></defs>
@@ -192,6 +221,7 @@ def how():
 <rect width="{W}" height="{H}" fill="{INK}"/>
 {swiss_grid(W, H)}
 {stars(55, W, H, 21)}
+{bursts([(1150, 92, 32, GOLD, 0.6), (1040, 62, 18, RED_LIGHT, 2.6)])}
 ''']
     X = 72
     lbl, w1 = text('HOW IT WORKS', 'mono', 13, X + 18, 84, 0.18, WHITE)
@@ -240,15 +270,6 @@ def how():
     open(f'{OUT}/how-it-works.svg', 'w').write('\n'.join(p))
 
 
-if __name__ == '__main__':
-    import os
-    os.makedirs(OUT, exist_ok=True)
-    hero()
-    divider()
-    how()
-    for f in ['hero.svg', 'divider.svg', 'how-it-works.svg']:
-        print(f, os.path.getsize(f'{OUT}/{f}') // 1024, 'KB')
-
 
 def footer():
     W, H = 1280, 380
@@ -258,6 +279,7 @@ def footer():
 @keyframes tw{{0%,100%{{opacity:.15}}50%{{opacity:.9}}}}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}
 .ring{{transform-origin:1060px 190px;animation:spin 30s linear infinite}}
+{FEST_CSS}
 {REDUCED}
 </style>
 <defs><clipPath id="card"><rect width="{W}" height="{H}" rx="28"/></clipPath></defs>
@@ -265,6 +287,7 @@ def footer():
 <rect width="{W}" height="{H}" fill="{INK}"/>
 {swiss_grid(W, H)}
 {stars(45, W, H, 99)}
+{bursts([(1210, 78, 26, GOLD, 0.9), (880, 70, 18, RED_LIGHT, 2.9)])}
 ''']
     X = 72
     lbl, w = text('BUILT BY', 'mono', 13, X + 18, 84, 0.18, GREY)
@@ -281,6 +304,9 @@ def footer():
     p.append(latin)
     s, _ = text('A national tech community. CodeOrbit is one of its open-source projects.', 'medium', 20, X, 316, 0, '#C9C9CC')
     p.append(s)
+    if DIWALI:
+        hd, _ = text('HAPPY DIWALI  ·  v0.2.0 RELEASED 8 NOVEMBER 2026', 'mono', 12.5, X, 352, 0.18, GOLD)
+        p.append(hd)
     # mark with orbit ring
     cx, cy = 1060, 190
     p.append(f'<circle cx="{cx}" cy="{cy}" r="118" fill="none" stroke="#fff" stroke-opacity=".14"/>')
@@ -398,7 +424,11 @@ def diwali():
     open(f'{OUT}/diwali.svg', 'w').write('\n'.join(p))
 
 if __name__ == '__main__':
+    os.makedirs(OUT, exist_ok=True)
+    hero()
+    divider()
+    how()
     footer()
-    print('footer.svg', os.path.getsize(f'{OUT}/footer.svg') // 1024, 'KB')
     diwali()
-    print('diwali.svg', os.path.getsize(f'{OUT}/diwali.svg') // 1024, 'KB')
+    for f in ['hero.svg', 'divider.svg', 'how-it-works.svg', 'footer.svg', 'diwali.svg']:
+        print(f, os.path.getsize(f'{OUT}/{f}') // 1024, 'KB')
