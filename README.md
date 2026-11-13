@@ -143,6 +143,63 @@ With nothing saved yet, the score is **0**. If you have no projects (or no skill
 
 <img src=".github/readme/divider.svg" width="100%" alt="">
 
+
+<!-- CodeOrbit Feature Showcase -->
+
+<h3 align="center">🚀 CodeOrbit in Action</h3>
+
+<p align="center">
+  <sub>Track your learning. Build projects. Achieve goals. Visualize progress.</sub>
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/029dfee0-3ced-4c35-bdf8-7d133dab2821">
+        <img src="https://github.com/user-attachments/assets/029dfee0-3ced-4c35-bdf8-7d133dab2821" width="100%" alt="Study Sessions">
+      </a>
+      <br>
+      <b>📚 Study Sessions</b>
+      <br>
+      <sub>Log study hours and track your learning consistency.</sub>
+    </td>
+    <td width="50%" align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/b85fb2a0-8161-49b3-91d7-f5f15ccaf215">
+        <img src="https://github.com/user-attachments/assets/b85fb2a0-8161-49b3-91d7-f5f15ccaf215" width="100%" alt="Projects">
+      </a>
+      <br>
+      <b>🛰️ Project Management</b>
+      <br>
+      <sub>Manage projects, deadlines and completion status.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/d10498b1-a40e-4836-ba7b-19632400501d">
+        <img src="https://github.com/user-attachments/assets/d10498b1-a40e-4836-ba7b-19632400501d" width="100%" alt="Goals">
+      </a>
+      <br>
+      <b>🎯 Goal Tracking</b>
+      <br>
+      <sub>Set priorities, monitor progress and meet deadlines.</sub>
+    </td>
+    <td width="50%" align="center" valign="top">
+      <a href="https://github.com/user-attachments/assets/8418a392-10d5-4b2d-a3ba-1c1eb280e011">
+        <img src="https://github.com/user-attachments/assets/8418a392-10d5-4b2d-a3ba-1c1eb280e011" width="100%" alt="Analytics">
+      </a>
+      <br>
+      <b>📊 Progress Analytics</b>
+      <br>
+      <sub>Visualize study trends, skill growth and productivity.</sub>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <sub>✨ Click any screenshot to view it in full resolution.</sub>
+</p>
+
+
 ## 04 — How it works
 
 <p align="center">
